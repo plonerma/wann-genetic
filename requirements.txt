@@ -1,0 +1,6 @@
+scipy
+matplotlib
+gym
+tqdm
+opencv-python
+networkx
