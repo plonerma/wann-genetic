@@ -2,7 +2,7 @@ import io
 import numpy as np
 from base64 import b64encode, b64decode
 
-def serizalize_array(a : np.array):
+def serialize_array(a : np.array):
     encodedBytes = b64encode(a.tobytes())
     return str(encodedBytes, 'utf-8')
 

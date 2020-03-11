@@ -1,8 +1,8 @@
 import numpy as np
 
 from .genes import Genotype
-from .util import serizalize_array, deserialize_array
 from .ann import apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes, weight_matrix_arrangement
+from ..util import serialize_array, deserialize_array
 
 import streamlit as st
 
@@ -132,7 +132,7 @@ class Network:
     def to_pytorch(self):
         pass
 
-    def serizalize(self):
+    def serialize(self):
         pass
 
     def deserialize(self):

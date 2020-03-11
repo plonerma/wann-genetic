@@ -3,7 +3,7 @@ import numpy as np
 # Tuple: https://stackoverflow.com/a/47534998
 from typing import Tuple, NamedTuple
 
-from .util import serizalize_array, deserialize_array
+from ..util import serialize_array, deserialize_array
 
 import streamlit as st
 
@@ -72,8 +72,8 @@ class Genotype:
 
     def serialize(self) -> dict:
         return dict(
-            edges=serizalize_array(self.edges),
-            nodes=serizalize_array(self.nodes),
+            edges=serialize_array(self.edges),
+            nodes=serialize_array(self.nodes),
             n_in=self.n_in,
             n_out=self.n_out
         )
