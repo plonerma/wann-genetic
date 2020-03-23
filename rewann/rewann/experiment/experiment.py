@@ -1,4 +1,5 @@
 import toml
+import logging
 
 from tqdm import tqdm
 
@@ -28,6 +29,8 @@ class Experiment:
 
         params_toml = toml.dumps(self.params)
         self.log.info(f"Running experiments with the following parameters:\n{params_toml}")
+        if not self['config', 'debug']:
+            self.log.setLevel(logging.INFO)
 
     @property
     def log(self):
