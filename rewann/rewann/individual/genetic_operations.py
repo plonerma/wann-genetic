@@ -137,32 +137,36 @@ def change_activation(ind, pop, params):
 
 # Genetic Operations
 def mutation(ind, pop, params):
-    supported_mutation_types = [
+    supported_mutation_types = np.array([
         ('new_edge', add_edge),
         ('new_node', add_node),
         ('reenable_edge', reenable_edge),
         ('change_activation', change_activation),
-    ]
-
-    names, funcs = zip(*supported_mutation_types)
+    ], dtype=[('name', 'U32'), ('func', object)])
 
     # get probabilities from params
-    probabilities = np.array(list(map(
-        lambda name: params['mutation', name, 'propability'], names)))
+    probabilities = np.array([
+        params['mutation', name, 'propability']
+        for name in supported_mutation_types['name']
+    ])
 
     # normalize
     probabilities = probabilities / np.sum(probabilities)
 
     # Generate permutation of functions (every function occurs only once)
+
     permutated_mutation_functions = np.random.choice(
-        funcs, len(funcs), p=probabilities, replace=False)
+        supported_mutation_types, len(supported_mutation_types),
+        p=probabilities, replace=False)
 
     # apply functions until one actually generates a mutation
-    for f in permutated_mutation_functions:
-        new_genes = f(ind, pop, params)
+    for name, func in permutated_mutation_functions:
+        new_genes = func(ind, pop, params)
         if new_genes is not None: # mutation was successful
+            params.log.debug(f"Mutation via {name}.")
             return ind.__class__(genes=new_genes)
 
+    params.log.warning("No mutation possible.")
     raise RuntimeError("No mutation possible.")
 
 def path_exists(network, src, dest):
@@ -189,4 +193,5 @@ def path_exists(network, src, dest):
 
 def crossover(ind_a, ind_b, params):
     # just do mutation for now
+    params.log.warning("Cross-over is not supported yet.")
     return ind_a.mutation(params)

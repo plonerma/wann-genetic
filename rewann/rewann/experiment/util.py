@@ -9,6 +9,7 @@ import collections.abc
 
 import logging
 
+
 this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
 
@@ -29,15 +30,22 @@ class FsInterface:
         path = next(dropwhile(os.path.exists, possible_paths(name)))
         return cls(path, *args, **kwargs)
 
-    def __init__(self, path, gen_digits=4):
+    def __init__(self, path, gen_digits=4, root_logger=None):
         self.base_path = path
         self.gen_digits = gen_digits
         self.hashfs = HashFS(os.path.join(self.base_path, 'objects'),
                              depth=1, width=2, algorithm='sha256')
-        logging.basicConfig(filename=os.path.join(self.base_path, 'objects'),
-                            filemode='a',
-                            format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                            level=logging.DEBUG)
+
+        log_path = self.path('execution.log')
+        logging.info (f"Check log ('{log_path}') for details.")
+
+        self.logger = logging.getLogger('experiment')
+
+        self.logger.setLevel(logging.DEBUG)
+
+        fh = logging.FileHandler(log_path)
+        fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        self.logger.addHandler(fh)
 
     def path(self, *parts):
         p = os.path.join(self.base_path, *parts)

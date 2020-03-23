@@ -32,7 +32,6 @@ sample = Individual(genes=Genotype(
 
 def test_serialization():
     s = sample.serialize()
-    print (s)
     x = Individual.deserialize(s)
 
     assert sample.genes == x.genes
@@ -53,7 +52,5 @@ def test_gene_expression():
         [0, 0, 0, 0, 1]
     ], dtype=np.float)
 
-    print (sample.network.weight_matrix)
-    print (expected_weight_matrix)
 
     assert np.all(sample.network.weight_matrix == expected_weight_matrix)
