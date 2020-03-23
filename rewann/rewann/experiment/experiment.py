@@ -2,7 +2,7 @@ import toml
 
 from ..tasks import select_task
 
-from .fs_util import FsInterface, default_params_path, nested_update
+from .util import FsInterface, default_params_path, nested_update
 from .population import Population
 
 import logging
