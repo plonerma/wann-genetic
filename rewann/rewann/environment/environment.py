@@ -8,7 +8,7 @@ from ..tasks import select_task
 from .util import FsInterface, default_params_path, nested_update
 from .population import Population
 
-class Experiment:
+class Environment:
     default_params = toml.load(default_params_path)
 
     def __init__(self, params, root_logger=None):

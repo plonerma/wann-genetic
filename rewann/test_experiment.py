@@ -1,6 +1,6 @@
 import logging
 import sys
-from rewann import Experiment
+from rewann import Environment
 
 # setup logging
 root = logging.getLogger()
@@ -22,6 +22,5 @@ root.handlers = [sh, fh]
 
 
 
-exp = Experiment(params='test_experiment.toml', root_logger=root)
-
+exp = Environment(params='test_experiment.toml', root_logger=root)
 exp.run()
