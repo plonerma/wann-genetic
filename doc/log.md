@@ -33,3 +33,9 @@ date: 2020-03-19
 
 Discussing new edge selection strategy with Adam Gaier (https://github.com/google/brain-tokyo-workshop/issues/18).
 Test the new approach vs. the original layer-based one!
+
+---
+
+date: 2020-03-34
+
+Implemented tests, simple experiments working.
