@@ -10,10 +10,8 @@ sample = Individual(genes=Genotype(
         (4, True, 0),
         (5, True, 0),
         (7, False, 0),
-        (8, False, 0),
         (10, False, 0),
         (12, False, 0),
-        (14, False, 0)
     ],
     edges=[
         # innovation id, src, dest, enabled
@@ -52,5 +50,10 @@ def test_gene_expression():
         [0, 0, 0, 0, 1]
     ], dtype=np.float)
 
+
+    print (expected_weight_matrix.shape)
+    print (expected_weight_matrix)
+    print (sample.network.weight_matrix.shape)
+    print (sample.network.weight_matrix)
 
     assert np.all(sample.network.weight_matrix == expected_weight_matrix)

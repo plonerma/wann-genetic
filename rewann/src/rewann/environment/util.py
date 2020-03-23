@@ -18,7 +18,17 @@ class FsInterface:
     """Provide interface for storing models on the file system."""
 
     @classmethod
-    def new_path(cls, name, *args, base_path='', **kwargs):
+    def for_env(cls, env):
+        if env['experiment_path'] is not None:
+            return FsInterface(env['experiment_path'], env)
+        else:
+            return FsInterface.new_path(env)
+
+    @classmethod
+    def new_path(cls, env):
+        name = env['experiment_name']
+        base_path = env['config', 'data_base_path']
+
         def possible_paths(name):
             date = str(datetime.now().date())
             for i in count():
@@ -28,11 +38,11 @@ class FsInterface:
                     yield f'{date}_{name}_{i}'
 
         path = next(dropwhile(os.path.exists, possible_paths(name)))
-        return cls(path, *args, **kwargs)
+        return cls(path, env)
 
-    def __init__(self, path, gen_digits=4, root_logger=None):
+    def __init__(self, path, env):
         self.base_path = path
-        self.gen_digits = gen_digits
+        self.gen_digits = env['config', 'gen_digits']
         self.hashfs = HashFS(os.path.join(self.base_path, 'objects'),
                              depth=1, width=2, algorithm='sha256')
 

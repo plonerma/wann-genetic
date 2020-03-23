@@ -4,6 +4,7 @@ name = 'iris'
 [config]
 data_base_path = "data"
 debug = true
+gen_digits=4
 
 [population]
 num_generations = 20

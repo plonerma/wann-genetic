@@ -25,7 +25,7 @@ class Environment:
         if self['experiment_name'] is None:
             self['experiment_name'] = '{}_run'.format(task_name)
 
-        self.fs = FsInterface.new_path(self['experiment_name'], base_path=self['config', 'data_base_path'], root_logger=root_logger)
+        self.fs = FsInterface.for_env(self)
 
         params_toml = toml.dumps(self.params)
         self.log.info(f"Running experiments with the following parameters:\n{params_toml}")
@@ -80,6 +80,8 @@ class Environment:
             pop.evaluate(self.task)
             self.log.debug(f"Accuracy: {pop.performance.accuracy}")
             self.store_results(gen, pop)
+
+        self.population = pop
 
     def store_results(self, gen, pop):
         if gen % 5:

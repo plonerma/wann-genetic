@@ -5,4 +5,4 @@ name='iris'
 
 [population]
 num_generations=10
-size=100
+size=40
