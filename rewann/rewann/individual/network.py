@@ -1,27 +1,40 @@
 import numpy as np
 
 from .genes import Genotype
-from .ann import apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes, weight_matrix_arrangement
 from ..util import serialize_array, deserialize_array
+from .ann import (
+    apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes,
+    weight_matrix_arrangement, softmax)
 
 import streamlit as st
 
 class Network:
     """Representation for all kinds of NNs (wann, ffnn, rnn, rewann)."""
 
-    def __init__(self, n_in, n_out, activation_funcs, weight_matrix,
+    ### Definition of the activations functions
+    available_act_functions = [
+        ('linear', lambda x: x),
+        ('step (unsigned)', lambda x: 1.0*(x>0.0)),
+        ('sin ', lambda x: np.sin(np.pi*x)),
+        ('gaussian with mean 0 and sigma 1', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
+        ('tanh (signed)', lambda x: np.tanh(x)),
+        ('sigmoid (unsigned)', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
+        ('inverse linear', lambda x: -x),
+        ('abs', lambda x: np.abs(x)),
+        ('relu', lambda x: np.maximum(0, x)),
+        ('cos', lambda x: np.cos(np.pi*x)),
+        ('squared', lambda x: x**2),
+    ]
+
+    def __init__(self, n_in, n_out, nodes, weight_matrix,
+                 propagation_steps=None,
                  **params):
         # Relevant for computation
         self.n_in = n_in # without bias
         self.n_out = n_out
-        self.n_hidden = weight_matrix.shape[1] - n_out
-        self.act_funcs = activation_funcs
+        self.nodes = nodes
         self.weight_matrix = weight_matrix
-
-        # Speeds up computation
-        self.propagation_steps = params.get('propagation_steps', None)
-
-        self.n_nodes = n_in + 1 + weight_matrix.shape[1]
+        self.propagation_steps = propagation_steps
 
         # For inspection
         self.params = params
@@ -31,27 +44,49 @@ class Network:
         """Offset for nodes that won't be updated (inputs & bias)."""
         return self.n_in + 1
 
+    @property
+    def n_hidden(self):
+        return len(self.nodes) - self.n_out
+
+    @property
+    def n_nodes(self):
+        return self.offset + len(self.nodes)
+
+    @property
+    def n_act_funcs(self):
+        return len(self.available_act_functions)
+
+    def index_to_gene_id(self, i):
+        if i < self.offset:
+            return i
+        else:
+            return self.nodes[i - self.offset]['id']
+
     @classmethod
-    def from_genes(cls, genes : Genotype):
+    def from_genes(cls, genes : Genotype, **kwargs):
         """Convert genes to weight matrix and activation vector."""
-        hidden_nodes, edges = remap_node_ids(genes)
+        edges = remap_node_ids(genes)
 
         # actual number of nodes that will be present in the network
-        n_nodes = len(hidden_nodes) + genes.n_static
+        n_nodes = len(genes.nodes) + genes.n_in + 1
 
         w_matrix = np.zeros((n_nodes, n_nodes), dtype=float)
         conn_mat = np.zeros((n_nodes, n_nodes), dtype=int)
 
-        # if there is no `enabled` field in the edge encoding enable by default
-        enabled = get_array_field(edges, 'enabled', 1)
-        conn_mat[edges['src'], edges['dest']] = enabled
-
-        # if there is no `weight` field in the edge encoding use default weight 1
-        w_matrix[edges['src'], edges['dest']] = enabled * get_array_field(edges, 'weight', 1)
+        # if there is a disabled connection between two nodes, there is a
+        # directed path between the two anyways
+        conn_mat[edges['src'], edges['dest']] = 1
 
         # reorder hidden nodes
         hidden_node_order, prop_steps = sort_hidden_nodes(conn_mat[genes.n_static:, genes.n_static:])
-        hidden_nodes = hidden_nodes[hidden_node_order]
+
+        # output nodes appear first in genes and last in network nodes
+        nodes = np.empty(genes.nodes.shape, dtype=genes.nodes.dtype)
+        nodes[: -genes.n_out] = genes.nodes[hidden_node_order + genes.n_out]
+        nodes[-genes.n_out: ] = genes.nodes[:genes.n_out]
+
+        # if a field does not exist, use 1 as default
+        w_matrix[edges['src'], edges['dest']] = get_array_field(edges, 'enabled', 1) * get_array_field(edges, 'weight', 1)
 
         # rearrange weight matrix
         i_rows, i_cols = weight_matrix_arrangement(genes.n_in, genes.n_out, hidden_node_order)
@@ -60,33 +95,58 @@ class Network:
 
         return cls(
             n_in=genes.n_in, n_out=genes.n_out,
-            # output nodes appear first in node genes and last in act-func vector
-            activation_funcs=np.append(hidden_nodes['func'], genes.nodes['func'][:genes.n_out]),
+            nodes=nodes,
             weight_matrix=w_matrix,
             propagation_steps=prop_steps,
-            num_enabled_connections=np.sum(enabled),
-            hidden_nodes=hidden_nodes,
-            n_nodes=n_nodes
         )
 
-    def layers(self):
+    def layers(self, including_input=False):
         if self.propagation_steps is None:
             return np.arange(self.n_hidden + self.n_out)
         i = self.offset
+        if including_input:
+            yield np.arange(0, i)
         for n in self.propagation_steps:
             yield np.arange(i, i+n)
             i = i + n
         yield np.arange(i, i+self.n_out)
 
-    def apply(self, x, return_complete=False):
-        x_full = np.empty((self.n_nodes))
-        x_full[:] = np.nan
-        x_full[:self.n_in] = x[:self.n_in]
-        x_full[self.n_in] = 1 # bias
-        y = self.fully_propagate(x_full)
-        if not return_complete:
-            y = y[-self.n_out:]
-        return y
+    def node_layers(self):
+        """Return layer index for each node"""
+        layers = np.full(self.n_nodes, np.nan)
+        for l, i in enumerate(self.layers(include_input=True)):
+            layers[l] = i
+
+    def initial_act_vec(self, x):
+        x_full = np.empty((x.shape[0], self.n_nodes))
+        x_full[:, :] = np.nan
+        x_full[:, :self.n_in] = x[:, :self.n_in]
+        x_full[:, self.n_in] = 1 # bias
+        return x_full
+
+    def apply(self, x, func='softmax', return_activation=False):
+        changed_shape = False
+        if len(x.shape) == 1:
+            x = np.array([x])
+            changed_shape = True
+
+
+        y_full = self.fully_propagate(self.initial_act_vec(x))
+        y = y_full[:, -self.n_out:]
+
+        if func == 'argmax':
+            y = np.argmax(y, axis=1)
+        elif func == 'softmax':
+            y = softmax(y, axis=1)
+
+        if changed_shape:
+            y = y[0]
+            y_full = y_full[0]
+
+        if return_activation:
+            return y, y_full
+        else:
+            return y
 
     def fully_propagate(self, act_vec): # activation vector
         """Iterate through all nodes that can be updated."""
@@ -94,7 +154,11 @@ class Network:
             act_vec = self.propagate(act_vec, active_nodes)
         return act_vec
 
-    def propagate(self, act_vec, active_nodes):
+    def activation_functions(self, nodes, x=None):
+        return apply_act_function(self.available_act_functions,
+                                  self.nodes['func'][nodes], x)
+
+    def propagate(self, x_full, active_nodes):
         """Apply updates for active nodes (active nodes can't share edges).
 
         Args:
@@ -106,37 +170,33 @@ class Network:
 
         # calculate sum of all incoming edges for each active node
         # use all nodes before first active node as input
-        s_in = np.s_[:active_nodes[0]]
 
+        M = self.weight_matrix[:active_nodes[0], active_nodes - self.offset] # Only return sums for active nodes
 
-        x = act_vec[s_in]
-        M = self.weight_matrix[s_in, active_nodes - self.offset] # Only return sums for active nodes
-
-        act_sum = np.dot(x, M)
+        act_sum = np.dot(x_full[:, :active_nodes[0]], M)
 
         # apply activation function for active nodes
-        act = apply_act_function(self.act_funcs[active_nodes - self.offset], act_sum)
+        y = self.activation_functions(active_nodes - self.offset, act_sum)
 
         #st.write(
         #    "active_nodes", active_nodes,
-        #    "x", x,
+        #    "x", x_full,
         #    "relevant part of weight matrix", M,
         #    "sum", act_sum,
-        #    "activation", act
+        #    "y", y,
         #)
 
-        # offset output indeces by number of nodes that won't be updated
-        act_vec[active_nodes] = act
-        return act_vec
+        x_full[:, active_nodes] = y
+        return x_full
 
     def to_pytorch(self):
-        pass
+        raise NotImplemented
 
     def serialize(self):
-        pass
+        raise NotImplemented
 
     def deserialize(self):
-        pass
+        raise NotImplemented
 
     @property
     def node_names(self):
@@ -167,8 +227,7 @@ class Network:
         # Positions
         N = len(nodes)
 
-        layers = [len(s) for s in self.layers()]
-        layers = np.array([(self.offset), *layers])
+        layers = np.array([len(s) for s in self.layers(including_input=True)])
 
         # pos x will be determined by layer, pos y will be iterated on
         # input, bias and output nodes will have static position, hidden node
@@ -192,7 +251,10 @@ class Network:
             a, b+b.T, c.T
         ])
 
-        M = M / np.sum(M,axis=0)
+        M_sum = np.sum(M,axis=0)
+        M_sum[np.where(M_sum == 0)] = 1
+
+        M = M / M_sum
 
         if pos_iterations is None:
             pos_iterations = len(layers)

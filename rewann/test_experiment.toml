@@ -1,0 +1,8 @@
+experiment_name='debugging'
+
+[task]
+name='iris'
+
+[population]
+num_generations=100
+size=100

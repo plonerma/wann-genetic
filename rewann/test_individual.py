@@ -16,17 +16,17 @@ sample = Individual(genes=Genotype(
         (14, False, 0)
     ],
     edges=[
-        # innovation id, src, dest, weight, enabled
-        ( 3, 12,  7, 1, True), # not necessarily ordered
-        ( 1,  1, 12, 1, True),
-        ( 0,  0, 12, 1, True),
-        ( 2, 12,  4, 1, True),
-        ( 4,  7,  4, 1, True),
-        (15,  2,  7, 1, True),
-        ( 6,  7, 10, 1, True),
-        ( 7, 10,  5, 1, True),
-        ( 8,  2, 10, 1, False), # disabled
-        (11,  3, 10, 1, True),
+        # innovation id, src, dest, enabled
+        ( 3, 12,  7, True), # not necessarily ordered
+        ( 1,  1, 12, True),
+        ( 0,  0, 12, True),
+        ( 2, 12,  4, True),
+        ( 4,  7,  4, True),
+        (15,  2,  7, True),
+        ( 6,  7, 10, True),
+        ( 7, 10,  5, True),
+        ( 8,  2, 10, False), # disabled
+        (11,  3, 10, True),
     ]
 ))
 

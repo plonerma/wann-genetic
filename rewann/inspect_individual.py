@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 
 import networkx as nx
 
+import pandas as pd
+
 from rewann.individual import Genotype, Network, Individual
 
 
@@ -19,24 +21,22 @@ sample = Individual(genes=Genotype(
         (4, True, 0),
         (5, True, 1),
         (7, False, 2),
-        (8, False, 3),
         (10, False, 4),
         (12, False, 5),
-        (14, False, 6)
     ],
     edges=[
         # innovation id, src, dest, weight, enabled
         # not necessarily ordered
-        ( 3, 12,  7, 1, True),
-        ( 1,  1, 12, 1, True),
-        ( 0,  0, 12, 1, True),
-        ( 2, 12,  4, 1, True),
-        ( 4,  7,  4, 1, True),
-        (15,  2,  7, 1, True),
-        ( 6,  7, 10, 1, True),
-        ( 7, 10,  5, 1, True),
-        ( 8,  2, 10, 1, False), # disabled
-        (11,  3, 10, 1, True),
+        ( 3, 12,  7, True),
+        ( 1,  1, 12, True),
+        ( 0,  0, 12, True),
+        ( 2, 12,  4, True),
+        ( 4,  7,  4, True),
+        (15,  2,  7, True),
+        ( 6,  7, 10, True),
+        ( 7, 10,  5, True),
+        ( 8,  2, 10, False), # disabled
+        (11,  3, 10, True),
     ]
 ))
 
@@ -68,15 +68,20 @@ else:
 
     n = sample.network
 
-    fig, axs = plt.subplots(2, 1)
+    fig, axs = plt.subplots(1, 2)
 
     n.draw_graph(axs[0])
 
     n.draw_weight_matrix(axs[1])
     st.pyplot(fig)
 
-    "### Hidden Node IDs"
-    n.params['hidden_nodes']['id']
+    "### Nodes"
+
+    st.write(pd.DataFrame({
+        'node': [n.node_names[i].strip('$') for i in range(n.offset, n.n_nodes)],
+        'gene id': n.nodes['id'],
+        'activation function': n.activation_functions(np.arange(0, n.n_nodes - n.offset))
+    }))
 
     "## Propagation"
 
@@ -86,11 +91,11 @@ else:
         st.sidebar.slider("x_2", 0., 1.),
     ])
 
-    full_y = n.apply(x, return_complete=True)
+    y, activation = n.apply(x, func='softmax', return_activation=True)
 
     st.write("Input", x)
-    st.write("Output", full_y[-n.n_out:])
+    st.write("Output", y)
 
     "### Activation Graph"
-    n.draw_graph(activation=full_y)
+    n.draw_graph(activation=activation)
     st.pyplot()

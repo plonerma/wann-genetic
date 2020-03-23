@@ -1,0 +1,22 @@
+[task]
+name='iris'
+
+[config]
+data_base_path="data"
+
+[population]
+num_generations=20
+size=64
+elite_size=10
+tournament_size=5
+
+[mutation]
+  [mutation.new_edge]
+    propability=0.25
+    strategy='layer_agnostic'
+  [mutation.new_node]
+    propability=0.25
+  [mutation.reenable_edge]
+    propability=0.25
+  [mutation.change_activation]
+    propability=0.25

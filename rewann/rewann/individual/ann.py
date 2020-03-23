@@ -22,40 +22,34 @@ def get_array_field(array, key, default=None):
     return array[key] if key in array.dtype.names else default
 
 def remap_node_ids(genes):
-    """Remove unconnected nodes and map node ids to continous node indices.
+    """Map node ids to continous node indices.
 
     Returns:
-        edges: np.array - copy of gene edges with src and dest replaced by indeces
-        hidden_nodes: np.array - representation of the hidden nodes
+        np.array - copy of gene edges with src and dest replaced by indeces
     """
 
+    # Assumption: There are never hidden nodes in the gene that do not have a
+    # enabled edge (edges are only disabled if they are replaced by a node and
+    # two connections).
+
     ids_in_edges = np.hstack([
-        np.arange(genes.n_static),  # make sure ids for static nodes stay the same
-        genes.edges['src'], genes.edges['dest']  # translate ids in src and dest field
+        # make sure ids of static nodes stay the same even if they have no edge
+        np.arange(genes.n_static),
+        # translate ids in src and dest field
+        genes.edges['src'], genes.edges['dest']
     ])
 
     # gene_node_ids[index] = node id in genes
     gene_node_ids, new_indices = np.unique(ids_in_edges, return_inverse=True)
 
     # copy edge genes
-    new_edges = np.array(genes.edges, dtype=genes.edges.dtype)
+    new_edges = np.copy(genes.edges)
 
     # replace src and dest field with new indices
     new_edges['src']  = new_indices[genes.n_static:-len(genes.edges)]
-    new_edges['dest'] = new_indices[-len(genes.edges):]
+    new_edges['dest'] = new_indices[genes.n_static + len(genes.edges):]
 
-    # Remove unconnected hidden nodes
-    remaining_hidden_nodes = iter(genes.nodes[genes.n_out:])
-    new_hidden_nodes = np.array([
-        # both arrays (genes.nodes and gene_node_ids) are ordered
-        # drop nodes until right id is found
-        next(dropwhile(lambda node: node['id'] != hidden_id, remaining_hidden_nodes))
-        for hidden_id in gene_node_ids[genes.n_static:]
-    ],  dtype=genes.nodes.dtype)
-
-    return new_hidden_nodes, new_edges
-
-
+    return new_edges
 
 def sort_hidden_nodes(conn_mat):
     """Topologically sorting hidden nodes given a connectivity matrix."""
@@ -99,24 +93,38 @@ def sort_hidden_nodes(conn_mat):
 
 ## Applying activation functions to an array of nodes
 
-### Definition of the activations functions
-activation_functions = {
-    0: lambda x: x,                                # Linear
-    1: lambda x: 1.0*(x>0.0),                      # Unsigned Step Function
-    2: lambda x: np.sin(np.pi*x),                  # Sin
-    3: lambda x: np.exp(-np.multiply(x, x) / 2.0), # Gaussian with mean 0 and sigma 1
-    4: lambda x: np.tanh(x) ,                      # Hyperbolic Tangent (signed)
-    5: lambda x: (np.tanh(x/2.0) + 1.0)/2.0,       # Sigmoid (unsigned)
-    6: lambda x: -x,                               # Inverse
-    7: lambda x: np.abs(x),                        # Absolute Value
-    8: lambda x: np.maximum(0, x),                 # Relu
-    9: lambda x: np.cos(np.pi*x),                 # Cosine
-    10: lambda x: x**2,                            # Squared
+def apply_act_function(available_funcs, selected_funcs, x=None):
+    if x is not None:
+        result = np.empty(x.shape)
+        for i, func in enumerate(selected_funcs):
+            assert func < len(available_funcs)
+            if len(x.shape) == 1:
+                result[i] = available_funcs[func][1](x[i])
+            else:
+                result[:, i] = available_funcs[func][1](x[:, i])
+        return result
+    else:
+        return np.array([  # return function names
+            available_funcs[func][0] for func in selected_funcs
+        ])
 
-    #### Unused functions:
-    # (np.tanh(50*x/2.0) + 1.0)/2.0
-}
 
-@np.vectorize  # vectorize function so it can be applied to an array
-def apply_act_function(func, x):
-    return activation_functions[func](x)
+
+def softmax(x, axis=1):
+    """Compute softmax values for each sets of scores in x.
+    Assumes: [samples x dims]
+
+    Args:
+      x - (np_array) - unnormalized values
+          [samples x dims]
+
+    Returns:
+      softmax - (np_array) - softmax normalized in dim axis
+    """
+    if axis == 1:
+        x = x.T
+    e_x = np.exp(x - np.max(x,axis=0))
+    s = (e_x / e_x.sum(axis=0))
+    if axis == 1:
+        s = s.T
+    return s
