@@ -7,7 +7,7 @@ from ..util import serialize_array, deserialize_array
 class ClassificationPerformance:
     """Track performances in classification tasks."""
 
-    def __init__(self, arg):
+    def __init__(self, arg, env):
         if not isinstance(arg, np.ndarray):
             # arg is the number of classes
             assert isinstance(arg, int)
@@ -22,6 +22,8 @@ class ClassificationPerformance:
 
         self.n_classes = self.confusion_matrix.shape[0]
 
+        self.env = env
+
     def __iadd__(self, other):
         if isinstance(other, Performance):
             ocm = other.confusion_matrix
@@ -34,7 +36,12 @@ class ClassificationPerformance:
 
     def add(self, y_true, y_pred):
         """Add new results to the performance record."""
-        self.confusion_matrix += confusion_matrix(y_true, y_pred)
+        self.env.log.debug(f"Adding performance samples\n{y_true}\n\n{y_pred}\n---\n")
+        cm = confusion_matrix(y_true, y_pred)
+        self.env.log.debug(f"New confusion matrix:\n{cm}")
+        self.env.log.debug(f"Prior confusion matrix:\n{self.confusion_matrix}")
+        self.confusion_matrix += cm
+        self.env.log.debug(f"Resulting confusion matrix:\n{self.confusion_matrix}")
 
     @property
     def total(self):

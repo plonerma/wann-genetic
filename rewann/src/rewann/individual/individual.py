@@ -12,7 +12,7 @@ class Individual:
 
     from .genes import Genotype
     from .network import Network
-    from ..tasks import Performance
+    from .performance import Performance
 
     from .genetic_operations import mutation, crossover
 
@@ -34,9 +34,11 @@ class Individual:
             self.express()
         return self.network.apply(*args, **keargs)
 
-    def evaluation(self, task):
+    def evaluation(self, env):
         if self.performance is None:
-            self.performance = task.evaluate_individual(self)
+            self.performance = self.Performance(env.task.n_out, env=env)
+            y_pred = self.apply(env.task.x, func='argmax')
+            self.performance += (env.task.y_true, y_pred)
         return self.performance
 
     @classmethod

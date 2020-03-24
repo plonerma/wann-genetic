@@ -5,7 +5,6 @@ import numpy as np
 from itertools import count
 
 from ..individual import Individual
-from ..tasks import Performance
 
 class InnovationRecord(set):
     @classmethod
@@ -35,7 +34,7 @@ class InnovationRecord(set):
 
 def evolution(env, ind_class=Individual):
     # initial population
-    n_in, n_out = env.task.n_dims, env.task.n_classes
+    n_in, n_out = env.task.n_in, env.task.n_out
 
     population = [ind_class.base(n_in, n_out)]
     evaluate_population(env, population)
@@ -60,7 +59,7 @@ def evolution(env, ind_class=Individual):
 
 def evaluate_population(env, population):
     for ind in population:
-        ind.evaluation(env.task)
+        ind.evaluation(env)
 
 def evolve_population(env, pop, innov):
     #env.log.debug(f"Evolving population.")

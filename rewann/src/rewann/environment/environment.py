@@ -2,7 +2,7 @@ import toml
 import logging
 from tqdm import tqdm
 
-from ..tasks import select_task
+from .tasks import select_task
 
 from .util import FsInterface, default_params, nested_update
 from .evolution import evolution
