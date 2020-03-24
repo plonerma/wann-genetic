@@ -12,7 +12,7 @@ import logging
 
 this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
-
+default_params = toml.load(default_params_path)
 
 class FsInterface:
     """Provide interface for storing models on the file system."""
@@ -57,6 +57,9 @@ class FsInterface:
         fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(fh)
 
+        if not env['config', 'debug']:
+            self.logger.setLevel(logging.INFO)
+
     def path(self, *parts):
         p = os.path.join(self.base_path, *parts)
         dir = os.path.dirname(p)
@@ -83,17 +86,16 @@ class FsInterface:
         fstr = f'{{:0{self.gen_digits}d}}.toml'
         return self.path('gen', fstr.format(i))
 
-    def commit_generation(self, gen, include_population=False):
+    def commit_generation(self, population):
         d = dict()
 
         #if gen.performance:
         #    d['performance'] = gen.performance
 
-        if include_population:
-            d['individuals'] = list()
-            for i in gen.individuals:
-                h = self.put(i.serialize())
-                d['individuals'].append(h)
+        d['individuals'] = list()
+        for i in population:
+            h = self.put(i.serialize())
+            d['individuals'].append(h)
 
         return self.put(
             # save generation data there

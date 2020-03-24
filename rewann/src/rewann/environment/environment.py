@@ -1,41 +1,60 @@
 import toml
 import logging
-
 from tqdm import tqdm
 
 from ..tasks import select_task
 
-from .util import FsInterface, default_params_path, nested_update
-from .population import Population
+from .util import FsInterface, default_params, nested_update
+from .evolution import evolution
 
 class Environment:
-    default_params = toml.load(default_params_path)
+    default_params = default_params
 
     def __init__(self, params, root_logger=None):
-        self.params = dict(self.default_params)
-
+        # set up params based on path or dict and default parameters
         if not isinstance(params, dict):
             params = toml.load(params)
 
+        self.params = dict(self.default_params)
         self.update_params(params)
+
+        # choose task
         task_name = self['task', 'name']
         self.task = select_task(task_name)
 
-
+        # ensure experiment name is defined
         if self['experiment_name'] is None:
             self['experiment_name'] = '{}_run'.format(task_name)
 
+        # init fs interface
         self.fs = FsInterface.for_env(self)
 
+        # log used parameters
         params_toml = toml.dumps(self.params)
         self.log.info(f"Running experiments with the following parameters:\n{params_toml}")
-        if not self['config', 'debug']:
-            self.log.setLevel(logging.INFO)
+
+    def update_params(self, params):
+        self.params = nested_update(self.params, params)
+
+    def run(self):
+        n = self['population', 'num_generations']
+        for gen, pop in tqdm(zip(range(n), evolution(self)), total=n, unit='gen'):
+            self.log.debug(f'Completed generation {gen}')
+            self.log.warning('No sensible population performance metrics yet.')
+
+            if not gen % self['config', 'commit_pop_freq']:
+                self.fs.commit_generation(pop)
+        self.last_population = pop
 
     @property
     def log(self):
         return self.fs.logger
 
+    @property
+    def path(self):
+        return self.fs.base_path
+
+    # magic methods for direct access of parameters
     def __getitem__(self, keys):
         if isinstance(keys, tuple):
             d = self.params
@@ -58,34 +77,3 @@ class Environment:
             d[keys[-1]] = value
         else:
             self.params[keys] = value
-
-    def update_params(self, params):
-        self.params = nested_update(self.params, params)
-
-    @property
-    def path(self):
-        return self.fs.base_path
-
-    def run(self):
-        self.run_evolution()
-
-    def run_evolution(self):
-        pop = Population.initial(self.task.n_dims, self.task.n_classes, params=self)
-        pop.evaluate(self.task)
-
-        for gen in tqdm(range(self['population', 'num_generations']), unit='gen'):
-            self.log.debug(f"Evolving generation {gen}")
-            pop.evolve(params=self)
-            self.log.debug(f"Evaluating generation {gen}")
-            pop.evaluate(self.task)
-            self.log.debug(f"Accuracy: {pop.performance.accuracy}")
-            self.store_results(gen, pop)
-
-        self.population = pop
-
-    def store_results(self, gen, pop):
-        if gen % 5:
-            return
-
-        self.log.debug(str(pop.performance.confusion_matrix))
-        self.fs.commit_generation(pop, include_population=True)

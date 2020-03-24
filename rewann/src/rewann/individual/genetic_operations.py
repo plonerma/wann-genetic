@@ -1,6 +1,6 @@
 import numpy as np
 
-def add_node(ind, pop, params):
+def add_node(ind, env, innov):
     edges = ind.genes.edges
     nodes = ind.genes.nodes
 
@@ -13,7 +13,7 @@ def add_node(ind, pop, params):
 
     # new node with random act func
     new_node = np.zeros(1, dtype=nodes.dtype)
-    new_node['id'] = pop.next_node_id()
+    new_node['id'] = innov.next_node_id()
     new_node['func'] = np.random.randint(ind.network.n_act_funcs)
 
     new_edges = np.zeros(2, dtype=ind.genes.edges.dtype)
@@ -27,7 +27,7 @@ def add_node(ind, pop, params):
     new_edges[1]['src'] = new_node['id']
     new_edges[1]['dest'] = edges[edge_to_disable]['dest']
 
-    new_edges['id'] = pop.next_edge_id(), pop.next_edge_id()
+    new_edges['id'] = innov.next_edge_id(), innov.next_edge_id()
 
     edges = np.append(edges, new_edges)  # creates copy of old edges as well
 
@@ -39,14 +39,14 @@ def add_node(ind, pop, params):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
-def add_edge_layer_based(ind, pop, params):
+def add_edge_layer_based(ind, env, innov):
     """Layer-based edge introduction strategy.
 
     The implementation of this method is equivalent to strategy used in the
     original implementation.
     """
 
-def add_edge_layer_agnostic(ind, pop, params):
+def add_edge_layer_agnostic(ind, env, innov):
     """Introduce edges regardless of node layers.
 
     See discussion for details: https://github.com/google/brain-tokyo-workshop/issues/18
@@ -89,20 +89,20 @@ def add_edge_layer_agnostic(ind, pop, params):
     new_edge['src'] = src if src < network.offset else network.nodes['id'][src - network.offset]
     new_edge['dest'] = network.nodes['id'][dest - network.offset]
     new_edge['enabled'] = True
-    new_edge['id'] = pop.next_edge_id()
+    new_edge['id'] = innov.next_edge_id()
 
     return ind.genes.__class__(
         edges=np.append(genes.edges, new_edge), nodes=np.copy(genes.nodes),
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
-def add_edge(ind, pop, params):
+def add_edge(ind, env, innov):
     return {
         'layer_based': add_edge_layer_based,
         'layer_agnostic': add_edge_layer_agnostic
-    }[params['mutation', 'new_edge', 'strategy']](ind, pop, params)
+    }[env['mutation', 'new_edge', 'strategy']](ind, env, innov)
 
-def reenable_edge(ind, pop, params):
+def reenable_edge(ind, env, innov):
     edges = np.copy(ind.genes.edges)
 
     # Choose an disabled edge
@@ -119,7 +119,7 @@ def reenable_edge(ind, pop, params):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
-def change_activation(ind, pop, params):
+def change_activation(ind, env, innov):
     nodes = np.copy(ind.genes.nodes)
 
     selected_node = np.random.randint(len(nodes))
@@ -136,7 +136,7 @@ def change_activation(ind, pop, params):
     )
 
 # Genetic Operations
-def mutation(ind, pop, params):
+def mutation(ind, env, innov):
     supported_mutation_types = np.array([
         ('new_edge', add_edge),
         ('new_node', add_node),
@@ -146,7 +146,7 @@ def mutation(ind, pop, params):
 
     # get probabilities from params
     probabilities = np.array([
-        params['mutation', name, 'propability']
+        env['mutation', name, 'propability']
         for name in supported_mutation_types['name']
     ])
 
@@ -161,12 +161,12 @@ def mutation(ind, pop, params):
 
     # apply functions until one actually generates a mutation
     for name, func in permutated_mutation_functions:
-        new_genes = func(ind, pop, params)
+        new_genes = func(ind, env, innov)
         if new_genes is not None: # mutation was successful
-            params.log.debug(f"Mutation via {name}.")
+            #env.log.debug(f"Mutation via {name}.")
             return ind.__class__(genes=new_genes)
 
-    params.log.warning("No mutation possible.")
+    env.log.warning("No mutation possible.")
     raise RuntimeError("No mutation possible.")
 
 def path_exists(network, src, dest):
@@ -191,7 +191,7 @@ def path_exists(network, src, dest):
     return False
 
 
-def crossover(ind_a, ind_b, params):
+def crossover(ind_a, ind_b, env, innov):
     # just do mutation for now
-    params.log.warning("Cross-over is not supported yet.")
-    return ind_a.mutation(params)
+    env.log.warning("Cross-over is not supported yet.")
+    return ind_a.mutation(env, innov)
