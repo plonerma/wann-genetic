@@ -2,6 +2,7 @@ import logging
 import sys
 from rewann import Environment
 import toml
+import numpy as np
 
 # setup logging
 root = logging.getLogger()
@@ -22,4 +23,4 @@ def test_experiment(tmp_path):
     params['experiment_path'] = tmp_path
     exp = Environment(params=params, root_logger=root)
     exp.run()
-    assert exp.population.performance.accuracy >= 0.33
+    assert np.average(np.array([i.performance.accuracy for i in exp.last_population]))
