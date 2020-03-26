@@ -33,6 +33,8 @@ class Environment:
         params_toml = toml.dumps(self.params)
         self.log.info(f"Running experiments with the following parameters:\n{params_toml}")
 
+        self.current_weight = 1
+
     def update_params(self, params):
         self.params = nested_update(self.params, params)
 

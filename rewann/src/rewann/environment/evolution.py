@@ -59,7 +59,7 @@ def evolution(env, ind_class=Individual):
 
 def evaluate_population(env, population):
     for ind in population:
-        ind.evaluation(env)
+        ind.evaluate(env)
 
 def evolve_population(env, pop, innov):
     #env.log.debug(f"Evolving population.")
@@ -70,11 +70,11 @@ def evolve_population(env, pop, innov):
     new_pop = list()
 
     # most basic version for now
-    ind_performances = np.array([
-        i.performance.accuracy for i in pop
+    fitness = np.array([
+        i.fitness for i in pop
     ])
 
-    rank = np.argsort(-ind_performances)
+    rank = np.argsort(-fitness)
 
     n_new_children = env['population', 'size']
 
@@ -90,7 +90,7 @@ def evolve_population(env, pop, innov):
     pot_parents = np.random.randint(len(pop),
         size=(n_new_children, env['population', 'tournament_size']))
 
-    pot_parents_fitness = ind_performances[pot_parents]
+    pot_parents_fitness = fitness[pot_parents]
 
     # Breed child population
     for i in range(n_new_children):

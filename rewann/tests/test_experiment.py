@@ -23,4 +23,5 @@ def test_experiment(tmp_path):
     params['experiment_path'] = tmp_path
     exp = Environment(params=params, root_logger=root)
     exp.run()
-    assert np.average(np.array([i.performance.accuracy for i in exp.last_population]))
+    # Assert that there is at least moderate agreement between predicted and true classifications
+    assert np.average(np.array([i.performance.get_metrics('cohen_kappa') for i in exp.last_population])) > 0.4
