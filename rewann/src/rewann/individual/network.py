@@ -124,14 +124,14 @@ class Network:
         x_full[:, self.n_in] = 1 # bias
         return x_full
 
-    def apply(self, x, func='softmax', return_activation=False):
+    def apply(self, x, func='softmax', return_activation=False, w=1):
         changed_shape = False
         if len(x.shape) == 1:
             x = np.array([x])
             changed_shape = True
 
 
-        y_full = self.fully_propagate(self.initial_act_vec(x))
+        y_full = self.fully_propagate(self.initial_act_vec(x), w=w)
         y = y_full[:, -self.n_out:]
 
         if func == 'argmax':
@@ -148,17 +148,17 @@ class Network:
         else:
             return y
 
-    def fully_propagate(self, act_vec): # activation vector
+    def fully_propagate(self, act_vec, w=1): # activation vector
         """Iterate through all nodes that can be updated."""
         for active_nodes in self.layers():
-            act_vec = self.propagate(act_vec, active_nodes)
+            act_vec = self.propagate(act_vec, active_nodes, w=w)
         return act_vec
 
     def activation_functions(self, nodes, x=None):
         return apply_act_function(self.available_act_functions,
                                   self.nodes['func'][nodes], x)
 
-    def propagate(self, x_full, active_nodes):
+    def propagate(self, x_full, active_nodes, w=1):
         """Apply updates for active nodes (active nodes can't share edges).
 
         Args:
@@ -173,7 +173,7 @@ class Network:
 
         M = self.weight_matrix[:active_nodes[0], active_nodes - self.offset] # Only return sums for active nodes
 
-        act_sum = np.dot(x_full[:, :active_nodes[0]], M)
+        act_sum = np.dot(x_full[:, :active_nodes[0]], M * w) # multiple matrix with shared weight
 
         # apply activation function for active nodes
         y = self.activation_functions(active_nodes - self.offset, act_sum)

@@ -97,13 +97,10 @@ def f1_per_class(precision_per_class, recall_per_class):
     return (precision_per_class * recall_per_class) / (precision_per_class + recall_per_class)
 
 @new_metric
-def cohen_kappa(accuracy, true_class_sum, pred_class_sum, total):
-    logging.debug(f"True class sum:\n{true_class_sum}")
-    logging.debug(f"Predicted class sum:\n{pred_class_sum}")
-    logging.debug(f"Total class sum:\n{total}")
-    expected_acc = true_class_sum * pred_class_sum / total**2
-    logging.debug(f"Expected accuracy:\n{expected_acc}")
-    logging.debug(f"Accuracy:\n{accuracy}")
+def cohen_kappa(cm_stack, accuracy, true_class_sum, pred_class_sum, total):
+    t = total*total
+    t = t[np.newaxis].T.repeat(true_class_sum.shape[1], axis=1)
+    expected_acc = np.sum(true_class_sum * pred_class_sum / t, axis=1)
     return (accuracy - expected_acc) / (1 - expected_acc)
 
 @new_metric
@@ -133,12 +130,18 @@ class ClassificationRecord:
         #self.y_preds = np.array([[]])
 
     def stack_predictions(self, y_true, y_pred, w):
-        cm = confusion_matrix(y_true, y_pred, normalize='all')
+        #self.env.log.debug (f'before stacking {self.cm_stack.shape}')
+        cm = confusion_matrix(y_true, y_pred, labels=list(range(self.n_classes)), normalize='all')
         self.cm_stack = np.vstack([self.cm_stack, [cm]])
         self.used_weights = np.hstack([self.used_weights, w])
 
         # reset all metric values
         self.metric_values = dict(cm_stack=self.cm_stack)
+        #self.env.log.debug (f'after stacking {self.cm_stack.shape}')
+
+    def has_weight(self, w):
+        """ Checks whether record already contains weight. """
+        return len(self.used_weights) == 0 or np.min(np.abs(self.used_weights - w)) < 0.0001
 
     def get_metrics(self, *metrics, as_dict=False):
         """ Metrics provided as strings are calculated in order. """

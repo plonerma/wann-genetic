@@ -27,7 +27,7 @@ class FsInterface:
     @classmethod
     def new_path(cls, env):
         name = env['experiment_name']
-        base_path = env['config', 'data_base_path']
+        base_path = env['storage', 'data_base_path']
 
         def possible_paths(name):
             date = str(datetime.now().date())
@@ -42,7 +42,7 @@ class FsInterface:
 
     def __init__(self, path, env):
         self.base_path = path
-        self.gen_digits = env['config', 'gen_digits']
+        self.gen_digits = env['storage', 'gen_digits']
         self.hashfs = HashFS(os.path.join(self.base_path, 'objects'),
                              depth=1, width=2, algorithm='sha256')
 
@@ -57,7 +57,7 @@ class FsInterface:
         fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         self.logger.addHandler(fh)
 
-        if not env['config', 'debug']:
+        if not env['debug']:
             self.logger.setLevel(logging.INFO)
 
     def path(self, *parts):

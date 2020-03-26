@@ -1,4 +1,4 @@
-experiment_name='debugging'
+experiment_name='pytest'
 
 [task]
 name='iris'

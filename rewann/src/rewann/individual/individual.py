@@ -37,9 +37,13 @@ class Individual:
     def evaluate(self, env):
         if self.performance is None:
             self.performance = self.Performance(env.task.n_out, env=env)
-            y_pred = self.apply(env.task.x, func='argmax')
+
+        shared_weight = env['sampling', 'current_weight']
+
+        if self.performance.has_weight(shared_weight):
+            y_pred = self.apply(env.task.x, func='argmax', w=shared_weight)
             self.performance.stack_predictions(
-                y_true=env.task.y_true, y_pred=y_pred, w=env.current_weight)
+                y_true=env.task.y_true, y_pred=y_pred, w=shared_weight)
 
     @property
     def fitness(self):

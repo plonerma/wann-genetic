@@ -1,6 +1,7 @@
 import toml
 import logging
-from tqdm import tqdm
+from tqdm import trange
+import numpy as np
 
 from .tasks import select_task
 
@@ -33,18 +34,39 @@ class Environment:
         params_toml = toml.dumps(self.params)
         self.log.info(f"Running experiments with the following parameters:\n{params_toml}")
 
-        self.current_weight = 1
+    def sample_weight(self):
+        dist = self['sampling', 'distribution'].lower()
+        if dist == 'one':
+            w = 1
+        elif dist == 'uniform':
+            l = self['sampling', 'lower_bound']
+            u = self['sampling', 'upper_bound']
+            assert l is not None and u is not None
+
+            w = np.random.uniform(l, u)
+
+        self['sampling', 'current_weight'] = w
+        return w
 
     def update_params(self, params):
         self.params = nested_update(self.params, params)
 
     def run(self):
+        np.random.seed(self['sampling', 'seed'])
+
         n = self['population', 'num_generations']
-        for gen, pop in tqdm(zip(range(n), evolution(self)), total=n, unit='gen'):
+        generations = evolution(self)
+
+        for gen in trange(n, unit='gen'):
+            w = self.sample_weight()
+            self.log.debug(f'Sampled weight {w}')
+
+            pop = next(generations)
+
             self.log.debug(f'Completed generation {gen}')
             self.log.warning('No sensible population performance metrics yet.')
 
-            if not gen % self['config', 'commit_pop_freq']:
+            if not gen % self['storage', 'commit_pop_freq']:
                 self.fs.commit_generation(pop)
         self.last_population = pop
 
@@ -63,10 +85,10 @@ class Environment:
             for k in keys:
                 d = d.get(k)
                 if d is None:
-                    return None
+                    raise KeyError()
             return d
         else:
-            return self.params.get(keys)
+            return self.params[keys]
 
     def __setitem__(self, keys, value):
         if isinstance(keys, tuple):

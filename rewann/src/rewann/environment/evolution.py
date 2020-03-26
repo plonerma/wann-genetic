@@ -80,9 +80,7 @@ def evolve_population(env, pop, innov):
 
     # Elitism
     for i in range(env['population', 'elite_size']):
-        if i >= len(pop):
-            i %= len(pop)
-        new_pop.append(pop[i])
+        new_pop.append(pop[i % len(pop)])
 
     n_new_children -= env['population', 'elite_size']
 
@@ -98,7 +96,7 @@ def evolve_population(env, pop, innov):
         j = np.argmax(pot_parents_fitness[i, :])
         parent = pot_parents[i, j]
         child = pop[parent].mutation(env, innov)
-        new_pop.append(child)
         assert child is not None
+        new_pop.append(child)
 
     return new_pop

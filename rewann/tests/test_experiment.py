@@ -24,4 +24,9 @@ def test_experiment(tmp_path):
     exp = Environment(params=params, root_logger=root)
     exp.run()
     # Assert that there is at least moderate agreement between predicted and true classifications
-    assert np.average(np.array([i.performance.get_metrics('cohen_kappa') for i in exp.last_population])) > 0.4
+
+    indiv_kappas = np.array([i.performance.get_metrics('avg_cohen_kappa') for i in exp.last_population])
+
+    avg_kappa = np.average(indiv_kappas)
+    max_kappa = np.max(indiv_kappas)
+    assert avg_kappa > 0 and max_kappa > 0.4

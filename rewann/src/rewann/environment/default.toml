@@ -1,17 +1,25 @@
-[task]
-name = 'iris'
-
-[config]
-data_base_path = "data"
 debug = true
-gen_digits=4
-commit_pop_freq=5
+
+[sampling]
+  seed=0
+  distribution='uniform'
+  lower_bound=-2
+  upper_bound=2
+
+
+[task]
+  name = 'iris'
+
+[storage]
+  data_base_path='data'
+  gen_digits=4
+  commit_pop_freq=5
 
 [population]
-num_generations = 20
-size = 64
-elite_size = 10
-tournament_size = 5
+  num_generations = 20
+  size = 64
+  elite_size = 10
+  tournament_size = 5
 
 [mutation]
   [mutation.new_edge]
