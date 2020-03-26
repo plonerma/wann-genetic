@@ -141,7 +141,7 @@ class ClassificationRecord:
 
     def has_weight(self, w):
         """ Checks whether record already contains weight. """
-        return len(self.used_weights) == 0 or np.min(np.abs(self.used_weights - w)) < 0.0001
+        return len(self.used_weights) > 0 and np.min(np.abs(self.used_weights - w)) < 0.0001
 
     def get_metrics(self, *metrics, as_dict=False):
         """ Metrics provided as strings are calculated in order. """

@@ -1,6 +1,5 @@
 import toml
 import logging
-from tqdm import trange
 import numpy as np
 
 from .tasks import select_task
@@ -11,7 +10,7 @@ from .evolution import evolution
 class Environment:
     default_params = default_params
 
-    def __init__(self, params, root_logger=None):
+    def __init__(self, params):
         # set up params based on path or dict and default parameters
         if not isinstance(params, dict):
             params = toml.load(params)
@@ -51,20 +50,31 @@ class Environment:
     def update_params(self, params):
         self.params = nested_update(self.params, params)
 
+    def metrics(self, pop):
+        indiv_kappas = np.array([
+            i.performance.get_metrics('avg_cohen_kappa') for i in pop])
+
+        return dict(
+            avg_kappa=np.average(indiv_kappas),
+            max_kappa=np.max(indiv_kappas)
+        )
+
     def run(self):
         np.random.seed(self['sampling', 'seed'])
 
         n = self['population', 'num_generations']
         generations = evolution(self)
 
-        for gen in trange(n, unit='gen'):
+        for gen in range(n):
             w = self.sample_weight()
             self.log.debug(f'Sampled weight {w}')
 
             pop = next(generations)
 
             self.log.debug(f'Completed generation {gen}')
-            self.log.warning('No sensible population performance metrics yet.')
+
+            m = self.metrics(pop)
+            self.log.info(f"#{gen} avg, max kappa: {m['avg_kappa']:.2}, {m['max_kappa']:.2}")
 
             if not gen % self['storage', 'commit_pop_freq']:
                 self.fs.commit_generation(pop)

@@ -1,8 +1,8 @@
 import numpy as np
 
-from rewann.individual import Individual, Network, Genotype
+from rewann.individual import Individual
 
-sample = Individual(genes=Genotype(
+sample = Individual(genes=Individual.Genotype(
     n_in=3,
     n_out=2,
     nodes=[

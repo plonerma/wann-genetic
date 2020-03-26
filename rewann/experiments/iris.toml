@@ -1,0 +1,13 @@
+experiment_name='iris_v0.1'
+debug=false
+
+[task]
+name='iris'
+
+[population]
+num_generations=400
+size=200
+elite_size = 40
+
+[storage]
+  commit_pop_freq=10

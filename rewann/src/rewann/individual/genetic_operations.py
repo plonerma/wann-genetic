@@ -1,18 +1,14 @@
 import numpy as np
 
 def add_node(ind, env, innov):
-    edges = ind.genes.edges
-    nodes = ind.genes.nodes
-
     # Choose an enabled edge
-    options, = np.where(edges['enabled'])
-    if len(options) == 0:
-        return None
+    options, = np.where(ind.genes.edges['enabled'])
+    if len(options) == 0: return None
 
     edge_to_disable = np.random.choice(options)
 
     # new node with random act func
-    new_node = np.zeros(1, dtype=nodes.dtype)
+    new_node = np.zeros(1, dtype=ind.genes.nodes.dtype)
     new_node['id'] = innov.next_node_id()
     new_node['func'] = np.random.randint(ind.network.n_act_funcs)
 
@@ -20,16 +16,16 @@ def add_node(ind, env, innov):
     new_edges['enabled'] = True
 
     # edge from src to new node
-    new_edges[0]['src'] = edges[edge_to_disable]['src']
+    new_edges[0]['src'] = ind.genes.edges[edge_to_disable]['src']
     new_edges[0]['dest'] = new_node['id']
 
     # edge from new node to old dest
     new_edges[1]['src'] = new_node['id']
-    new_edges[1]['dest'] = edges[edge_to_disable]['dest']
+    new_edges[1]['dest'] = ind.genes.edges[edge_to_disable]['dest']
 
     new_edges['id'] = innov.next_edge_id(), innov.next_edge_id()
 
-    edges = np.append(edges, new_edges)  # creates copy of old edges as well
+    edges = np.append(ind.genes.edges, new_edges)  # creates copy of old edges as well
 
     # disable edge
     edges[edge_to_disable]['enabled'] = False
@@ -52,7 +48,6 @@ def add_edge_layer_agnostic(ind, env, innov):
     See discussion for details: https://github.com/google/brain-tokyo-workshop/issues/18
     """
 
-    genes = ind.genes
     network = ind.network
 
     connectivity_matrix = np.zeros((network.n_nodes, network.n_nodes), dtype=bool)
@@ -78,21 +73,20 @@ def add_edge_layer_agnostic(ind, env, innov):
     # only the edges that are possible are relevant
     src_options, dest_options = np.where(possible_edges)
 
-    if len(src_options) == 0:  # We can't introduce another edge
-        return None
+    if len(src_options) == 0: return None  # We can't introduce another edge
 
     # select one of the edes (with equal probabilities)
     i = np.random.randint(len(src_options))
     src, dest = src_options[i],  dest_options[i]
 
-    new_edge = np.zeros(1, dtype=genes.edges.dtype)
+    new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
     new_edge['src'] = src if src < network.offset else network.nodes['id'][src - network.offset]
     new_edge['dest'] = network.nodes['id'][dest - network.offset]
     new_edge['enabled'] = True
     new_edge['id'] = innov.next_edge_id()
 
     return ind.genes.__class__(
-        edges=np.append(genes.edges, new_edge), nodes=np.copy(genes.nodes),
+        edges=np.append(ind.genes.edges, new_edge), nodes=np.copy(ind.genes.nodes),
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
@@ -107,8 +101,7 @@ def reenable_edge(ind, env, innov):
 
     # Choose an disabled edge
     options, = np.where(edges['enabled'] == False)
-    if len(options) == 0:
-        return None
+    if len(options) == 0: return None # Make sure one exists
 
     edge_to_enable = np.random.choice(options)
 
@@ -124,9 +117,9 @@ def change_activation(ind, env, innov):
 
     selected_node = np.random.randint(len(nodes))
 
+    # choose one of all but the current act funcs
     new_act = np.random.randint(ind.network.n_act_funcs - 1)
-    if new_act >= nodes[selected_node]['func']:
-        new_act += 1
+    if new_act >= nodes[selected_node]['func']: new_act += 1
 
     nodes[selected_node]['func'] = new_act
 
@@ -189,9 +182,3 @@ def path_exists(network, src, dest):
         if visited[dest]:
             return True
     return False
-
-
-def crossover(ind_a, ind_b, env, innov):
-    # just do mutation for now
-    env.log.warning("Cross-over is not supported yet.")
-    return ind_a.mutation(env, innov)

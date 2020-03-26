@@ -1,4 +1,4 @@
-"""Low-level functions for working with unstructured neural networks."""
+"""Low-level functions for translating genes to anns."""
 
 
 import numpy as np
@@ -8,7 +8,7 @@ from itertools import dropwhile
 ## Translating genes to network
 
 class NetworkCyclicException(Exception):
-    """Raised when encountering a which would lead to a cyclic network."""
+    """Raised when encountering a gene which would lead to a cyclic network."""
 
 def weight_matrix_arrangement(n_in, n_out, hidden_node_order):
     indices_in  = np.r_[: n_in + 1] # includes bias

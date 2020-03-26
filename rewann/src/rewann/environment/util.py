@@ -19,9 +19,9 @@ class FsInterface:
 
     @classmethod
     def for_env(cls, env):
-        if env['experiment_path'] is not None:
+        try:
             return FsInterface(env['experiment_path'], env)
-        else:
+        except KeyError:
             return FsInterface.new_path(env)
 
     @classmethod
