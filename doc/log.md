@@ -38,4 +38,4 @@ Test the new approach vs. the original layer-based one!
 
 date: 2020-03-34
 
-Implemented tests, simple experiments working.
+Implemented tests, simple environments working.
