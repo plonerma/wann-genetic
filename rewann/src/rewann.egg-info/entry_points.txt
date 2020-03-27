@@ -1,3 +1,0 @@
-[console_scripts]
-run_experiment = rewann.cli:run_experiment
-
