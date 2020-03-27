@@ -4,7 +4,7 @@ from io import StringIO
 import os
 from datetime import datetime
 import pandas as pd
-import collections.abc
+from collections.abc import Mapping
 
 import logging
 
@@ -13,21 +13,13 @@ this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
 default_params = toml.load(default_params_path)
 
-class FsInterface:
-    """Provide interface for storing models on the file system."""
 
-    @classmethod
-    def for_env(cls, env):
-        if not 'experiment_path' in env:
-            env['experiment_path'] = FsInterface.new_path(env)
 
-        return FsInterface(env)
 
-    @classmethod
-    def new_path(cls, env):
+def derive_path(env):
+    if not 'experiment_path' in env:
         name = env['experiment_name']
         base_path = env['storage', 'data_base_path']
-
         def possible_paths(name):
             date = str(datetime.now().date())
             for i in count():
@@ -36,82 +28,93 @@ class FsInterface:
                 else:
                     yield f'{date}_{name}_{i}'
 
-        path = next(dropwhile(os.path.exists, possible_paths(name)))
-        return path
+        env['experiment_path'] = next(dropwhile(os.path.exists, possible_paths(name)))
+    return env['experiment_path']
 
-    @property
-    def log_path(self):
-        return self.path(self.env['storage', 'log_filename'])
+def env_path(env, *parts):
+    p = os.path.join(env['experiment_path'], *parts)
+    dir = os.path.dirname(p)
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    return p
 
-    def __init__(self, env):
-        self.env = env
-        self.base_path = env['experiment_path']
-        self.gen_digits = len(str(env['population', 'num_generations']))
+def gen_path(env, i):
+    digits = len(str(env['population', 'num_generations']))
+    fstr = f'{{:0{digits}d}}.json'
+    return env_path(env, 'gen', fstr.format(i))
 
-        if not 'is_report' in env or not env['is_report']:
-            logging.info (f"Check log ('{self.log_path}') for details.")
+def dump_pop(env, gen, population):
+    with open(gen_path(env, gen), 'w') as f:
+        json.dump([i.serialize() for i in population], f)
 
-            self.logger = logging.getLogger('experiment')
-            self.logger.setLevel(logging.DEBUG)
+def load_pop(env, gen):
+    with open(gen_path(gen), 'r') as f:
+        pop = json.load(f)
+        return [env.Individual.deserialize(i) for i in pop]
 
-            fh = logging.FileHandler(self.log_path)
-            fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-            self.logger.addHandler(fh)
+def dump_metrics(env, metrics):
+    metrics.to_json(env_path(env, 'metrics.json'))
 
-            if not env['debug']:
-                self.logger.setLevel(logging.INFO)
+def load_metrics(self):
+    print (env_path(env, 'metrics.json'))
+    return pd.read_json(env_path(env, 'metrics.json'))
 
-            with open(self.path('params.toml'), 'w') as f:
-                params = dict(env.params)
-                params['is_report'] = True # mark stored params as part of a report
-                toml.dump(params, f)
+def existing_populations(env):
+    populations = list()
+    for dir, _, files in os.walk(env.path('gen')):
+        for f in files:
+            gen, _ = f.split('.')
+            populations.append(int(gen))
+    return sorted(populations)
 
-            # log used parameters
-            params_toml = toml.dumps(env.params)
-            self.logger.info(f"Running experiments with the following parameters:\n{params_toml}")
+def setup_logging(env):
+    log_path = env_path(env, env['storage', 'log_filename'])
+    logging.info (f"Check log ('{log_path}') for details.")
 
-    def path(self, *parts):
-        p = os.path.join(self.base_path, *parts)
-        dir = os.path.dirname(p)
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-        return p
+    env.log = logging.getLogger('experiment')
+    env.log.setLevel(logging.DEBUG)
 
-    def gen_path(self, i):
-        assert i < 10**self.gen_digits
-        fstr = f'{{:0{self.gen_digits}d}}.json'
-        return self.path('gen', fstr.format(i))
+    fh = logging.FileHandler(log_path)
+    fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    env.log.addHandler(fh)
 
-    def dump_population(self, gen, population):
-        with open(self.gen_path(gen), 'w') as f:
-            json.dump([i.serialize() for i in population], f)
+    if not env['debug']:
+        env.log.setLevel(logging.INFO)
 
-    def load_population(self, gen):
-        with open(gen_path(gen), 'r') as f:
-            pop = json.load(f)
-            return [self.env.Individual.deserialize(i) for i in pop]
+    with open(env_path(env, 'params.toml'), 'w') as f:
+        params = dict(env.params)
+        params['is_report'] = True # mark stored params as part of a report
+        toml.dump(params, f)
 
-    def dump_metrics(self, metrics):
-        metrics.to_json(self.path('metrics.json'))
+    # log used parameters
+    params_toml = toml.dumps(env.params)
+    env.log.info(f"Running experiments with the following parameters:\n{params_toml}")
 
-    def load_metrics(self):
-        print (self.path('metrics.json'))
-        return pd.read_json(self.path('metrics.json'))
+def setup_params(env, params):
+    # set up params based on path or dict and default parameters
+    if not isinstance(params, dict):
+        params_path = params
+        if os.path.isdir(params_path):
+            params_path = os.path.join(params_path, 'params.toml')
+        assert os.path.isfile(params_path)
+        params = toml.load(params_path)
 
-    def get_stored_populations(self):
-        populations = list()
+        if 'is_report' in params and params['is_report']:
+            params['experiment_path'] = os.path.dirname(params_path)
 
-        for dir, _, files in os.walk(self.path('gen')):
-            for f in files:
-                gen, _ = f.split('.')
-                populations.append(int(gen))
-        return sorted(populations)
+    env.params = nested_update(dict(env.default_params), params)
 
+    # ensure experiment name is defined
+    if env['experiment_name'] is None:
+        env['experiment_name'] = '{}_run'.format(task_name)
 
 def nested_update(d, u):
-    """https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth#3233356"""
+    """ Update nested parameters.
+
+    Source:
+    https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth#3233356"""
     for k, v in u.items():
-        if isinstance(v, collections.abc.Mapping):
+        if isinstance(v, Mapping):
             d[k] = nested_update(d.get(k, {}), v)
         else:
             d[k] = v

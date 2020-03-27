@@ -6,39 +6,22 @@ import os
 
 from .tasks import select_task
 
-from .util import FsInterface, default_params, nested_update
 from .evolution import evolution
 
 class Environment:
-    default_params = default_params
-
     from ..individual import Individual
-
+    from .util import (default_params, setup_params, setup_logging,
+                       dump_pop, dump_metrics, load_pop, load_metrics)
     def __init__(self, params):
-        # set up params based on path or dict and default parameters
-        if not isinstance(params, dict):
-            params_path = params
-            if os.path.isdir(params_path):
-                params_path = os.path.join(params_path, 'params.toml')
-            assert os.path.isfile(params_path)
-            params = toml.load(params_path)
-
-            if 'is_report' in params and params['is_report']:
-                params['experiment_path'] = os.path.dirname(params_path)
-
-        self.params = dict(self.default_params)
-        self.update_params(params)
+        self.setup_params(params)
 
         # choose task
         task_name = self['task', 'name']
         self.task = select_task(task_name)
 
-        # ensure experiment name is defined
-        if self['experiment_name'] is None:
-            self['experiment_name'] = '{}_run'.format(task_name)
-
-        # init fs interface
-        self.fs = FsInterface.for_env(self)
+        # if this is an experiment to be run, setup logger etc.
+        if not 'is_report' in self or not self['is_report']:
+            self.setup_logging()
 
     def sample_weight(self):
         dist = self['sampling', 'distribution'].lower()
@@ -53,9 +36,6 @@ class Environment:
 
         self['sampling', 'current_weight'] = w
         return w
-
-    def update_params(self, params):
-        self.params = nested_update(self.params, params)
 
     def get_metrics(self, pop):
         indiv_kappas = np.array([
@@ -111,20 +91,11 @@ class Environment:
             metrics.append(gen_metrics)
 
             if gen % self['storage', 'commit_population_freq'] == 0:
-                self.fs.dump_population(gen, pop)
+                self.dump_pop(gen, pop)
+                self.dump_metrics(pd.DataFrame(data=metrics))
 
-        self.metrics = pd.DataFrame(data=metrics)
-        self.fs.dump_metrics(self.metrics)
-
+        self.dump_metrics(pd.DataFrame(data=metrics))
         self.last_population = pop
-
-    @property
-    def log(self):
-        return self.fs.logger
-
-    @property
-    def path(self):
-        return self.fs.base_path
 
     # magic methods for direct access of parameters
     def __getitem__(self, keys):
