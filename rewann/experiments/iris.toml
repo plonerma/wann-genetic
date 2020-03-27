@@ -5,9 +5,6 @@ debug=false
 name='iris'
 
 [population]
-num_generations=400
-size=200
-elite_size = 40
-
-[storage]
-  commit_pop_freq=10
+num_generations=200
+size=100
+elite_size = 20

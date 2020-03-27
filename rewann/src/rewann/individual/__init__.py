@@ -8,18 +8,18 @@ class Individual:
 
     genes = None
     network = None
-    performance = None
+    record = None
 
     from .genes import Genotype
     from .network import Network
-    from .metrics import ClassificationRecord as Performance
+    from .metrics import ClassificationRecord as Record
 
     from .genetic_operations import mutation
 
-    def __init__(self, genes=None, network=None, performance=None):
+    def __init__(self, genes=None, network=None, record=None):
         self.genes = genes
         self.network = network
-        self.performance = performance
+        self.record = record
 
     # Translations
 
@@ -36,20 +36,20 @@ class Individual:
 
     def evaluate(self, env):
         self.express()
-        if self.performance is None:
-            self.performance = self.Performance(env.task.n_out, env=env)
+        if self.record is None:
+            self.record = self.Record(env.task.n_out, env=env)
 
         shared_weight = env['sampling', 'current_weight']
 
-        if not self.performance.has_weight(shared_weight):
-            self.performance.stack_predictions(
+        if not self.record.has_weight(shared_weight):
+            self.record.stack_predictions(
                 y_true=env.task.y_true,
                 y_pred=self.apply(env.task.x, func='argmax', w=shared_weight),
                 w=shared_weight)
 
     @property
     def fitness(self):
-        return self.performance.get_metrics('avg_accuracy')
+        return self.record.get_metrics('avg_accuracy')
 
     @classmethod
     def base(cls, *args, **kwargs):
@@ -58,10 +58,14 @@ class Individual:
     # Serialization
 
     def serialize(self):
-        return self.genes.serialize()
+        d = dict(genes=self.genes.serialize())
+        if self.record:
+            d['record']=self.record.serialize()
+        return d
 
     @classmethod
     def deserialize(cls, d : dict):
-        return cls(
-            genes=cls.Genotype.deserialize(d),
-        )
+        d = dict(genes=cls.Genotype.deserialize(d['genes']))
+        if 'record' in d:
+            d['record'] = cls.Record.deserialize(d['record'])
+        return cls(**d)

@@ -1,10 +1,9 @@
-import toml
+import json, toml
 from itertools import count, dropwhile
-from hashfs import HashFS
 from io import StringIO
 import os
 from datetime import datetime
-
+import pandas as pd
 import collections.abc
 
 import logging
@@ -19,10 +18,10 @@ class FsInterface:
 
     @classmethod
     def for_env(cls, env):
-        try:
-            return FsInterface(env['experiment_path'], env)
-        except KeyError:
-            return FsInterface.new_path(env)
+        if not 'experiment_path' in env:
+            env['experiment_path'] = FsInterface.new_path(env)
+
+        return FsInterface(env)
 
     @classmethod
     def new_path(cls, env):
@@ -38,27 +37,38 @@ class FsInterface:
                     yield f'{date}_{name}_{i}'
 
         path = next(dropwhile(os.path.exists, possible_paths(name)))
-        return cls(path, env)
+        return path
 
-    def __init__(self, path, env):
-        self.base_path = path
-        self.gen_digits = env['storage', 'gen_digits']
-        self.hashfs = HashFS(os.path.join(self.base_path, 'objects'),
-                             depth=1, width=2, algorithm='sha256')
+    @property
+    def log_path(self):
+        return self.path(self.env['storage', 'log_filename'])
 
-        log_path = self.path('execution.log')
-        logging.info (f"Check log ('{log_path}') for details.")
+    def __init__(self, env):
+        self.env = env
+        self.base_path = env['experiment_path']
+        self.gen_digits = len(str(env['population', 'num_generations']))
 
-        self.logger = logging.getLogger('experiment')
+        if not 'is_report' in env or not env['is_report']:
+            logging.info (f"Check log ('{self.log_path}') for details.")
 
-        self.logger.setLevel(logging.DEBUG)
+            self.logger = logging.getLogger('experiment')
+            self.logger.setLevel(logging.DEBUG)
 
-        fh = logging.FileHandler(log_path)
-        fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-        self.logger.addHandler(fh)
+            fh = logging.FileHandler(self.log_path)
+            fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            self.logger.addHandler(fh)
 
-        if not env['debug']:
-            self.logger.setLevel(logging.INFO)
+            if not env['debug']:
+                self.logger.setLevel(logging.INFO)
+
+            with open(self.path('params.toml'), 'w') as f:
+                params = dict(env.params)
+                params['is_report'] = True # mark stored params as part of a report
+                toml.dump(params, f)
+
+            # log used parameters
+            params_toml = toml.dumps(env.params)
+            self.logger.info(f"Running experiments with the following parameters:\n{params_toml}")
 
     def path(self, *parts):
         p = os.path.join(self.base_path, *parts)
@@ -67,49 +77,35 @@ class FsInterface:
             os.makedirs(dir)
         return p
 
-    def put(self, data, path=None):
-        if path is not None:
-            with open(path, 'w') as f:
-                toml.dump(data, f)
-            return path
-        else:
-            stream = StringIO()
-            toml.dump(data, stream)
-            return self.hashfs.put(stream).id
-
-    def get(self, path):
-        fileio = fs.open(address.abspath)
-        return toml.load(fileio)
-
     def gen_path(self, i):
         assert i < 10**self.gen_digits
-        fstr = f'{{:0{self.gen_digits}d}}.toml'
+        fstr = f'{{:0{self.gen_digits}d}}.json'
         return self.path('gen', fstr.format(i))
 
-    def commit_generation(self, population):
-        d = dict()
+    def dump_population(self, gen, population):
+        with open(self.gen_path(gen), 'w') as f:
+            json.dump([i.serialize() for i in population], f)
 
-        #if gen.performance:
-        #    d['performance'] = gen.performance
+    def load_population(self, gen):
+        with open(gen_path(gen), 'r') as f:
+            pop = json.load(f)
+            return [self.env.Individual.deserialize(i) for i in pop]
 
-        d['individuals'] = list()
-        for i in population:
-            h = self.put(i.serialize())
-            d['individuals'].append(h)
+    def dump_metrics(self, metrics):
+        metrics.to_json(self.path('metrics.json'))
 
-        return self.put(
-            # save generation data there
-            data=d,
-            # find first free path
-            path=next(dropwhile(os.path.isfile, (self.gen_path(i) for i in count())))
-        )
+    def load_metrics(self):
+        print (self.path('metrics.json'))
+        return pd.read_json(self.path('metrics.json'))
 
-    def retrieve_generation(self, i=None, path=None):
-        if path is None:
-            assert i is not None
-            path = self.gen_path(i)
-        d = self.get(path)
-        return Population.deserialize(d)
+    def get_stored_populations(self):
+        populations = list()
+
+        for dir, _, files in os.walk(self.path('gen')):
+            for f in files:
+                gen, _ = f.split('.')
+                populations.append(int(gen))
+        return sorted(populations)
 
 
 def nested_update(d, u):

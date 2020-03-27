@@ -37,7 +37,9 @@ def evolution(env, ind_class=Individual):
     n_in, n_out = env.task.n_in, env.task.n_out
 
     population = [ind_class.base(n_in, n_out)]
-    evaluate_population(env, population)
+
+    for ind in population:
+        ind.evaluate(env)
 
     # first hidden id after ins, bias, & outs
     h = n_in + n_out + 1
@@ -51,21 +53,13 @@ def evolution(env, ind_class=Individual):
         population = evolve_population(env, population, innov)
         #env.log.debug('Evolved population.')
 
-        evaluate_population(env, population)
-        #env.log.debug('Evaluated population.')
+        for ind in population:
+            ind.evaluate(env)
 
         # yield next generation
         yield population
 
-def evaluate_population(env, population):
-    for ind in population:
-        ind.evaluate(env)
-
 def evolve_population(env, pop, innov):
-    #env.log.debug(f"Evolving population.")
-    # all individuals need to be evaluated to evolve to next generation
-
-    assert all(i.performance is not None for i in pop)
 
     new_pop = list()
 

@@ -1,21 +1,21 @@
 import sys
 import numpy as np
 
-from . import Environment
+from .. import Environment
+
 
 def run_experiment():
     args = sys.argv[1:]
     if len(args) != 1:
-        print ("usage: run_experiment <path>")
+        print ("usage: run_experiment 'path'")
         return
 
     path, = args
 
-
     exp = Environment(params=path)
     exp.run()
 
-    indiv_kappas = np.array([i.performance.get_metrics('avg_cohen_kappa') for i in exp.last_population])
+    indiv_kappas = np.array([i.record.get_metrics('avg_cohen_kappa') for i in exp.last_population])
     exp.log.info(indiv_kappas)
 
     avg_kappa = np.average(indiv_kappas)

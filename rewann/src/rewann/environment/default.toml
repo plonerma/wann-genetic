@@ -12,8 +12,8 @@ debug = true
 
 [storage]
   data_base_path='data'
-  gen_digits=4
-  commit_pop_freq=5
+  commit_population_freq=10
+  log_filename='execution.log'
 
 [population]
   num_generations = 20

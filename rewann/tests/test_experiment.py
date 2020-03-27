@@ -11,7 +11,7 @@ def test_experiment(tmp_path):
     exp.run()
     # Assert that there is at least moderate agreement between predicted and true classifications
 
-    indiv_kappas = np.array([i.performance.get_metrics('avg_cohen_kappa') for i in exp.last_population])
+    indiv_kappas = np.array([i.record.get_metrics('avg_cohen_kappa') for i in exp.last_population])
     exp.log.info(indiv_kappas)
 
     avg_kappa = np.average(indiv_kappas)
