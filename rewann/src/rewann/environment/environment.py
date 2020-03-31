@@ -10,8 +10,9 @@ from .evolution import evolution
 
 class Environment:
     from ..individual import Individual
-    from .util import (default_params, setup_params, setup_logging,
+    from .fs_util import (default_params, setup_params, setup_logging,
                        dump_pop, dump_metrics, load_pop, load_metrics)
+
     def __init__(self, params):
         self.setup_params(params)
 
@@ -37,38 +38,6 @@ class Environment:
         self['sampling', 'current_weight'] = w
         return w
 
-    def get_metrics(self, pop):
-        indiv_kappas = np.array([
-            i.record.get_metrics('avg_cohen_kappa') for i in pop])
-
-        indiv_accs = np.array([
-            i.record.get_metrics('avg_accuracy') for i in pop])
-
-        indiv_n_hidden_nodes = np.array([i.network.n_hidden for i in pop])
-
-        indiv_n_edges = np.array([len(i.genes.edges) for i in pop])
-
-        return dict(
-            avg_kappa=np.average(indiv_kappas),
-            max_kappa=np.max(indiv_kappas),
-            min_kappa=np.min(indiv_kappas),
-
-            avg_accuracy=np.average(indiv_accs),
-            max_accuracy=np.max(indiv_accs),
-            min_accuracy=np.min(indiv_accs),
-
-            avg_n_hidden_nodes=np.average(indiv_n_hidden_nodes),
-            max_n_hidden_nodes=np.max(indiv_n_hidden_nodes),
-            min_n_hidden_nodes=np.min(indiv_n_hidden_nodes),
-
-            avg_n_edges=np.average(indiv_n_edges),
-            max_n_edges=np.max(indiv_n_edges),
-            min_n_edges=np.min(indiv_n_edges),
-
-            num_unique_individuals=len(set(pop)),
-            num_individuals=len(pop),
-        )
-
     def run(self):
         np.random.seed(self['sampling', 'seed'])
 
@@ -85,8 +54,8 @@ class Environment:
 
             self.log.debug(f'Completed generation {gen}')
 
-            gen_metrics = self.get_metrics(pop)
-            self.log.info(f"#{gen} avg, max kappa: {gen_metrics['avg_kappa']:.2}, {gen_metrics['max_kappa']:.2}")
+            gen_metrics = self.generation_metrics(pop)
+            self.log.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:mean:kappa']:.2}, {gen_metrics['MAX:max:kappa']:.2}")
 
             metrics.append(gen_metrics)
 
@@ -96,6 +65,27 @@ class Environment:
 
         self.dump_metrics(pd.DataFrame(data=metrics))
         self.last_population = pop
+
+    def generation_metrics(self, population):
+
+        metric_names = ('n_hidden', 'n_edges', 'n_evaluations',
+                        'mean:kappa', 'min:kappa', 'max:kappa',
+                        'mean:accuracy', 'min:accuracy', 'max:accuracy')
+        df = pd.DataFrame(data=[
+            ind.metrics(*metric_names) for ind in population
+        ])
+
+        metrics = dict(
+            num_unique_individuals=len(set(population)),
+            num_individuals=len(population),
+        )
+
+        for name, values in df.items():
+            metrics[f'MAX:{name}'] = values.max()
+            metrics[f'MIN:{name}'] = values.min()
+            metrics[f'MEAN:{name}'] = values.mean()
+
+        return metrics
 
     # magic methods for direct access of parameters
     def __getitem__(self, keys):

@@ -1,4 +1,5 @@
 import numpy as np
+import json
 
 from rewann.individual import Individual
 
@@ -29,8 +30,8 @@ sample = Individual(genes=Individual.Genotype(
 ))
 
 def test_serialization():
-    s = sample.serialize()
-    x = Individual.deserialize(s)
+    s = json.dumps(sample.serialize())
+    x = Individual.deserialize(json.loads(s))
 
     assert sample.genes == x.genes
 

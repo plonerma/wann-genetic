@@ -14,8 +14,6 @@ default_params_path = os.path.join(this_directory, 'default.toml')
 default_params = toml.load(default_params_path)
 
 
-
-
 def derive_path(env):
     if not 'experiment_path' in env:
         name = env['experiment_name']
@@ -55,8 +53,7 @@ def load_pop(env, gen):
 def dump_metrics(env, metrics):
     metrics.to_json(env_path(env, 'metrics.json'))
 
-def load_metrics(self):
-    print (env_path(env, 'metrics.json'))
+def load_metrics(env):
     return pd.read_json(env_path(env, 'metrics.json'))
 
 def existing_populations(env):
@@ -103,6 +100,8 @@ def setup_params(env, params):
             params['experiment_path'] = os.path.dirname(params_path)
 
     env.params = nested_update(dict(env.default_params), params)
+
+    derive_path(env)
 
     # ensure experiment name is defined
     if env['experiment_name'] is None:

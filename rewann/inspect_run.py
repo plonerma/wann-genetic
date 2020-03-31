@@ -18,6 +18,7 @@ if len(args) > 0:
 
 elif len(args) == 0:
     base_path, dirs, _ = next(os.walk('data'))
+    dirs = sorted(dirs)
     path = os.path.join(base_path, st.sidebar.selectbox('Path', options=dirs, index=(len(dirs)-1)))
 
 
@@ -39,9 +40,11 @@ elif exp_view == 'params':
 elif exp_view == 'metrics':
     "# Generations"
 
-    metrics = env.fs.load_metrics()
-
-    st.line_chart(data=metrics[['avg_accuracy', 'max_accuracy']])
+    metrics = env.load_metrics()
+    st.line_chart(data=metrics[['MEAN:mean:accuracy', 'MAX:max:accuracy', 'MIN:min:accuracy']])
+    st.line_chart(data=metrics[['MEAN:mean:kappa', 'MAX:max:kappa', 'MIN:min:kappa']])
+    st.line_chart(data=metrics[['MEAN:n_hidden', 'MAX:n_hidden', 'MIN:n_hidden']])
+    st.line_chart(data=metrics[['MEAN:n_edges', 'MAX:n_edges', 'MIN:n_edges']])
 
     st.line_chart(data=metrics[['num_unique_individuals', 'num_individuals']])
 

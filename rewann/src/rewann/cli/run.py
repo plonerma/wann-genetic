@@ -15,10 +15,4 @@ def run_experiment():
     exp = Environment(params=path)
     exp.run()
 
-    indiv_kappas = np.array([i.record.get_metrics('avg_cohen_kappa') for i in exp.last_population])
-    exp.log.info(indiv_kappas)
-
-    avg_kappa = np.average(indiv_kappas)
-    exp.log.info(f'Average kappa score: {avg_kappa}')
-    max_kappa = np.max(indiv_kappas)
-    exp.log.info(f'Max kappa score: {max_kappa}')
+    exp.log.info(f'Completed excution.')

@@ -11,11 +11,10 @@ def test_experiment(tmp_path):
     exp.run()
     # Assert that there is at least moderate agreement between predicted and true classifications
 
-    indiv_kappas = np.array([i.record.get_metrics('avg_cohen_kappa') for i in exp.last_population])
-    exp.log.info(indiv_kappas)
+    metrics = exp.generation_metrics(exp.last_population)
+    max_kappa = metrics['MAX:max:kappa']
+    mean_kappa = metrics['MEAN:mean:kappa']
 
-    avg_kappa = np.average(indiv_kappas)
-    exp.log.info(f'Average kappa score: {avg_kappa}')
-    max_kappa = np.max(indiv_kappas)
+    exp.log.info(f'Mean kappa score: {mean_kappa}')
     exp.log.info(f'Max kappa score: {max_kappa}')
-    assert avg_kappa > 0.1 and max_kappa > 0.4
+    assert mean_kappa > 0 and max_kappa > 0.4
