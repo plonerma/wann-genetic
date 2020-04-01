@@ -98,6 +98,7 @@ def add_edge(ind, env, innov):
 
 def reenable_edge(ind, env, innov):
     edges = np.copy(ind.genes.edges)
+    nodes = np.copy(ind.genes.nodes)
 
     # Choose an disabled edge
     options, = np.where(edges['enabled'] == False)
@@ -108,12 +109,13 @@ def reenable_edge(ind, env, innov):
     edges[edge_to_enable]['enabled'] = True
 
     return ind.genes.__class__(
-        edges=edges, nodes=np.copy(ind.genes.nodes),
+        edges=edges, nodes=nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
 def change_activation(ind, env, innov):
     nodes = np.copy(ind.genes.nodes)
+    edges = np.copy(ind.genes.edges)
 
     selected_node = np.random.randint(len(nodes))
 
@@ -124,7 +126,7 @@ def change_activation(ind, env, innov):
     nodes[selected_node]['func'] = new_act
 
     return ind.genes.__class__(
-        edges=np.copy(ind.genes.edges), nodes=nodes,
+        edges=edges, nodes=nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 

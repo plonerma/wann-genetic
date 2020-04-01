@@ -36,10 +36,11 @@ def evolution(env, ind_class=Individual):
     # initial population
     n_in, n_out = env.task.n_in, env.task.n_out
 
-    population = [ind_class.base(n_in, n_out)]
+    base_ind = ind_class.base(n_in, n_out)
 
-    for ind in population:
-        ind.evaluate(env)
+    population = [base_ind]*env['population', 'size']
+
+    base_ind.evaluate(env)
 
     # first hidden id after ins, bias, & outs
     h = n_in + n_out + 1
@@ -53,7 +54,9 @@ def evolution(env, ind_class=Individual):
         population = evolve_population(env, population, innov)
         #env.log.debug('Evolved population.')
 
-        for ind in population:
+        # make sure to only evaluate once, even if an individual happens to
+        # appear mutiple times
+        for ind in set(population):
             ind.evaluate(env)
 
         # yield next generation
@@ -70,26 +73,28 @@ def evolve_population(env, pop, innov):
 
     rank = np.argsort(-fitness)
 
-    n_new_children = env['population', 'size']
+    pop_size = env['population', 'size']
+    elite_size = env['population', 'elite_size']
+    tournament_size = env['population', 'tournament_size']
+    num_tournaments = pop_size - elite_size
+
 
     # Elitism
-    for i in range(env['population', 'elite_size']):
-        new_pop.append(pop[i % len(pop)])
-
-    n_new_children -= env['population', 'elite_size']
+    for i in range(elite_size):
+        new_pop.append(pop[rank[i % len(pop)]])
 
     # Tournament selection
-    pot_parents = np.random.randint(len(pop),
-        size=(n_new_children, env['population', 'tournament_size']))
+    tournament_participants = np.random.randint(len(pop),
+        size=(num_tournaments, tournament_size))
 
-    pot_parents_fitness = fitness[pot_parents]
+    tournament_scores = fitness[tournament_participants]
 
     # Breed child population
-    for i in range(n_new_children):
-        # Mutation only: take only highest fit parent
-        j = np.argmax(pot_parents_fitness[i, :])
-        parent = pot_parents[i, j]
-        child = pop[parent].mutation(env, innov)
+    for i in range(num_tournaments):
+        # Mutation only: take only fittest parent
+        j = np.argmax(tournament_scores[i, :])
+        winner = tournament_participants[i, j]
+        child = pop[winner].mutation(env, innov)
         assert child is not None
         new_pop.append(child)
 
