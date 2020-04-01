@@ -29,10 +29,12 @@ class Individual:
 
     from .genetic_operations import mutation
 
-    def __init__(self, genes=None, network=None, prediction_records=None):
+    def __init__(self, genes=None, network=None, prediction_records=None, id=None, birth=None):
         self.genes = genes
         self.network = network
         self.prediction_records = prediction_records
+        self.id = id
+        self.birth = birth
 
     # Translations
 
@@ -77,7 +79,7 @@ class Individual:
         return f
 
     @expressed
-    def metrics(self, *metrics):
+    def metrics(self, *metrics, current_gen=None):
         if not metrics:
             metrics = ('max:kappa', 'mean:kappa', 'min:kappa',
                        'n_hidden', 'n_edges')
@@ -87,8 +89,10 @@ class Individual:
         ind_metrics = dict(
             n_hidden=self.network.n_hidden,
             n_edges=len(self.genes.edges),
-            n_evaluations=len(self.prediction_records[0])
+            n_evaluations=len(self.prediction_records[0]),
         )
+        if current_gen is not None:
+            ind_metrics['age'] = current_gen - self.birth
         m = dict()
         for k, v in ind_metrics.items():
             if k in metrics:
@@ -109,13 +113,15 @@ class Individual:
 
     @classmethod
     def base(cls, *args, **kwargs):
-        return cls(genes=cls.Genotype.base(*args, **kwargs))
+        return cls(genes=cls.Genotype.base(*args, **kwargs), birth=0, id=0)
 
     # Serialization
 
-    def serialize(self):
-        d = dict(genes=self.genes.serialize())
-        if self.prediction_records:
+    def serialize(self, include_prediction_records=False):
+        d = dict(
+            genes=self.genes.serialize(),
+            birth=self.birth, id=self.id)
+        if include_prediction_records and self.prediction_records:
             cm_list, weight_list = data=self.prediction_records
             d['record'] = dict(
                 n_classes=cm_list[0].shape[0],

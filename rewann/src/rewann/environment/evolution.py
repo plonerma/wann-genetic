@@ -16,7 +16,12 @@ class InnovationRecord(set):
         self = cls()
         self.node_counter = count(start_id)
         self.edge_counter = count(0)
+        self.individual_counter = count(0)
+        self.generation = 0
         return self
+
+    def next_ind_id(self):
+        return next(self.individual_counter)
 
     def next_edge_id(self):
         return next(self.edge_counter)
@@ -50,6 +55,8 @@ def evolution(env, ind_class=Individual):
     env.log.debug('Created initial population.')
 
     while True:
+        innov.generation += 1
+
         # evolve & evaluate
         population = evolve_population(env, population, innov)
         #env.log.debug('Evolved population.')
@@ -60,7 +67,7 @@ def evolution(env, ind_class=Individual):
             ind.evaluate(env)
 
         # yield next generation
-        yield population
+        yield innov.generation, population
 
 def evolve_population(env, pop, innov):
 

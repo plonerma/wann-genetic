@@ -36,19 +36,34 @@ def env_path(env, *parts):
         os.makedirs(dir)
     return p
 
+def ind_path(env, i):
+    # maximum number of digits needed
+    digits = len(str(env['population', 'num_generations'] * env['population', 'size']))
+    fstr = f'{{:0{digits}d}}.json'
+    return env_path(env, 'individuals', fstr.format(i))
+
 def gen_path(env, i):
     digits = len(str(env['population', 'num_generations']))
     fstr = f'{{:0{digits}d}}.json'
     return env_path(env, 'gen', fstr.format(i))
 
+def dump_ind(env, ind):
+    with open(ind_path(env, ind.id), 'w') as f:
+        json.dump(ind.serialize(include_prediction_records=env['storage']['include_prediction_records']), f)
+    return ind.id
+
+def load_ind(env, i):
+    with open(ind_path(env, ind.id), 'r') as f:
+        return env.Individual.deserialize(json.load(f))
+
 def dump_pop(env, gen, population):
     with open(gen_path(env, gen), 'w') as f:
-        json.dump([i.serialize() for i in population], f)
+        json.dump([dump_ind(env, i) for i in population], f)
 
 def load_pop(env, gen):
-    with open(gen_path(gen), 'r') as f:
+    with open(gen_path(env, gen), 'r') as f:
         pop = json.load(f)
-        return [env.Individual.deserialize(i) for i in pop]
+        return [load_ind(env, i) for i in pop]
 
 def dump_metrics(env, metrics):
     metrics.to_json(env_path(env, 'metrics.json'))

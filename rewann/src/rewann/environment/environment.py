@@ -46,15 +46,16 @@ class Environment:
 
         metrics = list()
 
-        for gen in range(n):
+        for _ in range(n):
             w = self.sample_weight()
             self.log.debug(f'Sampled weight {w}')
 
-            pop = next(generations)
+            gen, pop = next(generations)
 
             self.log.debug(f'Completed generation {gen}')
 
-            gen_metrics = self.generation_metrics(pop)
+            gen_metrics = self.generation_metrics(gen=gen, population=pop)
+
             self.log.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:mean:kappa']:.2}, {gen_metrics['MAX:max:kappa']:.2}")
 
             metrics.append(gen_metrics)
@@ -66,13 +67,15 @@ class Environment:
         self.dump_metrics(pd.DataFrame(data=metrics))
         self.last_population = pop
 
-    def generation_metrics(self, population):
+    def generation_metrics(self, population, gen=None):
+        if gen is None:
+            gen = self['population', 'num_generations']
 
-        metric_names = ('n_hidden', 'n_edges', 'n_evaluations',
+        metric_names = ('n_hidden', 'n_edges', 'n_evaluations', 'age',
                         'mean:kappa', 'min:kappa', 'max:kappa', 'median:kappa',
                         'mean:accuracy', 'min:accuracy', 'max:accuracy', 'median:accuracy')
         df = pd.DataFrame(data=[
-            ind.metrics(*metric_names) for ind in population
+            ind.metrics(*metric_names, current_gen=gen) for ind in population
         ])
 
         metrics = dict(
