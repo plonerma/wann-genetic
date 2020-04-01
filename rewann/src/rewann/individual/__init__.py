@@ -66,13 +66,14 @@ class Individual:
 
         y_preds = self.apply(env.task.x, func='argmax', weights=weights)
 
-        for y_pred, weight in zip(y_preds, weights):
+        #for y_pred, weight in zip(y_preds, weights):
 
-            cm = confusion_matrix(env.task.y_true, y_pred,
-                                  labels=list(range(env.task.n_out)),
-                                  normalize='all')
-            cm_list.append(cm)
-            weight_list.append(weight)
+        cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
+                              y_preds.flatten(),
+                              labels=list(range(env.task.n_out)),
+                              normalize='all')
+        cm_list.append(cm)
+        weight_list.append(weights)
 
         self.prediction_records = cm_list, weight_list
 
