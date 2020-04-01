@@ -49,7 +49,7 @@ class Individual:
         return self.network.apply(*args, **keargs)
 
     @expressed
-    def evaluate(self, env):
+    def evaluate(self, env, average_over_sampled_weights=True):
         if self.prediction_records is None:
             # stack for storing confusion matrices
             cm_list = list()
@@ -66,14 +66,23 @@ class Individual:
 
         y_preds = self.apply(env.task.x, func='argmax', weights=weights)
 
-        #for y_pred, weight in zip(y_preds, weights):
 
-        cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
-                              y_preds.flatten(),
-                              labels=list(range(env.task.n_out)),
-                              normalize='all')
-        cm_list.append(cm)
-        weight_list.append(weights)
+        if average_over_sampled_weights:
+            # though this changes metrics, it is much faster
+            cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
+                                  y_preds.flatten(),
+                                  labels=list(range(env.task.n_out)),
+                                  normalize='all')
+            cm_list.append(cm)
+            weight_list.append(weights)
+        else:
+            for y_pred, weight in zip(y_preds, weights):
+                cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
+                                      y_preds.flatten(),
+                                      labels=list(range(env.task.n_out)),
+                                      normalize='all')
+                cm_list.append(cm)
+                weight_list.append(weight)
 
         self.prediction_records = cm_list, weight_list
 
