@@ -59,16 +59,20 @@ class Individual:
         else:
             cm_list, weight_list = self.prediction_records
 
-        shared_weight = env['sampling', 'current_weight']
+        weights = env['sampling', 'current_weight']
 
-        y_pred=self.apply(env.task.x, func='argmax', w=shared_weight)
+        if not isinstance(weights, np.ndarray):
+            weights = np.array([weights])
 
-        cm = confusion_matrix(env.task.y_true, y_pred,
-                              labels=list(range(env.task.n_out)),
-                              normalize='all')
+        y_preds = self.apply(env.task.x, func='argmax', weights=weights)
 
-        cm_list.append(cm)
-        weight_list.append(shared_weight)
+        for y_pred, weight in zip(y_preds, weights):
+
+            cm = confusion_matrix(env.task.y_true, y_pred,
+                                  labels=list(range(env.task.n_out)),
+                                  normalize='all')
+            cm_list.append(cm)
+            weight_list.append(weight)
 
         self.prediction_records = cm_list, weight_list
 

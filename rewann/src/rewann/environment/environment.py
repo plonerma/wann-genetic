@@ -33,7 +33,7 @@ class Environment:
             u = self['sampling', 'upper_bound']
             assert l is not None and u is not None
 
-            w = np.random.uniform(l, u)
+            w = np.random.uniform(l, u, size=self['sampling']['number_of_samples_per_iteration'])
 
         self['sampling', 'current_weight'] = w
         return w

@@ -98,10 +98,7 @@ def apply_act_function(available_funcs, selected_funcs, x=None):
         result = np.empty(x.shape)
         for i, func in enumerate(selected_funcs):
             assert func < len(available_funcs)
-            if len(x.shape) == 1:
-                result[i] = available_funcs[func][1](x[i])
-            else:
-                result[:, i] = available_funcs[func][1](x[:, i])
+            result[..., i] = available_funcs[func][1](x[..., i])
         return result
     else:
         return np.array([  # return function names
@@ -110,21 +107,12 @@ def apply_act_function(available_funcs, selected_funcs, x=None):
 
 
 
-def softmax(x, axis=1):
+def softmax(x, axis=-1):
     """Compute softmax values for each sets of scores in x.
-    Assumes: [samples x dims]
-
-    Args:
-      x - (np_array) - unnormalized values
-          [samples x dims]
 
     Returns:
-      softmax - (np_array) - softmax normalized in dim axis
+      softmax - softmax normalized in dim axis
     """
-    if axis == 1:
-        x = x.T
-    e_x = np.exp(x - np.max(x,axis=0))
-    s = (e_x / e_x.sum(axis=0))
-    if axis == 1:
-        s = s.T
+    e_x = np.exp(x - np.expand_dims(np.max(x,axis=axis), axis=axis))
+    s = (e_x / np.expand_dims(e_x.sum(axis=-1), axis=axis))
     return s

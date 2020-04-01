@@ -115,38 +115,52 @@ class Network:
         for l, i in enumerate(self.layers(include_input=True)):
             layers[l] = i
 
-    def initial_act_vec(self, x):
-        x_full = np.empty((x.shape[0], self.n_nodes))
-        x_full[:, :] = np.nan
-        x_full[:, :self.n_in] = x[:, :self.n_in]
-        x_full[:, self.n_in] = 1 # bias
-        return x_full
+    def apply(self, x, func='softmax', return_activation=False, weights=1):
+        # one dimensional for single input, two dimensional for multiple inputs
+        assert len(x.shape) <= 2
 
-    def apply(self, x, func='softmax', return_activation=False, w=1):
-        changed_shape = False
-        if len(x.shape) == 1:
-            x = np.array([x])
-            changed_shape = True
+        multiple_inputs = (len(x.shape) == 2)
 
+        if isinstance(weights, list):
+            weights = np.array(weights)
 
-        y_full = self.fully_propagate(self.initial_act_vec(x), w=w)
-        y = y_full[:, -self.n_out:]
+        multiple_weights = isinstance(weights, np.ndarray)
+
+        if not multiple_inputs: x = np.expand_dims(x, axis=0)
+
+        if not multiple_weights: weights = np.array([weights])
+
+        # initial activations
+        x_full = np.empty((weights.shape[0], x.shape[0], self.n_nodes))
+        x_full[...] = np.nan
+        x_full[..., :self.n_in] = x[:, :self.n_in]
+        x_full[..., self.n_in] = 1 # bias
+
+        y_full = self.fully_propagate(x_full, w=weights)
+
+        # only look at output activations
+        y = y_full[..., -self.n_out:]
 
         if func == 'argmax':
-            y = np.argmax(y, axis=1)
+            y = np.argmax(y, axis=-1)
         elif func == 'softmax':
-            y = softmax(y, axis=1)
+            y = softmax(y, axis=-1)
 
-        if changed_shape:
-            y = y[0]
-            y_full = y_full[0]
+
+        return_slice = (
+            np.s_[:] if multiple_weights else np.s_[0],
+            np.s_[:] if multiple_inputs else np.s_[0],
+        )
+
+        y = y[return_slice]
 
         if return_activation:
+            y_full = y_full[return_slice]
             return y, y_full
         else:
             return y
 
-    def fully_propagate(self, act_vec, w=1): # activation vector
+    def fully_propagate(self, act_vec, w):
         """Iterate through all nodes that can be updated."""
         for active_nodes in self.layers():
             act_vec = self.propagate(act_vec, active_nodes, w=w)
@@ -156,7 +170,7 @@ class Network:
         return apply_act_function(self.available_act_functions,
                                   self.nodes['func'][nodes], x)
 
-    def propagate(self, x_full, active_nodes, w=1):
+    def propagate(self, x_full, active_nodes, w):
         """Apply updates for active nodes (active nodes can't share edges).
 
         Args:
@@ -171,10 +185,17 @@ class Network:
 
         M = self.weight_matrix[:active_nodes[0], active_nodes - self.offset] # Only return sums for active nodes
 
-        act_sum = np.dot(x_full[:, :active_nodes[0]], M * w) # multiple matrix with shared weight
+        # multiply relevant weight matrix with base weights w
+        M3d = M[None, :, :] * w[:, None, None]
+
+        # use same inputs for all weights and use all samples,
+        # use all nodes lower then the first active node as inputs
+        x3d = x_full[..., :active_nodes[0]]
+
+        act_sums = np.matmul(x3d, M3d)
 
         # apply activation function for active nodes
-        y = self.activation_functions(active_nodes - self.offset, act_sum)
+        y = self.activation_functions(active_nodes - self.offset, act_sums)
 
         #st.write(
         #    "active_nodes", active_nodes,
@@ -184,5 +205,5 @@ class Network:
         #    "y", y,
         #)
 
-        x_full[:, active_nodes] = y
+        x_full[:, :, active_nodes] = y
         return x_full
