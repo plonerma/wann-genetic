@@ -93,12 +93,10 @@ class Individual:
         return f
 
     @expressed
-    def metrics(self, *metrics, current_gen=None):
+    def metrics(self, *metrics, current_gen=None, as_list=False):
         if not metrics:
             metrics = ('max:kappa', 'mean:kappa', 'min:kappa',
                        'n_hidden', 'n_edges')
-
-        metrics = list(metrics)
 
         ind_metrics = dict(
             n_hidden=self.network.n_hidden,
@@ -107,16 +105,12 @@ class Individual:
         )
         if current_gen is not None:
             ind_metrics['age'] = current_gen - self.birth
-        m = dict()
-        for k, v in ind_metrics.items():
-            if k in metrics:
-                metrics.remove(k)
-                m[k] = v
 
-        pm = self.get_prediction_metrics(*metrics)
-        for k in metrics:
-            m[k] = pm[k]
-        return m
+        ind_metrics.update(self.get_prediction_metrics(*[m for m in metrics if not m in ind_metrics]))
+        if as_list:
+            return [ind_metrics[k] for k in metrics]
+        else:
+            return {k: ind_metrics[k] for k in metrics}
 
     def get_prediction_metrics(self, *metrics):
         cm_list, weight_list = data=self.prediction_records

@@ -4,6 +4,8 @@
 import numpy as np
 from itertools import count
 
+from .ranking import rank_individuals
+
 from ..individual import Individual
 
 class InnovationRecord(set):
@@ -70,32 +72,20 @@ def evolution(env, ind_class=Individual):
         yield innov.generation, population
 
 def evolve_population(env, pop, innov):
+    elite_size = env['population', 'elite_size']
 
-    new_pop = list()
+    rank = rank_individuals(pop)
 
-    # most basic version for now
-    fitness = np.array([
-        i.fitness for i in pop
-    ])
-
-    simplicity = np.array([
-        i.network.n_hidden for i in pop
-    ])
-
-    rank = np.argsort(-fitness)
+    # Elitism (best `elite_size` individual surive without mutation)
+    if len (pop) > elite_size:
+        elite = np.argpartition(rank, elite_size)
+        new_pop = [pop[i] for i in elite[:elite_size]]
+    else:
+        new_pop = pop
 
     pop_size = env['population', 'size']
-    elite_size = env['population', 'elite_size']
     tournament_size = env['population', 'tournament_size']
-    n_simplicity_tournaments = env['population', 'n_simplicity_tournaments']
-
-
-    num_tournaments = pop_size - elite_size
-
-
-    # Elitism
-    for i in range(elite_size):
-        new_pop.append(pop[rank[i % len(pop)]])
+    num_tournaments = pop_size - len(new_pop)
 
     # Tournament selection
     participants = np.random.randint(len(pop), size=(num_tournaments, tournament_size))
@@ -103,12 +93,9 @@ def evolve_population(env, pop, innov):
     scores = np.empty(participants.shape)
 
     # simplicity tournament
-    scores[:n_simplicity_tournaments, :] = simplicity[participants[:n_simplicity_tournaments, :]]
+    score = rank[participants]
 
-    # fitness tournament
-    scores[:n_simplicity_tournaments, :] = fitness[participants[:n_simplicity_tournaments, :]]
-
-    winner = np.argmax(scores, axis=-1)
+    winner = np.argmin(scores, axis=-1)
 
     # Breed child population
     for i in winner:
