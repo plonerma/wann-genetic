@@ -7,13 +7,14 @@ import networkx as nx
 
 import pandas as pd
 
-from rewann.individual import Genotype, Network, Individual
+from rewann.individual import Individual
+from rewann.vis import draw_graph, draw_weight_matrix, node_names
 
 
 class NetworkCyclicException(Exception):
     """Raised when encountering a which would lead to a cyclic network."""
 
-sample = Individual(genes=Genotype(
+sample = Individual(genes=Individual.Genotype(
     n_in=3,
     n_out=2,
     nodes=[
@@ -70,15 +71,15 @@ else:
 
     fig, axs = plt.subplots(1, 2)
 
-    n.draw_graph(axs[0])
+    draw_graph(n, axs[0])
 
-    n.draw_weight_matrix(axs[1])
+    draw_weight_matrix(n, axs[1])
     st.pyplot(fig)
 
     "### Nodes"
 
     st.write(pd.DataFrame({
-        'node': [n.node_names[i].strip('$') for i in range(n.offset, n.n_nodes)],
+        'node': [node_names(n)[i].strip('$') for i in range(n.offset, n.n_nodes)],
         'gene id': n.nodes['id'],
         'activation function': n.activation_functions(np.arange(0, n.n_nodes - n.offset))
     }))
@@ -97,5 +98,5 @@ else:
     st.write("Output", y)
 
     "### Activation Graph"
-    n.draw_graph(activation=activation)
+    draw_graph(n, activation=activation)
     st.pyplot()
