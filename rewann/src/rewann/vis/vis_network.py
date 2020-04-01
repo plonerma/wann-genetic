@@ -96,9 +96,9 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
 
 def draw_weight_matrix(net, ax=None):
     x_ticks = list(range(net.n_hidden + net.n_out))
-    x_ticklabels = net.node_names[net.offset:]
+    x_ticklabels = node_names(net)[net.offset:]
     y_ticks = list(range(net.n_nodes - net.n_out))
-    y_ticklabels = net.node_names[:net.n_out]
+    y_ticklabels = node_names(net)[:net.n_out]
 
     if ax is None:
         plt.xticks(x_ticks, x_ticklabels)
