@@ -72,15 +72,14 @@ class Individual:
 
     @property
     def fitness(self):
-        fitness_metric = 'mean:accuracy'
+        fitness_metric = 'median:accuracy'
         f = self.get_prediction_metrics(fitness_metric)[fitness_metric]
-        logging.getLogger('experiment').debug(f)
         return f
 
     @expressed
     def metrics(self, *metrics):
         if not metrics:
-            metrics = ('max:kappa', 'avg:kappa', 'mean:kappa', 'min:kappa',
+            metrics = ('max:kappa', 'mean:kappa', 'min:kappa',
                        'n_hidden', 'n_edges')
 
         metrics = list(metrics)

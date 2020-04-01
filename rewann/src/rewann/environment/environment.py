@@ -69,21 +69,33 @@ class Environment:
     def generation_metrics(self, population):
 
         metric_names = ('n_hidden', 'n_edges', 'n_evaluations',
-                        'mean:kappa', 'min:kappa', 'max:kappa',
-                        'mean:accuracy', 'min:accuracy', 'max:accuracy')
+                        'mean:kappa', 'min:kappa', 'max:kappa', 'median:kappa',
+                        'mean:accuracy', 'min:accuracy', 'max:accuracy', 'median:accuracy')
         df = pd.DataFrame(data=[
             ind.metrics(*metric_names) for ind in population
         ])
 
         metrics = dict(
             num_unique_individuals=len(set(population)),
+
             num_individuals=len(population),
+
+            # number of inds without edges
+            num_no_edge_inds=np.sum(df['n_edges'] == 0),
+
+            # number of inds without hidden nodes
+            num_no_hidden_inds=np.sum(df['n_hidden'] == 0),
+
+            # individual with the most occurences
+            biggest_ind=max([population.count(i) for i in set(population)]),
+            covariance_mean_kappa_n_edges=df['n_edges'].cov(df['mean:kappa'])
         )
 
         for name, values in df.items():
             metrics[f'MAX:{name}'] = values.max()
             metrics[f'MIN:{name}'] = values.min()
             metrics[f'MEAN:{name}'] = values.mean()
+            metrics[f'MEDIAN:{name}'] = values.median()
 
         return metrics
 

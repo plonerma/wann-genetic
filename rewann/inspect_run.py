@@ -41,10 +41,13 @@ elif exp_view == 'metrics':
     "# Generations"
 
     metrics = env.load_metrics()
-    st.line_chart(data=metrics[['MEAN:mean:accuracy', 'MAX:max:accuracy', 'MIN:min:accuracy']])
-    st.line_chart(data=metrics[['MEAN:mean:kappa', 'MAX:max:kappa', 'MIN:min:kappa']])
-    st.line_chart(data=metrics[['MEAN:n_hidden', 'MAX:n_hidden', 'MIN:n_hidden']])
-    st.line_chart(data=metrics[['MEAN:n_edges', 'MAX:n_edges', 'MIN:n_edges']])
+    st.line_chart(data=metrics[['MEDIAN:median:accuracy', 'MEAN:mean:accuracy', 'MAX:max:accuracy', 'MIN:min:accuracy']])
+    st.line_chart(data=metrics[['MEDIAN:median:kappa', 'MEAN:mean:kappa', 'MAX:max:kappa', 'MIN:min:kappa']])
+    st.line_chart(data=metrics[['MEDIAN:n_hidden', 'MEAN:n_hidden', 'MAX:n_hidden', 'MIN:n_hidden']])
+    st.line_chart(data=metrics[['MEDIAN:n_edges', 'MEAN:n_edges', 'MAX:n_edges', 'MIN:n_edges']])
+    st.line_chart(data=metrics[['MEDIAN:n_evaluations', 'MEAN:n_evaluations', 'MAX:n_evaluations', 'MIN:n_evaluations']])
+
+    st.line_chart(data=metrics[['num_no_edge_inds', 'num_no_hidden_inds', 'biggest_ind']])
 
     st.line_chart(data=metrics[['num_unique_individuals', 'num_individuals']])
 

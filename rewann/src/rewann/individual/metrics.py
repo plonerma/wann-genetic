@@ -111,8 +111,8 @@ def kappa(accuracy, true_class_sum, pred_class_sum):
     return (accuracy - expected_acc) / (1 - expected_acc)
 
 @prefix_metric
-def avg(x):
-    return np.average(x)
+def median(x):
+    return np.median(x)
 
 @prefix_metric
 def mean(x):
