@@ -24,7 +24,7 @@ elif len(args) == 0:
 
 env = load_env(path)
 
-exp_view = st.sidebar.selectbox('Experiment', options=['log', 'params', 'metrics'])
+exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log'])
 
 if exp_view == 'log':
     "# Log"
