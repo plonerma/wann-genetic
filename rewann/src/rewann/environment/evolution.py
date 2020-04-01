@@ -78,11 +78,18 @@ def evolve_population(env, pop, innov):
         i.fitness for i in pop
     ])
 
+    simplicity = np.array([
+        i.network.n_hidden for i in pop
+    ])
+
     rank = np.argsort(-fitness)
 
     pop_size = env['population', 'size']
     elite_size = env['population', 'elite_size']
     tournament_size = env['population', 'tournament_size']
+    n_simplicity_tournaments = env['population', 'n_simplicity_tournaments']
+
+
     num_tournaments = pop_size - elite_size
 
 
@@ -91,17 +98,23 @@ def evolve_population(env, pop, innov):
         new_pop.append(pop[rank[i % len(pop)]])
 
     # Tournament selection
-    tournament_participants = np.random.randint(len(pop),
-        size=(num_tournaments, tournament_size))
+    participants = np.random.randint(len(pop), size=(num_tournaments, tournament_size))
 
-    tournament_scores = fitness[tournament_participants]
+    scores = np.empty(participants.shape)
+
+    # simplicity tournament
+    scores[:n_simplicity_tournaments, :] = simplicity[participants[:n_simplicity_tournaments, :]]
+
+    # fitness tournament
+    scores[:n_simplicity_tournaments, :] = fitness[participants[:n_simplicity_tournaments, :]]
+
+    winner = np.argmax(scores, axis=-1)
 
     # Breed child population
-    for i in range(num_tournaments):
+    for i in winner:
         # Mutation only: take only fittest parent
-        j = np.argmax(tournament_scores[i, :])
-        winner = tournament_participants[i, j]
-        child = pop[winner].mutation(env, innov)
+        child = pop[i].mutation(env, innov)
+
         assert child is not None
         new_pop.append(child)
 
