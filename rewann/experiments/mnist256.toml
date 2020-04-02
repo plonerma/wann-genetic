@@ -1,0 +1,17 @@
+experiment_name='mnist256_v0.1'
+debug=false
+
+[task]
+name='mnist256'
+
+[population]
+num_generations=200
+size=100
+elite_size = 10
+
+[sampling]
+  seed=0
+  distribution='uniform'
+  lower_bound=1
+  upper_bound=2
+  number_of_samples_per_iteration=10

@@ -14,5 +14,5 @@ setup(
             'run_experiment = rewann.cli.run:run_experiment',
         ],
     },
-    install_requires=['pytest-watch', 'streamlit', 'sklearn', 'numpy']
+    install_requires=['pytest-watch', 'streamlit', 'sklearn', 'numpy', 'mnist', 'opencv-python']
 )
