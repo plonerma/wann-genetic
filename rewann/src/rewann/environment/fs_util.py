@@ -130,24 +130,20 @@ def setup_logging(env):
     log_path = env_path(env, env['storage', 'log_filename'])
     logging.info (f"Check log ('{log_path}') for details.")
 
-    env.log = logging.getLogger('experiment')
-    env.log.setLevel(logging.DEBUG)
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
     fh = logging.FileHandler(log_path)
     fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-    env.log.addHandler(fh)
+    logger.addHandler(fh)
 
     if not env['debug']:
-        env.log.setLevel(logging.INFO)
+        logger.setLevel(logging.INFO)
 
     with open(env_path(env, 'params.toml'), 'w') as f:
         params = dict(env.params)
         params['is_report'] = True # mark stored params as part of a report
         toml.dump(params, f)
-
-    # log used parameters
-    params_toml = toml.dumps(env.params)
-    env.log.info(f"Running experiments with the following parameters:\n{params_toml}")
 
 def setup_params(env, params):
     # set up params based on path or dict and default parameters

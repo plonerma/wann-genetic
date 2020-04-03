@@ -3,10 +3,9 @@
 
 import numpy as np
 from itertools import count
+import logging
 
 from .ranking import rank_individuals
-
-from ..individual import Individual
 
 class InnovationRecord(set):
     @classmethod
@@ -39,11 +38,11 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
-def evolution(env, ind_class=Individual):
+def evolution(env):
     # initial population
     n_in, n_out = env.task.n_in, env.task.n_out
 
-    base_ind = ind_class.base(n_in, n_out)
+    base_ind = env.ind_class.base(n_in, n_out)
 
     population = [base_ind]*env['population', 'size']
 
@@ -54,14 +53,14 @@ def evolution(env, ind_class=Individual):
 
     innov = InnovationRecord.empty(h)
 
-    env.log.debug('Created initial population.')
+    logging.debug('Created initial population.')
 
     while True:
         innov.generation += 1
 
         # evolve & evaluate
         population = evolve_population(env, population, innov)
-        #env.log.debug('Evolved population.')
+        #logging.debug('Evolved population.')
 
         # make sure to only evaluate once, even if an individual happens to
         # appear mutiple times

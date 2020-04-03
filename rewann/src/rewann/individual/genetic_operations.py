@@ -158,10 +158,10 @@ def mutation(ind, env, innov):
     for name, func in permutated_mutation_functions:
         new_genes = func(ind, env, innov)
         if new_genes is not None: # mutation was successful
-            #env.log.debug(f"Mutation via {name}.")
+            #logging.debug(f"Mutation via {name}.")
             return ind.__class__(genes=new_genes, id=innov.next_ind_id(), birth=innov.generation)
 
-    env.log.warning("No mutation possible.")
+    logging.warning("No mutation possible.")
     raise RuntimeError("No mutation possible.")
 
 def path_exists(network, src, dest):

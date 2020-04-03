@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import os
 import subprocess
+import logging
 
 from .tasks import select_task
-
 from .evolution import evolution
 
 class Environment:
@@ -28,13 +28,17 @@ class Environment:
             git_label = subprocess.check_output(["git", "describe", "--always"]).strip()
             git_label = git_label.decode('utf-8')
 
-            self.log.info(f"Current commit {git_label}")
+            logging.info(f"Current commit {git_label}")
 
             p = os.path.abspath(self['experiment_path'])
-            self.log.info(f'Saving data at {p}.')
+            logging.info(f'Saving data at {p}.')
 
             n_samples = len(self.task.y_true)
-            self.log.debug(f'{n_samples} samples in training data set.')
+            logging.debug(f'{n_samples} samples in training data set.')
+
+            # log used parameters
+            params_toml = toml.dumps(self.params)
+            logging.debug(f"Running experiments with the following parameters:\n{params_toml}")
 
     def sample_weight(self):
         dist = self['sampling', 'distribution'].lower()
@@ -60,15 +64,15 @@ class Environment:
 
         for _ in range(n):
             w = self.sample_weight()
-            self.log.debug(f'Sampled weight {w}')
+            logging.debug(f'Sampled weight {w}')
 
             gen, pop = next(generations)
 
-            self.log.debug(f'Completed generation {gen}')
+            logging.debug(f'Completed generation {gen}')
 
             gen_metrics = self.generation_metrics(gen=gen, population=pop)
 
-            self.log.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:mean:kappa']:.2}, {gen_metrics['MAX:max:kappa']:.2}")
+            logging.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:mean:kappa']:.2}, {gen_metrics['MAX:max:kappa']:.2}")
 
             metrics.append(gen_metrics)
 
