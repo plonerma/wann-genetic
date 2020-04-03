@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 import os
+import subprocess
 
 from .tasks import select_task
 
@@ -23,6 +24,11 @@ class Environment:
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
             self.setup_logging()
+
+            git_label = subprocess.check_output(["git", "describe", "--always"]).strip()
+            git_label = git_label.decode('utf-8')
+
+            self.log.info(f"Current commit {git_label}")
 
             p = os.path.abspath(self['experiment_path'])
             self.log.info(f'Saving data at {p}.')
