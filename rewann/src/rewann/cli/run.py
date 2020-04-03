@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 
-from .. import Environment
+from rewann import Environment
 
 
 def run_experiment():
