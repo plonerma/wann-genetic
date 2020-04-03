@@ -29,13 +29,6 @@ sample = Individual(genes=Individual.Genotype(
     ]
 ))
 
-def test_serialization():
-    s = json.dumps(sample.serialize())
-    x = Individual.deserialize(json.loads(s))
-
-    assert sample.genes == x.genes
-
-
 def test_gene_expression():
     sample.express()
 

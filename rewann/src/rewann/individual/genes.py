@@ -3,11 +3,8 @@ import numpy as np
 # Tuple: https://stackoverflow.com/a/47534998
 from typing import Tuple, NamedTuple
 
-from ..util import serialize_array, deserialize_array
-
-import streamlit as st
-
 GeneEncoding = Tuple[Tuple[str, np.dtype], ...]
+
 
 class Genotype:
     # data
@@ -57,20 +54,6 @@ class Genotype:
 
         self.n_in = n_in
         self.n_out = n_out
-
-    def serialize(self) -> dict:
-        return dict(
-            edges=serialize_array(self.edges),
-            nodes=serialize_array(self.nodes),
-            n_in=self.n_in,
-            n_out=self.n_out
-        )
-
-    @classmethod
-    def deserialize(cls, d: dict):
-        edges = deserialize_array(d.get('edges', ''), dtype=list(cls.edge_encoding))
-        nodes = deserialize_array(d.get('nodes', ''), dtype=list(cls.node_encoding))
-        return cls(edges=edges, nodes=nodes, n_in=d['n_in'], n_out=d['n_out'])
 
     def __str__(self):
         return "\n".join([

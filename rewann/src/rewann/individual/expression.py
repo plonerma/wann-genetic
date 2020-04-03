@@ -10,6 +10,7 @@ from itertools import dropwhile
 class NetworkCyclicException(Exception):
     """Raised when encountering a gene which would lead to a cyclic network."""
 
+
 def weight_matrix_arrangement(n_in, n_out, hidden_node_order):
     indices_in  = np.r_[: n_in + 1] # includes bias
     indices_out = np.r_[  n_in + 1 : n_in + 1 + n_out]
@@ -18,8 +19,10 @@ def weight_matrix_arrangement(n_in, n_out, hidden_node_order):
     # indices to use for rows, columns
     return np.append(indices_in, indices_hid), np.append(indices_hid, indices_out)
 
+
 def get_array_field(array, key, default=None):
     return array[key] if key in array.dtype.names else default
+
 
 def remap_node_ids(genes):
     """Map node ids to continous node indices.
@@ -50,6 +53,7 @@ def remap_node_ids(genes):
     new_edges['dest'] = new_indices[genes.n_static + len(genes.edges):]
 
     return new_edges
+
 
 def sort_hidden_nodes(conn_mat):
     """Topologically sorting hidden nodes given a connectivity matrix."""
@@ -87,8 +91,6 @@ def sort_hidden_nodes(conn_mat):
         propagation_steps = np.append(propagation_steps, [len(next_nodes)])
 
     return hidden_node_order, propagation_steps
-
-
 
 
 ## Applying activation functions to an array of nodes

@@ -8,6 +8,10 @@ from collections.abc import Mapping
 
 import logging
 
+import io
+import numpy as np
+from base64 import b64encode, b64decode
+
 
 this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
@@ -47,14 +51,57 @@ def gen_path(env, i):
     fstr = f'{{:0{digits}d}}.json'
     return env_path(env, 'gen', fstr.format(i))
 
+def serialize_array(a : np.array):
+    # Encoding as b64 is not optimal, but it allows including it in a json file
+    encodedBytes = b64encode(a.tobytes())
+    return str(encodedBytes, 'utf-8')
+
+def deserialize_array(s : str, dtype : np.dtype):
+    bytes = b64decode(s)
+    return np.frombuffer(bytes, dtype)
+
 def dump_ind(env, ind):
     with open(ind_path(env, ind.id), 'w') as f:
-        json.dump(ind.serialize(include_prediction_records=env['storage']['include_prediction_records']), f)
+        data = dict(
+            birth=ind.birth, id=ind.id,
+            edges=serialize_array(ind.genes.edges),
+            nodes=serialize_array(ind.genes.nodes),
+        )
+
+        if env['storage']['include_prediction_records'] and ind.prediction_records:
+            cm_list, weight_list = ind.prediction_records
+            data['record'] = dict(
+                n_classes=cm_list[0].shape[0],
+                cm_stack=[serialize_array(cm) for cm in cm_list],
+                weights=weight_list,
+            )
+
+        json.dump(data, f)
     return ind.id
 
 def load_ind(env, i):
-    with open(ind_path(env, ind.id), 'r') as f:
-        return env.Individual.deserialize(json.load(f))
+    with open(ind_path(env, i), 'r') as f:
+        data = json.load(f)
+
+    Genotype = env.ind_class.Genotype
+    p = dict(genes=Genotype(
+        edges=deserialize_array(data['edges'], dtype=list(Genotype.edge_encoding)),
+        nodes=deserialize_array(data['nodes'], dtype=list(Genotype.node_encoding)),
+        n_in=env.task.n_in, n_out=env.task.n_out
+    ))
+
+    if 'record' in data:
+        cm_list = list()
+        n_classes = data['record']['n_classes']
+        for cm in data['record']['cm_stack']:
+            cm = deserialize_array(data['record']['cm_stack'], dtype=int)
+            s = cm.shape[0]
+            cm.reshape((n_classes, n_classes))
+            cm_list.append(cm)
+        weights = data['record']['weights']
+
+        p['prediction_records'] = cm_list, weights
+    return env.ind_class(**p)
 
 def dump_pop(env, gen, population):
     with open(gen_path(env, gen), 'w') as f:

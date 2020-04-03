@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
-from ..util import deserialize_array, serialize_array
 
 from .metrics import apply_metrics
 
@@ -98,58 +97,26 @@ class Individual:
             metrics = ('max:kappa', 'mean:kappa', 'min:kappa',
                        'n_hidden', 'n_edges')
 
-        ind_metrics = dict(
+        base_metrics = dict(
             n_hidden=self.network.n_hidden,
             n_edges=len(self.genes.edges),
             n_evaluations=len(self.prediction_records[0]),
+            age=None if current_gen is None else (current_gen - self.birth)
         )
-        if current_gen is not None:
-            ind_metrics['age'] = current_gen - self.birth
 
-        ind_metrics.update(self.get_prediction_metrics(*[m for m in metrics if not m in ind_metrics]))
-        if as_list:
-            return [ind_metrics[k] for k in metrics]
-        else:
-            return {k: ind_metrics[k] for k in metrics}
-
-    def get_prediction_metrics(self, *metrics):
         cm_list, weight_list = data=self.prediction_records
+
         values = dict(
             cm_stack=np.array(cm_list), weights=np.array([weight_list])
         )
-        return apply_metrics(values, metrics)
+
+        base_metrics.update(apply_metrics(values, [m for m in metrics if not m in base_metrics]))
+
+        if as_list:
+            return [base_metrics[k] for k in metrics]
+        else:
+            return {k: base_metrics[k] for k in metrics}
 
     @classmethod
     def base(cls, *args, **kwargs):
         return cls(genes=cls.Genotype.base(*args, **kwargs), birth=0, id=0)
-
-    # Serialization
-
-    def serialize(self, include_prediction_records=False):
-        d = dict(
-            genes=self.genes.serialize(),
-            birth=self.birth, id=self.id)
-        if include_prediction_records and self.prediction_records:
-            cm_list, weight_list = data=self.prediction_records
-            d['record'] = dict(
-                n_classes=cm_list[0].shape[0],
-                cm_stack=[serialize_array(cm) for cm in cm_list],
-                weights=weight_list,
-            )
-        return d
-
-    @classmethod
-    def deserialize(cls, d : dict):
-        p = dict(genes=cls.Genotype.deserialize(d['genes']))
-        if 'record' in d:
-            cm_list = list()
-            n_classes = d['record']['n_classes']
-            for cm in d['record']['cm_stack']:
-                cm = deserialize_array(d['record']['cm_stack'], dtype=int)
-                s = cm.shape[0]
-                cm.reshape((n_classes, n_classes))
-                cm_list.append(cm)
-            weights = d['record']['weights']
-
-            p['prediction_records'] = cm_list, weights
-        return cls(**p)

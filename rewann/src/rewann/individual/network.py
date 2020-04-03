@@ -1,7 +1,5 @@
 import numpy as np
 
-from .genes import Genotype
-from ..util import serialize_array, deserialize_array
 from .expression import (
     apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes,
     weight_matrix_arrangement, softmax)
@@ -11,17 +9,17 @@ class Network:
 
     ### Definition of the activations functions
     available_act_functions = [
-        ('linear', lambda x: x),
+#        ('linear', lambda x: x),
         ('step (unsigned)', lambda x: 1.0*(x>0.0)),
-        ('sin ', lambda x: np.sin(np.pi*x)),
+#        ('sin ', lambda x: np.sin(np.pi*x)),
         ('gaussian with mean 0 and sigma 1', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
         ('tanh (signed)', lambda x: np.tanh(x)),
         ('sigmoid (unsigned)', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
         ('inverse linear', lambda x: -x),
-        ('abs', lambda x: np.abs(x)),
+#        ('abs', lambda x: np.abs(x)),
         ('relu', lambda x: np.maximum(0, x)),
-        ('cos', lambda x: np.cos(np.pi*x)),
-        ('squared', lambda x: x**2),
+#        ('cos', lambda x: np.cos(np.pi*x)),
+#        ('squared', lambda x: x**2),
     ]
 
     def __init__(self, n_in, n_out, nodes, weight_matrix,
@@ -61,7 +59,7 @@ class Network:
             return self.nodes[i - self.offset]['id']
 
     @classmethod
-    def from_genes(cls, genes : Genotype, **kwargs):
+    def from_genes(cls, genes, **kwargs):
         """Convert genes to weight matrix and activation vector."""
         edges = remap_node_ids(genes)
 

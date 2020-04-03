@@ -1,6 +1,5 @@
 import numpy as np
 import inspect
-from ..util import serialize_array, deserialize_array
 
 available_metrics = dict()
 available_prefixes = dict()

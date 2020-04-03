@@ -9,7 +9,7 @@ from .tasks import select_task
 from .evolution import evolution
 
 class Environment:
-    from ..individual import Individual
+    from ..individual import Individual as ind_class
     from .fs_util import (default_params, setup_params, setup_logging,
                        dump_pop, dump_metrics, load_pop, load_metrics)
 
@@ -23,6 +23,12 @@ class Environment:
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
             self.setup_logging()
+
+            p = os.path.abspath(self['experiment_path'])
+            self.log.info(f'Saving data at {p}.')
+
+            n_samples = len(self.task.y_true)
+            self.log.debug(f'{n_samples} samples in training data set.')
 
     def sample_weight(self):
         dist = self['sampling', 'distribution'].lower()

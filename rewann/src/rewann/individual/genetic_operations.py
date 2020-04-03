@@ -165,7 +165,6 @@ def mutation(ind, env, innov):
     raise RuntimeError("No mutation possible.")
 
 def path_exists(network, src, dest):
-    # TODO: test this!!!
     # if a disabled connections exists, there is also another path
     # src, dest are indices for nodes in the network
 
