@@ -21,23 +21,17 @@ default_params = toml.load(default_params_path)
 def derive_path(env):
     if not 'experiment_path' in env:
         name = env['experiment_name']
-        base_path = env['storage', 'data_base_path']
-        def possible_paths(name):
-            date = str(datetime.now().date())
-            for i in count():
-                if base_path:
-                    yield os.path.join(base_path, f'{date}_{name}_{i:03d}')
-                else:
-                    yield f'{date}_{name}_{i}'
+        base_path = env['storage', 'data_base_path'] or './'
+        date = str(datetime.now().date())
+        paths = (os.path.join(base_path, f'{date}_{name}_{i:03d}') for i in count())
 
-        env['experiment_path'] = next(dropwhile(os.path.exists, possible_paths(name)))
+        env['experiment_path'] = next(dropwhile(os.path.exists, paths))
     return env['experiment_path']
 
 def env_path(env, *parts):
     p = os.path.join(env['experiment_path'], *parts)
     dir = os.path.dirname(p)
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+    if not os.path.exists(dir): os.makedirs(dir)  # make sure dir exists
     return p
 
 def ind_path(env, i):
@@ -51,32 +45,30 @@ def gen_path(env, i):
     fstr = f'{{:0{digits}d}}.json'
     return env_path(env, 'gen', fstr.format(i))
 
-def serialize_array(a : np.array):
+def encode_array(a : np.array):
     # Encoding as b64 is not optimal, but it allows including it in a json file
-    encodedBytes = b64encode(a.tobytes())
-    return str(encodedBytes, 'utf-8')
+    return str(b64encode(a.tobytes()), 'utf-8')
 
-def deserialize_array(s : str, dtype : np.dtype):
-    bytes = b64decode(s)
-    return np.frombuffer(bytes, dtype)
+def decode_array(s : str, dtype : np.dtype):
+    return np.frombuffer(b64decode(s), dtype)
 
 def dump_ind(env, ind):
-    with open(ind_path(env, ind.id), 'w') as f:
-        data = dict(
-            birth=ind.birth, id=ind.id,
-            edges=serialize_array(ind.genes.edges),
-            nodes=serialize_array(ind.genes.nodes),
+    data = dict(birth=ind.birth, id=ind.id,
+                edges=encode_array(ind.genes.edges),
+                nodes=encode_array(ind.genes.nodes),)
+
+    if env['storage']['include_prediction_records'] and ind.prediction_records:
+        cm_list, weight_list = ind.prediction_records
+
+        data['record'] = dict(
+            n_classes=cm_list[0].shape[0],
+            cm_stack=[encode_array(cm) for cm in cm_list],
+            weights=weight_list,
         )
 
-        if env['storage']['include_prediction_records'] and ind.prediction_records:
-            cm_list, weight_list = ind.prediction_records
-            data['record'] = dict(
-                n_classes=cm_list[0].shape[0],
-                cm_stack=[serialize_array(cm) for cm in cm_list],
-                weights=weight_list,
-            )
-
+    with open(ind_path(env, ind.id), 'w') as f:
         json.dump(data, f)
+
     return ind.id
 
 def load_ind(env, i):
@@ -84,23 +76,27 @@ def load_ind(env, i):
         data = json.load(f)
 
     Genotype = env.ind_class.Genotype
+
     p = dict(genes=Genotype(
-        edges=deserialize_array(data['edges'], dtype=list(Genotype.edge_encoding)),
-        nodes=deserialize_array(data['nodes'], dtype=list(Genotype.node_encoding)),
+        edges=decode_array(data['edges'], dtype=list(Genotype.edge_encoding)),
+        nodes=decode_array(data['nodes'], dtype=list(Genotype.node_encoding)),
         n_in=env.task.n_in, n_out=env.task.n_out
     ))
 
     if 'record' in data:
         cm_list = list()
         n_classes = data['record']['n_classes']
+
         for cm in data['record']['cm_stack']:
-            cm = deserialize_array(data['record']['cm_stack'], dtype=int)
+            cm = decode_array(data['record']['cm_stack'], dtype=int)
             s = cm.shape[0]
             cm.reshape((n_classes, n_classes))
             cm_list.append(cm)
+
         weights = data['record']['weights']
 
         p['prediction_records'] = cm_list, weights
+
     return env.ind_class(**p)
 
 def dump_pop(env, gen, population):

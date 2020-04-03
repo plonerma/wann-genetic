@@ -53,10 +53,7 @@ class Network:
         return len(self.available_act_functions)
 
     def index_to_gene_id(self, i):
-        if i < self.offset:
-            return i
-        else:
-            return self.nodes[i - self.offset]['id']
+        return i if (i < self.offset) else self.nodes[i - self.offset]['id']
 
     @classmethod
     def from_genes(cls, genes, **kwargs):
@@ -129,15 +126,17 @@ class Network:
         if not multiple_weights: weights = np.array([weights])
 
         # initial activations
-        x_full = np.empty((weights.shape[0], x.shape[0], self.n_nodes))
-        x_full[...] = np.nan
-        x_full[..., :self.n_in] = x[:, :self.n_in]
-        x_full[..., self.n_in] = 1 # bias
+        act_vec = np.empty((weights.shape[0], x.shape[0], self.n_nodes))
+        act_vec[...] = np.nan
+        act_vec[..., :self.n_in] = x[:, :self.n_in]
+        act_vec[..., self.n_in] = 1 # bias
 
-        y_full = self.fully_propagate(x_full, w=weights)
+        # propagate signal through all layers
+        for active_nodes in self.layers():
+            act_vec = self.propagate(act_vec, active_nodes, w=weights)
 
         # only look at output activations
-        y = y_full[..., -self.n_out:]
+        y = act_vec[..., -self.n_out:]
 
         if func == 'argmax':
             y = np.argmax(y, axis=-1)
@@ -153,16 +152,10 @@ class Network:
         y = y[return_slice]
 
         if return_activation:
-            y_full = y_full[return_slice]
-            return y, y_full
+            act_vec = act_vec[return_slice]
+            return y, act_vec
         else:
             return y
-
-    def fully_propagate(self, act_vec, w):
-        """Iterate through all nodes that can be updated."""
-        for active_nodes in self.layers():
-            act_vec = self.propagate(act_vec, active_nodes, w=w)
-        return act_vec
 
     def activation_functions(self, nodes, x=None):
         return apply_act_function(self.available_act_functions,

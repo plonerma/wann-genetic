@@ -18,8 +18,7 @@ class Environment:
         self.setup_params(params)
 
         # choose task
-        task_name = self['task', 'name']
-        self.task = select_task(task_name)
+        self.task = select_task(self['task', 'name'])
 
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
@@ -120,35 +119,31 @@ class Environment:
 
     # magic methods for direct access of parameters
     def __getitem__(self, keys):
-        if isinstance(keys, tuple):
-            assert len(keys) > 0
-            d = self.params
-            for k in keys:
-                d = d[k]
-            return d
-        else:
-            return self.params[keys]
+        if not isinstance(keys, tuple):
+            keys = [keys]
+
+        d = self.params
+        for k in keys: d = d[k]
+        return d
 
     def __setitem__(self, keys, value):
-        if isinstance(keys, tuple):
-            assert len(keys) > 0
-            d = self.params
-            for k in keys[:-1]:
-                d[k] = d.get(k, dict())
-                d = d[k]
-            d[keys[-1]] = value
-        else:
-            self.params[keys] = value
+        if not isinstance(keys, tuple):
+            keys = [keys]
+
+        *first_keys, last_key = keys
+        d = self.params
+        for k in first_keys:
+            d[k] = d.get(k, dict())
+            d = d[k]
+        d[last_key] = value
 
     def __contains__(self, keys):
-        if isinstance(keys, tuple):
-            assert len(keys) > 0
-            d = self.params
-            for k in keys:
-                try:
-                    d = d[k]
-                except:
-                    return False
-            return True
-        else:
-            return keys in self.params
+        if not isinstance(keys, tuple):
+            keys = [keys]
+
+        d = self.params
+
+        for k in keys:
+            try: d = d[k]
+            except: return False
+        return True
