@@ -44,7 +44,7 @@ def rank_individuals(population):
         # sort
         front_list[front_index] = front[np.argsort(-dist)]
 
-    rank = np.empty(len(population))
+    rank = np.empty(len(population), dtype=int)
     order = np.hstack(front_list)
     rank[order] = ix
 

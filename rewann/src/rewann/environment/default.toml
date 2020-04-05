@@ -21,6 +21,10 @@ debug = true
 [population]
   num_generations = 20
   size = 64
+
+[selection]
+  # 'nsga_rank' and 'tournament' are mutually exclusie
+  types = ['elite', 'nsga_rank']
   elite_size = 10
   tournament_size = 5
 

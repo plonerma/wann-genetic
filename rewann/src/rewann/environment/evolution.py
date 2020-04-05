@@ -71,7 +71,9 @@ def evolution(env):
         yield innov.generation, population
 
 def evolve_population(env, pop, innov):
-    elite_size = env['population', 'elite_size']
+    pop_size = env['population', 'size']
+    elite_size = env['selection', 'elite_size']
+    selection_types = env['selection', 'types']
 
     rank = rank_individuals(pop)
 
@@ -82,19 +84,26 @@ def evolve_population(env, pop, innov):
     else:
         new_pop = pop
 
-    pop_size = env['population', 'size']
-    tournament_size = env['population', 'tournament_size']
-    num_tournaments = pop_size - len(new_pop)
+    num_places_left = pop_size - len(new_pop)
+    winner = None
 
-    # Tournament selection
-    participants = np.random.randint(len(pop), size=(num_tournaments, tournament_size))
+    if 'tournaments' in selection_types: # Tournament selection
 
-    scores = np.empty(participants.shape)
+        participants = np.random.randint(
+            len(pop), size=(num_places_left, env['selection', 'tournament_size']))
 
-    # simplicity tournament
-    score = rank[participants]
+        scores = np.empty(participants.shape)
+        scores = rank[participants]
+        winner = np.argmin(scores, axis=-1)
 
-    winner = np.argmin(scores, axis=-1)
+    elif 'nsga_rank' in selection_types:
+        logging.debug(rank)
+        winner = np.empty(pop_size, dtype=int)
+        winner[rank] = np.arange(pop_size)
+        winner = winner[:num_places_left]
+    else:
+        sts = ' ,'.join(selection_types)
+        raise RuntimeError(f'No secondary selection type selected ({sts})')
 
     # Breed child population
     for i in winner:
