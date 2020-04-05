@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import logging
 
 from rewann import Environment
 
@@ -15,4 +16,4 @@ def run_experiment():
     exp = Environment(params=path)
     exp.run()
 
-    exp.log.info(f'Completed excution.')
+    logging.info(f'Completed excution.')
