@@ -1,6 +1,12 @@
 import sys, os
 import numpy as np
 import streamlit as st
+import altair as alt
+
+
+import logging
+
+from pathlib import Path
 
 from rewann import Environment
 
@@ -8,18 +14,25 @@ import pandas as pd
 
 args = sys.argv[1:]
 
+
 def load_env(path):
+    logging.info(f"Loading env in @'{path}'")
     return Environment(path)
 
+
+def multiline_chart(df, xs, limit=1):
+    st.altair_chart(alt.Chart(df).mark_line().encode(x='index', y=xs))
 
 
 if len(args) > 0:
     path, *_ = args
 
 elif len(args) == 0:
-    base_path, dirs, _ = next(os.walk('data'))
-    dirs = sorted(dirs)
-    path = os.path.join(base_path, st.sidebar.selectbox('Path', options=dirs, index=(len(dirs)-1)))
+    paths = filter(lambda p: not str(p).endswith('.gitignore'),
+                   Path('data').iterdir())
+
+    paths = sorted(paths, key=os.path.getmtime, reverse=True)
+    path = st.sidebar.selectbox('Path', options=paths)
 
 
 env = load_env(path)
@@ -41,6 +54,9 @@ elif exp_view == 'metrics':
     "# Generations"
 
     metrics = env.load_metrics()
+    metrics.index.names = ['generation']
+
+
     st.line_chart(data=metrics[['MEDIAN:median:accuracy', 'MEAN:mean:accuracy', 'MAX:max:accuracy', 'MIN:min:accuracy']])
     st.line_chart(data=metrics[['MEDIAN:median:kappa', 'MEAN:mean:kappa', 'MAX:max:kappa', 'MIN:min:kappa']])
     st.line_chart(data=metrics[['MEDIAN:n_hidden', 'MEAN:n_hidden', 'MAX:n_hidden', 'MIN:n_hidden']])
