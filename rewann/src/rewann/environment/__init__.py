@@ -11,7 +11,7 @@ from .evolution import evolution
 
 class Environment:
     from ..individual import Individual as ind_class
-    from .fs_util import (default_params, setup_params, setup_logging,
+    from .fs_util import (default_params, setup_params,
                        dump_pop, dump_metrics, load_pop, load_metrics)
 
     def __init__(self, params):
@@ -22,7 +22,19 @@ class Environment:
 
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
-            self.setup_logging()
+
+            log_path = env_path(env, env['storage', 'log_filename'])
+            logging.info (f"Check log ('{log_path}') for details.")
+
+            logger = logging.getLogger()
+            logger.setLevel(logging.DEBUG)
+
+            fh = logging.FileHandler(log_path)
+            fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            logger.addHandler(fh)
+
+            if not env['debug']:
+                logger.setLevel(logging.INFO)
 
             git_label = subprocess.check_output(["git", "describe", "--always"]).strip()
             git_label = git_label.decode('utf-8')
@@ -38,6 +50,11 @@ class Environment:
             # log used parameters
             params_toml = toml.dumps(self.params)
             logging.debug(f"Running experiments with the following parameters:\n{params_toml}")
+
+            with open(env_path(env, 'params.toml'), 'w') as f:
+                params = dict(env.params)
+                params['is_report'] = True # mark stored params as part of a report
+                toml.dump(params, f)
 
     def sample_weight(self):
         dist = self['sampling', 'distribution'].lower()

@@ -122,25 +122,6 @@ def existing_populations(env):
             populations.append(int(gen))
     return sorted(populations)
 
-def setup_logging(env):
-    log_path = env_path(env, env['storage', 'log_filename'])
-    logging.info (f"Check log ('{log_path}') for details.")
-
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
-    fh = logging.FileHandler(log_path)
-    fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-    logger.addHandler(fh)
-
-    if not env['debug']:
-        logger.setLevel(logging.INFO)
-
-    with open(env_path(env, 'params.toml'), 'w') as f:
-        params = dict(env.params)
-        params['is_report'] = True # mark stored params as part of a report
-        toml.dump(params, f)
-
 def setup_params(env, params):
     # set up params based on path or dict and default parameters
     if not isinstance(params, dict):
@@ -153,13 +134,17 @@ def setup_params(env, params):
         if 'is_report' in params and params['is_report']:
             params['experiment_path'] = os.path.dirname(params_path)
 
+
     env.params = nested_update(dict(env.default_params), params)
 
     derive_path(env)
 
+
     # ensure experiment name is defined
     if env['experiment_name'] is None:
         env['experiment_name'] = '{}_run'.format(task_name)
+
+
 
 def nested_update(d, u):
     """ Update nested parameters.
