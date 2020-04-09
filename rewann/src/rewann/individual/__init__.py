@@ -20,6 +20,7 @@ class Individual:
     from .network import Network
 
     from .genetic_operations import mutation
+    parent = None
 
     recorded_metrics = 'accuracy', 'kappa', 'log_loss'
 

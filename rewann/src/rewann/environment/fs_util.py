@@ -53,7 +53,7 @@ def decode_array(s : str, dtype : np.dtype):
     return np.frombuffer(b64decode(s), dtype)
 
 def dump_ind(env, ind):
-    data = dict(birth=ind.birth, id=ind.id,
+    data = dict(birth=ind.birth, id=ind.id, parent=ind.parent,
                 edges=encode_array(ind.genes.edges),
                 nodes=encode_array(ind.genes.nodes),)
 
@@ -80,7 +80,8 @@ def load_ind(env, i):
     p = dict(genes=Genotype(
         edges=decode_array(data['edges'], dtype=list(Genotype.edge_encoding)),
         nodes=decode_array(data['nodes'], dtype=list(Genotype.node_encoding)),
-        n_in=env.task.n_in, n_out=env.task.n_out
+        n_in=env.task.n_in, n_out=env.task.n_out,
+        parent=data.get('paent', None),
     ))
 
     if 'record' in data:

@@ -159,7 +159,9 @@ def mutation(ind, env, innov):
         new_genes = func(ind, env, innov)
         if new_genes is not None: # mutation was successful
             #logging.debug(f"Mutation via {name}.")
-            return ind.__class__(genes=new_genes, id=innov.next_ind_id(), birth=innov.generation)
+            child = ind.__class__(genes=new_genes, id=innov.next_ind_id(), birth=innov.generation)
+            child.parent = ind.id
+            return child
 
     logging.warning("No mutation possible.")
     raise RuntimeError("No mutation possible.")
