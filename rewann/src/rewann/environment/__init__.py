@@ -10,9 +10,10 @@ from .tasks import select_task
 from .evolution import evolution
 
 class Environment:
-    from ..individual import Individual as ind_class
+    from rewann.individual import Individual as ind_class
     from .fs_util import (default_params, setup_params,
-                       dump_pop, dump_metrics, load_pop, load_metrics)
+                          dump_pop, dump_metrics, load_pop, load_metrics,
+                          env_path)
 
     def __init__(self, params):
         self.setup_params(params)
@@ -23,7 +24,7 @@ class Environment:
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
 
-            log_path = env_path(env, env['storage', 'log_filename'])
+            log_path = self.env_path(self['storage', 'log_filename'])
             logging.info (f"Check log ('{log_path}') for details.")
 
             logger = logging.getLogger()
@@ -33,7 +34,7 @@ class Environment:
             fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
             logger.addHandler(fh)
 
-            if not env['debug']:
+            if not self['debug']:
                 logger.setLevel(logging.INFO)
 
             git_label = subprocess.check_output(["git", "describe", "--always"]).strip()
@@ -51,8 +52,8 @@ class Environment:
             params_toml = toml.dumps(self.params)
             logging.debug(f"Running experiments with the following parameters:\n{params_toml}")
 
-            with open(env_path(env, 'params.toml'), 'w') as f:
-                params = dict(env.params)
+            with open(self.env_path('params.toml'), 'w') as f:
+                params = dict(self.params)
                 params['is_report'] = True # mark stored params as part of a report
                 toml.dump(params, f)
 
@@ -88,7 +89,7 @@ class Environment:
 
             gen_metrics = self.generation_metrics(gen=gen, population=pop)
 
-            logging.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:mean:kappa']:.2}, {gen_metrics['MAX:max:kappa']:.2}")
+            logging.info(f"#{gen} mean, max kappa: {gen_metrics['MEAN:kappa.mean']:.2}, {gen_metrics['MAX:kappa.mean']:.2}, {gen_metrics['MAX:kappa.max']:.2}")
 
             metrics.append(gen_metrics)
 
@@ -103,9 +104,14 @@ class Environment:
         if gen is None:
             gen = self['population', 'num_generations']
 
-        metric_names = ('n_hidden', 'n_edges', 'n_evaluations', 'age',
-                        'mean:kappa', 'min:kappa', 'max:kappa', 'median:kappa',
-                        'mean:accuracy', 'min:accuracy', 'max:accuracy', 'median:accuracy')
+        names = 'kappa', 'accuracy', 'log_loss'
+        pfs = 'max', 'mean', 'median', 'min'
+
+        metric_names = [
+            'n_hidden', 'n_edges', 'n_evaluations', 'age'] + [
+            f'{m}.{p}' for p in pfs for m in names
+        ]
+
         df = pd.DataFrame(data=[
             ind.metrics(*metric_names, current_gen=gen) for ind in population
         ])
@@ -123,7 +129,7 @@ class Environment:
 
             # individual with the most occurences
             biggest_ind=max([population.count(i) for i in set(population)]),
-            covariance_mean_kappa_n_edges=df['n_edges'].cov(df['mean:kappa'])
+            covariance_mean_kappa_n_edges=df['n_edges'].cov(df['kappa.mean'])
         )
 
         for name, values in df.items():
