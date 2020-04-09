@@ -1,5 +1,8 @@
 debug = true
 
+[config]
+  num_workers=1
+
 [sampling]
   seed=0
   distribution='uniform'

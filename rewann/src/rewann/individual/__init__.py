@@ -50,13 +50,16 @@ class Individual:
         return self.network.apply(*args, **kwargs)
 
     @expressed
-    def evaluate(self, env):
-        weights = env['sampling', 'current_weight']
-
+    def evaluate(self, weights, x, y_true):
         if not isinstance(weights, np.ndarray):
             weights = np.array([weights])
 
-        y_probs = self.apply(env.task.x, func='softmax', weights=weights)
+        y_probs = self.apply(x, func='softmax', weights=weights)
+
+        self.record_metrics(weights, y_true, y_probs)
+
+
+    def record_metrics(self, weights, y_true, y_probs):
         y_preds = np.argmax(y_probs, axis=-1)
 
         for y_prob, y_pred, weight in zip(y_probs, y_preds, weights):
@@ -64,8 +67,8 @@ class Individual:
             values = dict(
                 y_prob=y_prob,
                 y_pred=y_pred,
-                y_true=env.task.y_true,
-                labels=list(range(env.task.n_out))
+                y_true=y_true,
+                labels=list(range(self.genes.n_out))
             )
             metrics = apply_metrics(values, self.recorded_metrics)
 

@@ -6,7 +6,9 @@ import os
 import subprocess
 import logging
 
-from time import process_time
+from multiprocessing import Pool
+
+from time import time
 
 from .tasks import select_task
 from .evolution import evolution
@@ -59,6 +61,7 @@ class Environment:
                 params['is_report'] = True # mark stored params as part of a report
                 toml.dump(params, f)
 
+
     def sample_weight(self):
         dist = self['sampling', 'distribution'].lower()
         if dist == 'one':
@@ -81,7 +84,8 @@ class Environment:
 
         metrics = list()
 
-        start_time = process_time()
+        start_time = time()
+        self.pool = Pool(self['config', 'num_workers'])
 
         for _ in range(n):
             w = self.sample_weight()
@@ -89,7 +93,7 @@ class Environment:
 
             gen, pop = next(generations)
 
-            elapsed_time = process_time() - start_time
+            elapsed_time = time() - start_time
 
             logging.debug(f'Completed generation {gen}, ({elapsed_time}s elapsed - avg.: {elapsed_time / gen}s).')
 

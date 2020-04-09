@@ -3,6 +3,7 @@
 
 import numpy as np
 from itertools import count
+from functools import partial
 import logging
 
 from .ranking import rank_individuals
@@ -38,15 +39,31 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
+def express_inds(env, pop):
+    inds_to_express = list(filter(lambda i: i.network is None, pop))
+    networks = env.pool.imap(env.ind_class.Network.from_genes, (i.genes for i in inds_to_express))
+    for ind, net in zip(inds_to_express, networks):
+        ind.network = net
+
+def apply_networks(params, x):
+    network, weights = params
+    return network.apply(x=x, weights=weights)
+
 def evolution(env):
+    # evaluation function
+    apply_func = partial(apply_networks, x=env.task.x)
+
     # initial population
     n_in, n_out = env.task.n_in, env.task.n_out
 
     base_ind = env.ind_class.base(n_in, n_out)
+    base_ind.express()
 
     population = [base_ind]*env['population', 'size']
 
-    base_ind.evaluate(env)
+    weights = env['sampling', 'current_weight']
+    y_probs = apply_func((base_ind.network, weights))
+    base_ind.record_metrics(weights, env.task.y_true, y_probs)
 
     # first hidden id after ins, bias, & outs
     h = n_in + n_out + 1
@@ -58,14 +75,23 @@ def evolution(env):
     while True:
         innov.generation += 1
 
-        # evolve & evaluate
-        population = evolve_population(env, population, innov)
-        #logging.debug('Evolved population.')
+        logging.debug('evolving next generation')
 
-        # make sure to only evaluate once, even if an individual happens to
-        # appear mutiple times
-        for ind in set(population):
-            ind.evaluate(env)
+        population = evolve_population(env, population, innov)
+
+        logging.debug('expressing individuals')
+        express_inds(env, population)
+
+        weights = env['sampling', 'current_weight']
+
+        logging.debug('Applying networks')
+
+        results = env.pool.map(apply_func, [(ind.network, weights) for ind in population])
+
+        logging.debug('recording metrics')
+
+        for y_probs, ind in zip(results, population):
+            ind.record_metrics(weights, env.task.y_true, y_probs)
 
         # yield next generation
         yield innov.generation, population
