@@ -6,6 +6,8 @@ import os
 import subprocess
 import logging
 
+from time import process_time
+
 from .tasks import select_task
 from .evolution import evolution
 
@@ -79,13 +81,17 @@ class Environment:
 
         metrics = list()
 
+        start_time = process_time()
+
         for _ in range(n):
             w = self.sample_weight()
             logging.debug(f'Sampled weight {w}')
 
             gen, pop = next(generations)
 
-            logging.debug(f'Completed generation {gen}')
+            elapsed_time = process_time() - start_time
+
+            logging.debug(f'Completed generation {gen}, ({elapsed_time}s elapsed - avg.: {elapsed_time / gen}s).')
 
             gen_metrics = self.generation_metrics(gen=gen, population=pop)
 
