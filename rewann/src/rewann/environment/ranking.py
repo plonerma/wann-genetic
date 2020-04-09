@@ -3,8 +3,8 @@ import numpy as np
 import logging
 
 def get_objective_values(ind):
-    acc, n_hidden = ind.metrics('mean:accuracy', 'n_hidden', as_list=True)
-    return acc, -n_hidden
+    loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_hidden', as_list=True)
+    return loss_min, loss_mean, n_hidden
 
 def rank_individuals(population):
     objectives = np.array([
@@ -51,7 +51,7 @@ def rank_individuals(population):
     return rank
 
 def dominates(objectives, i, j):
-    return np.all(objectives[i] >= objectives[j], axis=-1) & np.any(objectives[i] > objectives[j], axis=-1)
+    return np.all(objectives[i] <= objectives[j], axis=-1) & np.any(objectives[i] < objectives[j], axis=-1)
 
 def crowding_distances(front_objectives):
   # Order by objective value

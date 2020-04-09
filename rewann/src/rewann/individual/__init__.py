@@ -1,7 +1,4 @@
-import pandas as pd
 import numpy as np
-from sklearn.metrics import confusion_matrix
-
 
 from .metrics import apply_metrics
 
@@ -19,21 +16,25 @@ class Individual:
     Will contain genes (genotype), network (phenotype), and performance statistics (fitness).
     """
 
-    genes = None
-    network = None
-    prediction_records = None
-
     from .genes import Genotype
     from .network import Network
 
     from .genetic_operations import mutation
 
-    def __init__(self, genes=None, network=None, prediction_records=None, id=None, birth=None):
+    recorded_metrics = 'accuracy', 'kappa', 'log_loss'
+
+    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None):
         self.genes = genes
         self.network = network
-        self.prediction_records = prediction_records
         self.id = id
         self.birth = birth
+        if metric_values is None:
+            self._metric_values = dict()
+            for m in self.recorded_metrics:
+                self._metric_values[m] = list()
+            self._metric_values['weight'] = list()
+        else:
+            self._metric_values = metric_values
 
     # Translations
 
@@ -44,78 +45,65 @@ class Individual:
             self.network = self.Network.from_genes(self.genes)
 
     @expressed
-    def apply(self, *args, **keargs):
-        return self.network.apply(*args, **keargs)
+    def apply(self, *args, **kwargs):
+        return self.network.apply(*args, **kwargs)
 
     @expressed
-    def evaluate(self, env, average_over_sampled_weights=True):
-        if self.prediction_records is None:
-            # stack for storing confusion matrices
-            cm_list = list()
-
-            # weights used during evaluations
-            weight_list = list()
-        else:
-            cm_list, weight_list = self.prediction_records
-
+    def evaluate(self, env):
         weights = env['sampling', 'current_weight']
 
         if not isinstance(weights, np.ndarray):
             weights = np.array([weights])
 
-        y_preds = self.apply(env.task.x, func='argmax', weights=weights)
+        y_probs = self.apply(env.task.x, func='softmax', weights=weights)
+        y_preds = np.argmax(y_probs, axis=-1)
 
+        for y_prob, y_pred, weight in zip(y_probs, y_preds, weights):
 
-        if average_over_sampled_weights:
-            # though this changes metrics, it is much faster
-            cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
-                                  y_preds.flatten(),
-                                  labels=list(range(env.task.n_out)),
-                                  normalize='all')
-            cm_list.append(cm)
-            weight_list.append(weights)
-        else:
-            for y_pred, weight in zip(y_preds, weights):
-                cm = confusion_matrix(np.tile(env.task.y_true, y_preds.shape[0]),
-                                      y_preds.flatten(),
-                                      labels=list(range(env.task.n_out)),
-                                      normalize='all')
-                cm_list.append(cm)
-                weight_list.append(weight)
+            values = dict(
+                y_prob=y_prob,
+                y_pred=y_pred,
+                y_true=env.task.y_true,
+                labels=list(range(env.task.n_out))
+            )
+            metrics = apply_metrics(values, self.recorded_metrics)
 
-        self.prediction_records = cm_list, weight_list
+            for r in self.recorded_metrics:
+                self._metric_values[r].append(metrics[r])
 
-    @property
-    def fitness(self):
-        fitness_metric = 'median:accuracy'
-        f = self.get_prediction_metrics(fitness_metric)[fitness_metric]
-        return f
+            self._metric_values['weight'].append(weight)
 
     @expressed
-    def metrics(self, *metrics, current_gen=None, as_list=False):
-        if not metrics:
-            metrics = ('max:kappa', 'mean:kappa', 'min:kappa',
-                       'n_hidden', 'n_edges')
+    def metrics(self, *metric_names, current_gen=None, as_list=False):
+        if not metric_names:
+            metric_names = ('kappa.max', 'kappa.mean', 'kappa.min',
+                            'n_hidden', 'n_edges')
 
-        base_metrics = dict(
+        metric_values = dict(
             n_hidden=self.network.n_hidden,
             n_edges=len(self.genes.edges),
-            n_evaluations=len(self.prediction_records[0]),
+            n_evaluations=len(self._metric_values['weight']),
             age=None if current_gen is None else (current_gen - self.birth)
         )
 
-        cm_list, weight_list = data=self.prediction_records
+        postfixes = {
+            'mean': np.mean,
+            'median': np.median,
+            'max': np.max,
+            'min': np.min
+        }
 
-        values = dict(
-            cm_stack=np.array(cm_list), weights=np.array([weight_list])
-        )
-
-        base_metrics.update(apply_metrics(values, [m for m in metrics if not m in base_metrics]))
+        for m in metric_names:
+            if m in metric_values:
+                continue
+            m, *postfix = m.split('.')
+            for p, func in postfixes.items():
+                metric_values[f'{m}.{p}'] = func(self._metric_values[m])
 
         if as_list:
-            return [base_metrics[k] for k in metrics]
+            return [metric_values[k] for k in metric_names]
         else:
-            return {k: base_metrics[k] for k in metrics}
+            return {k: metric_values[k] for k in metric_names}
 
     @classmethod
     def base(cls, *args, **kwargs):

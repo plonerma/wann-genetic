@@ -14,8 +14,8 @@ def test_experiment(tmp_path):
     # Assert that there is at least moderate agreement between predicted and true classifications
 
     metrics = exp.generation_metrics(exp.last_population)
-    max_kappa = metrics['MAX:max:kappa']
-    mean_kappa = metrics['MEAN:mean:kappa']
+    max_kappa = metrics['MAX:kappa.max']
+    mean_kappa = metrics['MEAN:kappa.mean']
 
     logging.info(f'Mean kappa score: {mean_kappa}')
     logging.info(f'Max kappa score: {max_kappa}')
