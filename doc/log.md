@@ -32,10 +32,21 @@ level (averages vs. means etc.).
 date: 2020-03-19
 
 Discussing new edge selection strategy with Adam Gaier (https://github.com/google/brain-tokyo-workshop/issues/18).
-Test the new approach vs. the original layer-based one!
+
+-[ ] Test the new approach vs. the original layer-based one!
 
 ---
 
 date: 2020-03-34
 
 Implemented tests, simple environments working.
+
+---
+
+date: 2020-04-01
+
+Implemented nsga sort. Core functionality mostly implemented.
+
+The most major difference to Gaier and Ha's approach is the focus on classifications problems. Most assumptions I make in the theoretical approach as well as in the implementation will rest on this focus.
+
+What parts are really neat, which are nsga?
