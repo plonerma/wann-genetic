@@ -76,6 +76,9 @@ class Environment:
         self['sampling', 'current_weight'] = w
         return w
 
+    def setup_pool(self):
+        self.pool = Pool(self['config', 'num_workers'])
+
     def run(self):
         np.random.seed(self['sampling', 'seed'])
 
@@ -85,7 +88,7 @@ class Environment:
         metrics = list()
 
         start_time = time()
-        self.pool = Pool(self['config', 'num_workers'])
+        self.setup_pool()
 
         for _ in range(n):
             w = self.sample_weight()
