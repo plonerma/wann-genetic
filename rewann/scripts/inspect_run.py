@@ -1,7 +1,6 @@
 import sys, os
 import numpy as np
 import streamlit as st
-import altair as alt
 
 import matplotlib.pyplot as plt
 
@@ -23,11 +22,6 @@ args = sys.argv[1:]
 def load_env(path):
     logging.info(f"Loading env in @'{path}'")
     return Environment(path)
-
-
-def multiline_chart(df, xs, limit=1):
-    st.altair_chart(alt.Chart(df).mark_line().encode(x='index', y=xs))
-
 
 if len(args) > 0:
     path, *_ = args
