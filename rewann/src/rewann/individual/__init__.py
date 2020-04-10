@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from .metrics import apply_metrics
 
@@ -20,15 +21,15 @@ class Individual:
     from .network import Network
 
     from .genetic_operations import mutation
-    parent = None
 
     recorded_metrics = 'accuracy', 'kappa', 'log_loss'
 
-    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None):
+    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None, parent=None):
         self.genes = genes
         self.network = network
         self.id = id
         self.birth = birth
+        self.parent = parent
         if metric_values is None:
             self._metric_values = dict()
             for m in self.recorded_metrics:
@@ -108,6 +109,11 @@ class Individual:
             return [metric_values[k] for k in metric_names]
         else:
             return {k: metric_values[k] for k in metric_names}
+
+
+    @property
+    def metric_values(self):
+        return pd.DataFrame(data=self._metric_values)
 
     @classmethod
     def base(cls, *args, **kwargs):

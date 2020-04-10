@@ -8,7 +8,8 @@ debug = true
   distribution='uniform'
   lower_bound=-2
   upper_bound=2
-  number_of_samples_per_iteration=1
+  num_weight_samples_per_iteration=1
+  num_training_samples_per_iteration=-1 # all
 
 
 [task]

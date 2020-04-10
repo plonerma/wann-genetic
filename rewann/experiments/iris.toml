@@ -7,11 +7,25 @@ name='iris'
 [population]
 num_generations=200
 size=100
+
+[selection]
 elite_size = 10
+types = ['elite', 'nsga_rank']
 
 [sampling]
-  seed=0
-  distribution='uniform'
-  lower_bound=1
-  upper_bound=2
-  number_of_samples_per_iteration=10
+seed=0
+distribution='uniform'
+lower_bound=1
+upper_bound=3
+num_weight_samples_per_iteration=5
+
+[mutation]
+  [mutation.new_edge]
+    propability = 0.2
+    strategy = 'layer_agnostic'
+  [mutation.new_node]
+    propability = 0.3
+  [mutation.reenable_edge]
+    propability = 0.1
+  [mutation.change_activation]
+    propability = 0.4

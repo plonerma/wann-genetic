@@ -4,9 +4,9 @@ import logging
 
 def get_objective_values(ind):
     loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_hidden', as_list=True)
-    return loss_min, loss_mean, n_hidden
+    return -loss_min, -loss_mean, -n_hidden
 
-def rank_individuals(population):
+def rank_individuals(population, return_order=False):
     objectives = np.array([
         get_objective_values(ind) for ind in population
     ])
@@ -44,14 +44,17 @@ def rank_individuals(population):
         # sort
         front_list[front_index] = front[np.argsort(-dist)]
 
-    rank = np.empty(len(population), dtype=int)
-    order = np.hstack(front_list)
-    rank[order] = ix
 
-    return rank
+    order = np.hstack(front_list)
+    if return_order:
+        return order
+    else:
+        rank = np.empty(len(population), dtype=int)
+        rank[order] = ix
+        return rank
 
 def dominates(objectives, i, j):
-    return np.all(objectives[i] <= objectives[j], axis=-1) & np.any(objectives[i] < objectives[j], axis=-1)
+    return np.all(objectives[i] >= objectives[j], axis=-1) & np.any(objectives[i] > objectives[j], axis=-1)
 
 def crowding_distances(front_objectives):
   # Order by objective value

@@ -77,12 +77,16 @@ def load_ind(env, i):
 
     Genotype = env.ind_class.Genotype
 
-    p = dict(genes=Genotype(
-        edges=decode_array(data['edges'], dtype=list(Genotype.edge_encoding)),
-        nodes=decode_array(data['nodes'], dtype=list(Genotype.node_encoding)),
-        n_in=env.task.n_in, n_out=env.task.n_out,
+    p = dict(
+        genes=Genotype(
+            edges=decode_array(data['edges'], dtype=list(Genotype.edge_encoding)),
+            nodes=decode_array(data['nodes'], dtype=list(Genotype.node_encoding)),
+            n_in=env.task.n_in, n_out=env.task.n_out,
+        ),
         parent=data.get('paent', None),
-    ))
+        id=i,
+    )
+
 
     if 'record' in data:
         cm_list = list()
@@ -117,7 +121,7 @@ def load_metrics(env):
 
 def existing_populations(env):
     populations = list()
-    for dir, _, files in os.walk(env.path('gen')):
+    for dir, _, files in os.walk(env_path(env, 'gen')):
         for f in files:
             gen, _ = f.split('.')
             populations.append(int(gen))

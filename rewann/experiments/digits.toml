@@ -5,13 +5,16 @@ debug=false
 name='digits'
 
 [population]
-num_generations=200
+num_generations=1000
 size=100
+
+[selection]
 elite_size = 10
+types = ['elite', 'nsga_rank']
 
 [sampling]
   seed=0
   distribution='uniform'
   lower_bound=1
   upper_bound=2
-  number_of_samples_per_iteration=5
+  num_weight_samples_per_iteration=5

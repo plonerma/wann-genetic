@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 
 def node_names(net):
     return (
-        [f"$x_{i}$" for i in range(net.n_in)]          # inputs
+        [f"$x_{{{i}}}$" for i in range(net.n_in)]          # inputs
         + ["$b$"]                               # bias
-        + [f"$h_{i}$" for i in range(net.n_hidden)]    # hidden
-        + [f"$y_{i}$" for i in range(net.n_out)]       # outputs
+        + [f"$h_{{{i}}}$" for i in range(net.n_hidden)]    # hidden
+        + [f"$y_{{{i}}}$" for i in range(net.n_out)]       # outputs
     )
 
 
@@ -66,6 +66,10 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
         update = np.dot(pos['y'], M)
         pos['y'][net.offset:-net.n_out] = update
 
+    y_hidden = pos['y'][net.offset:-net.n_out]
+
+    pos['y'][np.argsort(y_hidden) + net.offset] = np.linspace(-1,1, net.n_hidden)
+
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
     if activation is not None:
@@ -89,7 +93,7 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
     nx.draw(
         g, ax=ax, pos=pos, node_color=color,
         with_labels=True, node_size=node_size, font_color="k", font_size=9,
-        arrows=False, linewidths=0,
+        arrows=True, linewidths=0, alpha=.9, arrowstyle='-|>', style='dotted',
         edge_color=edge_color, vmax=0, vmin=np.min(edge_color), cmap='magma',
         width=edge_widths,
         label="CAPTION")

@@ -43,13 +43,14 @@ def evaluate_inds(env, pop):
     apply_func=partial(apply_networks, x=env.task.x)
 
     logging.debug('expressing individuals')
+
     express_inds(env, pop)
 
     weights = env['sampling', 'current_weight']
 
     logging.debug('Applying networks')
 
-    results = env.pool.map(apply_func, [(ind.network, weights) for ind in pop])
+    results = env.pool_map(apply_func, [(ind.network, weights) for ind in pop])
 
     logging.debug('recording metrics')
 
@@ -58,7 +59,7 @@ def evaluate_inds(env, pop):
 
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))
-    networks = env.pool.imap(env.ind_class.Network.from_genes, (i.genes for i in inds_to_express))
+    networks = env.pool_map(env.ind_class.Network.from_genes, (i.genes for i in inds_to_express))
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
@@ -71,11 +72,12 @@ def evolution(env):
     n_in, n_out = env.task.n_in, env.task.n_out
 
     base_ind = env.ind_class.base(n_in, n_out)
+    express_inds(env, [base_ind])
 
-    evaluate_inds(env, [base_ind])
+    #evaluate_inds(env, [base_ind])
 
     pop = [base_ind]*env['population', 'size']
-
+    #rank = np.arange(env['population', 'size'])
 
     # first hidden id after ins, bias, & outs
     h = n_in + n_out + 1
@@ -92,6 +94,9 @@ def evolution(env):
         pop = evolve_population(env, pop, innov)
 
         evaluate_inds(env, pop)
+        order = rank_individuals(pop, return_order=True)
+        logging.debug(order)
+        pop = [pop[i] for i in order]
 
         # yield next generation
         yield innov.generation, pop
@@ -101,7 +106,8 @@ def evolve_population(env, pop, innov):
     elite_size = env['selection', 'elite_size']
     selection_types = env['selection', 'types']
 
-    rank = rank_individuals(pop)
+    # assume ordered population
+    rank = np.arange(len(pop))
 
     # Elitism (best `elite_size` individual surive without mutation)
     if len (pop) > elite_size:

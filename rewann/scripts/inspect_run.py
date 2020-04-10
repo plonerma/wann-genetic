@@ -3,18 +3,23 @@ import numpy as np
 import streamlit as st
 import altair as alt
 
+import matplotlib.pyplot as plt
+
 
 import logging
 
 from pathlib import Path
 
 from rewann import Environment
+from rewann.environment.evolution import evaluate_inds
+
+from rewann.vis import draw_graph, draw_weight_matrix, node_names
 
 import pandas as pd
 
 args = sys.argv[1:]
 
-
+@st.cache(allow_output_mutation=True)
 def load_env(path):
     logging.info(f"Loading env in @'{path}'")
     return Environment(path)
@@ -37,7 +42,7 @@ elif len(args) == 0:
 
 env = load_env(path)
 
-exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log'])
+exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log', 'population'])
 
 if exp_view == 'log':
     "# Log"
@@ -56,15 +61,59 @@ elif exp_view == 'metrics':
     metrics = env.load_metrics()
     metrics.index.names = ['generation']
 
+    options = list(sorted(metrics.columns))
 
-    st.line_chart(data=metrics[['MEDIAN:median:accuracy', 'MEAN:mean:accuracy', 'MAX:max:accuracy', 'MIN:min:accuracy']])
-    st.line_chart(data=metrics[['MEDIAN:median:kappa', 'MEAN:mean:kappa', 'MAX:max:kappa', 'MIN:min:kappa']])
-    st.line_chart(data=metrics[['MEDIAN:n_hidden', 'MEAN:n_hidden', 'MAX:n_hidden', 'MIN:n_hidden']])
-    st.line_chart(data=metrics[['MEDIAN:n_edges', 'MEAN:n_edges', 'MAX:n_edges', 'MIN:n_edges']])
-    st.line_chart(data=metrics[['MEDIAN:age', 'MEAN:age', 'MAX:age', 'MIN:age']])
+    default = ['MEDIAN:kappa.median', 'MEAN:kappa.mean', 'MAX:kappa.max', 'MEDIAN:kappa.min']
 
-    st.line_chart(data=metrics[['num_no_edge_inds', 'num_no_hidden_inds', 'biggest_ind']])
+    default = list(filter(lambda o: o in options, default))
 
-    st.line_chart(data=metrics[['num_unique_individuals', 'num_individuals']])
+    selection = st.multiselect('metrics', options=options, default=default)
 
-    st.line_chart(data=metrics)
+    st.line_chart(data=metrics[selection])
+
+    always_show = [
+        ['MEDIAN:accuracy.median', 'MEAN:accuracy.mean', 'MAX:accuracy.max', 'MEDIAN:accuracy.min', 'MAX:accuracy.mean'],
+        ['MEDIAN:log_loss.median', 'MEAN:log_loss.mean', 'MIN:log_loss.min', 'MEDIAN:log_loss.min', 'MIN:log_loss.mean'],
+        ['num_no_edge_inds', 'num_no_hidden_inds', 'biggest_ind'],
+        ['num_unique_individuals', 'num_individuals']
+    ]
+
+    for s in always_show:
+        st.line_chart(data=metrics[s])
+
+elif exp_view == 'population':
+    pops = list(reversed(env.existing_populations()))
+    gen = st.selectbox('generation', options=pops)
+    pop = env.load_pop(gen)
+
+    individuals = {f'{i}: {ind.id}': ind for i, ind in enumerate(pop)}
+    i = st.selectbox('individual', options=list(individuals.keys()))
+
+    ind = individuals[i]
+
+    env.sample_weights(100)
+    env.setup_pool(1)
+    evaluate_inds(env, [ind])
+
+    ind_metrics = ind.metric_values
+
+    ind_metrics = ind_metrics.sort_values(by=['weight'])
+
+    fig, ax = plt.subplots()
+    ind_metrics.plot(kind='line',x='weight',y='log_loss', ax=ax)
+    st.pyplot(fig)
+
+    fig, ax = plt.subplots()
+    ind_metrics.plot(kind='line',x='weight',y='kappa', ax=ax)
+    ind_metrics.plot(kind='line',x='weight',y='accuracy', ax=ax)
+    st.pyplot(fig)
+
+    fig, ax = plt.subplots()
+    ind_metrics[['weight']].plot(kind='hist', ax=ax)
+    st.pyplot(fig)
+
+    n = ind.network
+
+    fig, ax = plt.subplots()
+    draw_graph(n, ax)
+    st.pyplot(fig)
