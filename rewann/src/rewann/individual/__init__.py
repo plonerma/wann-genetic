@@ -32,9 +32,7 @@ class Individual:
         self.parent = parent
         if metric_values is None:
             self._metric_values = dict()
-            for m in self.recorded_metrics:
-                self._metric_values[m] = list()
-            self._metric_values['weight'] = list()
+            self._metric_values['n_evaluations'] = 0
         else:
             self._metric_values = metric_values
 
@@ -73,10 +71,23 @@ class Individual:
             )
             metrics = apply_metrics(values, self.recorded_metrics)
 
-            for r in self.recorded_metrics:
-                self._metric_values[r].append(metrics[r])
+            values = self._metric_values
 
-            self._metric_values['weight'].append(weight)
+            for r in self.recorded_metrics:
+                k_max, k_min, k_mean = f'{r}.max', f'{r}.min', f'{r}.mean'
+
+                if values['n_evaluations'] < 1:
+                    values[k_max] = metrics[r]
+                    values[k_min] = metrics[r]
+                    values[k_mean] = metrics[r]
+                else:
+                    values[k_max] = max(metrics[r], values[k_max])
+                    values[k_min] = min(metrics[r], values[k_min])
+                    values[k_mean] = (
+                        (metrics[r] + values[k_mean] * values['n_evaluations'])
+                        / (values['n_evaluations'] + 1))
+
+            self._metric_values['n_evaluations'] += 1
 
     @expressed
     def metrics(self, *metric_names, current_gen=None, as_list=False):
@@ -87,23 +98,10 @@ class Individual:
         metric_values = dict(
             n_hidden=self.network.n_hidden,
             n_edges=len(self.genes.edges),
-            n_evaluations=len(self._metric_values['weight']),
             age=None if current_gen is None else (current_gen - self.birth)
         )
 
-        postfixes = {
-            'mean': np.mean,
-            'median': np.median,
-            'max': np.max,
-            'min': np.min
-        }
-
-        for m in metric_names:
-            if m in metric_values:
-                continue
-            m, *postfix = m.split('.')
-            for p, func in postfixes.items():
-                metric_values[f'{m}.{p}'] = func(self._metric_values[m])
+        metric_values.update(self._metric_values)
 
         if as_list:
             return [metric_values[k] for k in metric_names]

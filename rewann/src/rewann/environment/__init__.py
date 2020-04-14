@@ -146,7 +146,7 @@ class Environment:
             gen = self['population', 'num_generations']
 
         names = 'kappa', 'accuracy', 'log_loss'
-        pfs = 'max', 'mean', 'median', 'min'
+        pfs = 'max', 'mean', 'min'
 
         metric_names = [
             'n_hidden', 'n_edges', 'n_evaluations', 'age'] + [

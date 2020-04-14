@@ -57,7 +57,7 @@ elif exp_view == 'metrics':
 
     options = list(sorted(metrics.columns))
 
-    default = ['MEDIAN:kappa.median', 'MEAN:kappa.mean', 'MAX:kappa.max', 'MEDIAN:kappa.min']
+    default = ['MEAN:kappa.mean', 'MAX:kappa.max', 'MEDIAN:kappa.min']
 
     default = list(filter(lambda o: o in options, default))
 
@@ -66,10 +66,9 @@ elif exp_view == 'metrics':
     st.line_chart(data=metrics[selection])
 
     always_show = [
-        ['MEDIAN:accuracy.median', 'MEAN:accuracy.mean', 'MAX:accuracy.max', 'MEDIAN:accuracy.min', 'MAX:accuracy.mean'],
-        ['MEDIAN:log_loss.median', 'MEAN:log_loss.mean', 'MIN:log_loss.min', 'MEDIAN:log_loss.min', 'MIN:log_loss.mean'],
+        ['MEAN:accuracy.mean', 'MAX:accuracy.max', 'MEDIAN:accuracy.min', 'MAX:accuracy.mean'],
+        ['MEAN:log_loss.mean', 'MIN:log_loss.min', 'MEDIAN:log_loss.min', 'MIN:log_loss.mean'],
         ['num_no_edge_inds', 'num_no_hidden_inds', 'biggest_ind'],
-        ['num_unique_individuals', 'num_individuals']
     ]
 
     for s in always_show:
