@@ -20,7 +20,7 @@ args = sys.argv[1:]
 
 @st.cache(allow_output_mutation=True)
 def load_env(path):
-    logging.info(f"Loading env in @'{path}'")
+    logging.info(f"Loading env @'{path}'")
     return Environment(path)
 
 if len(args) > 0:
@@ -33,7 +33,7 @@ elif len(args) == 0:
     paths = sorted(paths, key=os.path.getmtime, reverse=True)
     path = st.sidebar.selectbox('Path', options=paths)
 
-
+logging.info(f'Calling load env ({path})')
 env = load_env(path)
 
 exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log', 'population'])

@@ -108,6 +108,7 @@ class Environment:
         self.setup_run()
         generations = evolution(self)
 
+        logging.info("Starting evolutionary algorithm")
         start_time = time()
 
         for _ in range(self['population', 'num_generations']):

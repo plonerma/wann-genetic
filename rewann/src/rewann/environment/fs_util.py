@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 import pandas as pd
 from collections.abc import Mapping
+import copy
 
 import logging
 
@@ -140,7 +141,7 @@ def setup_params(env, params):
             params['experiment_path'] = os.path.dirname(params_path)
 
 
-    env.params = nested_update(dict(env.default_params), params)
+    env.params = nested_update(copy.deepcopy(env.default_params), params)
 
     derive_path(env)
 
