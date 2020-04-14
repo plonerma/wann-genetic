@@ -75,22 +75,31 @@ def apply_networks(params, x):
     network, weights = params
     return network.apply(x=x, weights=weights)
 
+def create_initial_population(env):
+    if not env['population', 'initial_with_edges']:
+        base_ind = env.ind_class.base(n_in, n_out)
+        express_inds(env, [base_ind])
+        return [base_ind]*env['population', 'size']
+
+    else:
+        pop = list()
+        prob_enabled = env['population', 'initial_enabled_edge_probability']
+        for i in range(env['population', 'size']):
+            pop.append(
+                env.ind_class.full_initial(env.task.n_in, env.task.n_out,
+                                           id=i, prob_enabled=prob_enabled))
+            # disable some edges
+        express_inds(env, pop)
+        evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
+        order = rank_individuals(pop, return_order=True)
+        pop = [pop[i] for i in order]
+        return pop
+
 def evolution(env):
-    # initial population
-    n_in, n_out = env.task.n_in, env.task.n_out
-
-    base_ind = env.ind_class.base(n_in, n_out)
-    express_inds(env, [base_ind])
-
-    #evaluate_inds(env, [base_ind])
-
-    pop = [base_ind]*env['population', 'size']
-    #rank = np.arange(env['population', 'size'])
+    pop = create_initial_population(env)
 
     # first hidden id after ins, bias, & outs
-    h = n_in + n_out + 1
-
-    innov = InnovationRecord.empty(h)
+    innov = InnovationRecord.empty(env.task.n_in + env.task.n_out + 1)
 
     logging.debug('Created initial population.')
 
@@ -111,39 +120,26 @@ def evolution(env):
 
 def evolve_population(env, pop, innov):
     pop_size = env['population', 'size']
-    elite_size = env['selection', 'elite_size']
-    selection_types = env['selection', 'types']
+    elite_size = int(np.floor(env['selection', 'elite_ratio'] * pop_size))
+    culling_size = int(np.floor(env['selection', 'culling_ratio'] * pop_size))
 
-    # assume ordered population
-    rank = np.arange(len(pop))
+    # population is assumed to be ordered
 
     # Elitism (best `elite_size` individual surive without mutation)
-    if len (pop) > elite_size:
-        elite = np.argpartition(rank, elite_size)
-        new_pop = [pop[i] for i in elite[:elite_size]]
-    else:
-        new_pop = pop
+    new_pop = pop[:elite_size]
 
     num_places_left = pop_size - len(new_pop)
     winner = None
 
-    if 'tournaments' in selection_types: # Tournament selection
-
+    if env['selection', 'use_tournaments']:
         participants = np.random.randint(
-            len(pop), size=(num_places_left, env['selection', 'tournament_size']))
+            len(pop) - culling_size, # last `culling_size` individuals are ignored
+            size=(num_places_left, env['selection', 'tournament_size']))
 
-        scores = np.empty(participants.shape)
-        scores = rank[participants]
-        winner = np.argmin(scores, axis=-1)
+        winner = np.argmin(participants, axis=-1)
 
-    elif 'nsga_rank' in selection_types:
-        logging.debug(rank)
-        winner = np.empty(pop_size, dtype=int)
-        winner[rank] = np.arange(pop_size)
-        winner = winner[:num_places_left]
     else:
-        sts = ' ,'.join(selection_types)
-        raise RuntimeError(f'No secondary selection type selected ({sts})')
+        winner = np.arange(num_places_left)
 
     # Breed child population
     for i in winner:

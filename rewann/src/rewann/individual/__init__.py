@@ -118,3 +118,7 @@ class Individual:
     @classmethod
     def base(cls, *args, **kwargs):
         return cls(genes=cls.Genotype.base(*args, **kwargs), birth=0, id=0)
+
+    @classmethod
+    def full_initial(cls, *args, id=0, **kwargs):
+        return cls(genes=cls.Genotype.full_initial(*args, **kwargs), birth=0, id=id)

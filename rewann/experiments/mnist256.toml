@@ -8,12 +8,8 @@ debug=false
 name='mnist256'
 
 [population]
-num_generations=5
+num_generations=1000
 size=100
-
-[selection]
-elite_size = 10
-types = ['elite', 'nsga_rank']
 
 [sampling]
 seed=0
@@ -21,14 +17,4 @@ distribution='uniform'
 lower_bound=1
 upper_bound=3
 num_weight_samples_per_iteration=2
-
-[mutation]
-  [mutation.new_edge]
-    propability = 0.2
-    strategy = 'layer_agnostic'
-  [mutation.new_node]
-    propability = 0.3
-  [mutation.reenable_edge]
-    propability = 0.1
-  [mutation.change_activation]
-    propability = 0.4
+num_training_samples_per_iteration=1000

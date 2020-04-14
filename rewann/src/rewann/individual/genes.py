@@ -87,6 +87,27 @@ class Genotype:
 
         return cls(edges=edges, nodes=nodes, n_in=n_in, n_out=n_out)
 
+    @classmethod
+    def full_initial(cls, n_in, n_out, prob_enabled=1):
+        """Create new base gene with all input nodes connected to the output nodes."""
+        # connect all input (and bias) nodes to all output nodes
+        n_edges = (n_in+1)*n_out
+
+        edges = np.zeros(n_edges, dtype=list(cls.edge_encoding))
+        edges['id'] = np.arange(n_edges)
+        edges['src'] = np.tile(np.arange(n_in+1), n_out)
+        edges['dest'] = np.repeat(np.arange(n_out), n_in+1)
+        edges['enabled'] = np.random.rand(n_edges) < prob_enabled
+
+        # start only with output nodes (input and bias nodes are implicit)
+        nodes = np.zeros(n_out, dtype=list(cls.node_encoding))
+        nodes['out'] = True
+
+        # reserve first n_in + 1 ids for implicit input and bias nodes
+        nodes['id'] = np.arange(n_out) + n_in + 1
+
+        return cls(edges=edges, nodes=nodes, n_in=n_in, n_out=n_out)
+
     def copy(self):
         return self.__class__(
             edges=np.copy(self.edges), nodes=np.copy(self.nodes),

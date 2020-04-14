@@ -8,10 +8,6 @@ name='iris'
 num_generations=200
 size=100
 
-[selection]
-elite_size = 10
-types = ['elite', 'nsga_rank']
-
 [sampling]
 seed=0
 distribution='uniform'

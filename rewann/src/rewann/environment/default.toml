@@ -25,20 +25,22 @@ debug = true
 [population]
   num_generations = 20
   size = 64
+  initial_enabled_edge_probability = 0.05
+  initial_with_edges=true
 
 [selection]
-  # 'nsga_rank' and 'tournaments' are mutually exclusie
-  types = ['elite', 'nsga_rank']
-  elite_size = 10
+  use_tournaments = true
+  elite_ratio = 0.1
+  culling_ratio = 0.2 # Don't use the worst 20% of the population for further variations
   tournament_size = 5
 
 [mutation]
   [mutation.new_edge]
-    propability = 0.25
+    propability = 0.20
     strategy = 'layer_agnostic'
   [mutation.new_node]
     propability = 0.25
   [mutation.reenable_edge]
-    propability = 0.25
+    propability = 0.05
   [mutation.change_activation]
-    propability = 0.25
+    propability = 0.5
