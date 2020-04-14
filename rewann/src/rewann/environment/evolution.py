@@ -39,8 +39,16 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
-def evaluate_inds(env, pop):
-    apply_func=partial(apply_networks, x=env.task.x)
+def evaluate_inds(env, pop, n_samples=-1):
+    if n_samples < 0 or n_samples > len(env.task.x):
+        x = env.task.x
+        y_true = env.task.y_true
+    else:
+        chosen_samples = np.random.choice(len(env.task.x), size=n_samples, replace=False)
+        x = env.task.x[chosen_samples]
+        y_true = env.task.y_true[chosen_samples]
+
+    apply_func=partial(apply_networks, x=x)
 
     logging.debug('expressing individuals')
 
@@ -48,14 +56,14 @@ def evaluate_inds(env, pop):
 
     weights = env['sampling', 'current_weight']
 
-    logging.debug('Applying networks')
+    logging.debug(f'Applying networks ({n_samples})')
 
     results = env.pool_map(apply_func, [(ind.network, weights) for ind in pop])
 
     logging.debug('recording metrics')
 
     for y_probs, ind in zip(results, pop):
-        ind.record_metrics(weights, env.task.y_true, y_probs)
+        ind.record_metrics(weights, y_true, y_probs)
 
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))
@@ -93,7 +101,7 @@ def evolution(env):
 
         pop = evolve_population(env, pop, innov)
 
-        evaluate_inds(env, pop)
+        evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
         order = rank_individuals(pop, return_order=True)
         logging.debug(order)
         pop = [pop[i] for i in order]

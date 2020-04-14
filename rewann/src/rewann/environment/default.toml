@@ -27,7 +27,7 @@ debug = true
   size = 64
 
 [selection]
-  # 'nsga_rank' and 'tournament' are mutually exclusie
+  # 'nsga_rank' and 'tournaments' are mutually exclusie
   types = ['elite', 'nsga_rank']
   elite_size = 10
   tournament_size = 5

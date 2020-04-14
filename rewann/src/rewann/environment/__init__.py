@@ -23,6 +23,7 @@ class Environment:
         self.setup_params(params)
 
         self.metrics = list()
+        self.pool= None
 
         # choose task
         self.task = select_task(self['task', 'name'])
