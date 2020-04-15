@@ -1,5 +1,5 @@
 experiment_name='iris_v0.1'
-debug=false
+debug=true
 
 [task]
 name='iris'
