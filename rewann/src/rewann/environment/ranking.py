@@ -3,7 +3,7 @@ import numpy as np
 import logging
 
 def get_objective_values(ind):
-    loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_hidden', as_list=True)
+    loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_layers', as_list=True)
     return -loss_min, -loss_mean, -n_hidden
 
 def rank_individuals(population, return_order=False):

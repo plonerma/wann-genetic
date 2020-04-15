@@ -108,6 +108,7 @@ class Individual:
 
         metric_values = dict(
             n_hidden=self.network.n_hidden,
+            n_layers=self.network.n_layers,
             n_edges=len(self.genes.edges),
             age=None if current_gen is None else (current_gen - self.birth)
         )

@@ -105,6 +105,10 @@ class Network:
             i = i + n
         yield np.arange(i, i+self.n_out)
 
+    @property
+    def n_layers(self):
+        return len(self.propagation_steps)
+
     def node_layers(self):
         """Return layer index for each node"""
         layers = np.full(self.n_nodes, np.nan)
