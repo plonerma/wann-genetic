@@ -22,7 +22,7 @@ class Network:
 #        ('squared', lambda x: x**2),
     ]
 
-    def __init__(self, n_in, n_out, nodes, weight_matrix,
+    def __init__(self, n_in, n_out, nodes, weight_matrix, conn_mat,
                  propagation_steps=None,
                  **params):
         # Relevant for computation
@@ -30,6 +30,7 @@ class Network:
         self.n_out = n_out
         self.nodes = nodes
         self.weight_matrix = weight_matrix
+        self.conn_matrix = conn_mat
         self.propagation_steps = propagation_steps
 
         # For inspection
@@ -89,7 +90,7 @@ class Network:
         return cls(
             n_in=genes.n_in, n_out=genes.n_out,
             nodes=nodes,
-            weight_matrix=w_matrix,
+            weight_matrix=w_matrix, conn_mat=conn_mat,
             propagation_steps=prop_steps,
         )
 

@@ -50,21 +50,19 @@ def add_edge_layer_agnostic(ind, env, innov):
 
     network = ind.network
 
-    connectivity_matrix = np.zeros((network.n_nodes, network.n_nodes), dtype=bool)
-    connectivity_matrix[:-network.n_out, network.offset:] = network.weight_matrix != 0
-
-    np.fill_diagonal(connectivity_matrix, True)
-    reachability_matrix = np.copy(connectivity_matrix)
+    reachability_matrix = np.copy(network.conn_matrix)
+    np.fill_diagonal(reachability_matrix, True)
 
     n_paths = 0
     while n_paths < np.sum(reachability_matrix):
         n_paths = np.sum(reachability_matrix)
-        reachability_matrix = np.dot(connectivity_matrix, reachability_matrix)
+        reachability_matrix = np.dot(reachability_matrix, reachability_matrix)
 
 
     # edges are possible where src can not be reached from dest and there is no
-    # direct connection from src to dest (* can be used as logical and)
-    possible_edges = (reachability_matrix == False).T * (connectivity_matrix == False)
+    # direct connection from src to dest
+    possible_edges = np.logical_and((reachability_matrix == False).T, (network.conn_matrix == False))
+    np.fill_diagonal(reachability_matrix, False) # don't allow loops
 
     # Disallow edges from output and to inputs
     possible_edges[network.offset:, :] = False

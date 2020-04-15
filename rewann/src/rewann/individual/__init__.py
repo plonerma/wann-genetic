@@ -58,8 +58,10 @@ class Individual:
         self.record_metrics(weights, y_true, y_probs)
 
 
-    def record_metrics(self, weights, y_true, y_probs):
+    def record_metrics(self, weights, y_true, y_probs, reduce_values=True):
         y_preds = np.argmax(y_probs, axis=-1)
+
+        mv = self._metric_values
 
         for y_prob, y_pred, weight in zip(y_probs, y_preds, weights):
 
@@ -71,23 +73,32 @@ class Individual:
             )
             metrics = apply_metrics(values, self.recorded_metrics)
 
-            values = self._metric_values
-
             for r in self.recorded_metrics:
-                k_max, k_min, k_mean = f'{r}.max', f'{r}.min', f'{r}.mean'
 
-                if values['n_evaluations'] < 1:
-                    values[k_max] = metrics[r]
-                    values[k_min] = metrics[r]
-                    values[k_mean] = metrics[r]
+                if reduce_values:
+                    k_max, k_min, k_mean = f'{r}.max', f'{r}.min', f'{r}.mean'
+
+                    if mv['n_evaluations'] < 1:
+                        mv[k_max] = metrics[r]
+                        mv[k_min] = metrics[r]
+                        mv[k_mean] = metrics[r]
+                    else:
+                        mv[k_max] = max(metrics[r], mv[k_max])
+                        mv[k_min] = min(metrics[r], mv[k_min])
+                        mv[k_mean] = (
+                            (metrics[r] + mv[k_mean] * mv['n_evaluations'])
+                            / (mv['n_evaluations'] + 1))
                 else:
-                    values[k_max] = max(metrics[r], values[k_max])
-                    values[k_min] = min(metrics[r], values[k_min])
-                    values[k_mean] = (
-                        (metrics[r] + values[k_mean] * values['n_evaluations'])
-                        / (values['n_evaluations'] + 1))
+                    if r not in mv:
+                        mv[r] = list()
+                    mv[r].append(metrics[r])
 
-            self._metric_values['n_evaluations'] += 1
+            if not reduce_values:
+                if 'weight' not in mv:
+                    mv['weight'] = list()
+                mv['weight'].append(weight)
+
+            mv['n_evaluations'] += 1
 
     @expressed
     def metrics(self, *metric_names, current_gen=None, as_list=False):

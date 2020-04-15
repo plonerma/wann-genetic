@@ -96,7 +96,7 @@ class Genotype:
         edges = np.zeros(n_edges, dtype=list(cls.edge_encoding))
         edges['id'] = np.arange(n_edges)
         edges['src'] = np.tile(np.arange(n_in+1), n_out)
-        edges['dest'] = np.repeat(np.arange(n_out), n_in+1)
+        edges['dest'] = np.repeat(n_in+1 + np.arange(n_out), n_in+1)
         edges['enabled'] = np.random.rand(n_edges) < prob_enabled
 
         # start only with output nodes (input and bias nodes are implicit)

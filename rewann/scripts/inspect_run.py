@@ -88,7 +88,7 @@ elif exp_view == 'population':
     n_samples = st.slider('number of samples', 1, len(env.task.x), 100)
 
     env.sample_weights(n_weights)
-    evaluate_inds(env, [ind], n_samples=n_samples)
+    evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False)
 
     ind_metrics = ind.metric_values
 
@@ -107,8 +107,26 @@ elif exp_view == 'population':
     ind_metrics[['weight']].plot(kind='hist', ax=ax)
     st.pyplot(fig)
 
-    n = ind.network
+    net = ind.network
 
     fig, ax = plt.subplots()
-    draw_graph(n, ax)
+    draw_graph(net, ax)
     st.pyplot(fig)
+
+    names = node_names(net)
+    id_map = {n['id']: i for i, n in enumerate(ind.genes.nodes)}
+
+    data = list()
+
+    for e in ind.genes.edges:
+        #src, dest = id_map[], id_map[e['dest']]
+
+        data.append(dict(
+            id=e['id'],
+            src=e['src'],
+            dest=e['dest'],
+            enabled=e['enabled']
+        ))
+
+
+    st.write(pd.DataFrame(data))

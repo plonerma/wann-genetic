@@ -39,7 +39,7 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
-def evaluate_inds(env, pop, n_samples=-1):
+def evaluate_inds(env, pop, n_samples=-1, reduce_values=True):
     if n_samples < 0 or n_samples > len(env.task.x):
         x = env.task.x
         y_true = env.task.y_true
@@ -63,7 +63,7 @@ def evaluate_inds(env, pop, n_samples=-1):
     logging.debug('recording metrics')
 
     for y_probs, ind in zip(results, pop):
-        ind.record_metrics(weights, y_true, y_probs)
+        ind.record_metrics(weights, y_true, y_probs, reduce_values=reduce_values)
 
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))
