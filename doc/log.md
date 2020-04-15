@@ -50,3 +50,16 @@ Implemented nsga sort. Core functionality mostly implemented.
 The most major difference to Gaier and Ha's approach is the focus on classifications problems. Most assumptions I make in the theoretical approach as well as in the implementation will rest on this focus.
 
 What parts are really neat, which are nsga?
+
+---
+
+date: 2020-04-15
+
+Ich habe umgestellt, wie die initiale Population erzeugt wird: anstatt leere Netzwerke zu erzeugen, werden die Knoten vollständig verbunden, allerdings wird ein Großteil der Verbindungen auf `disabled` gesetzt: dh. direkte Verbindungen können dort nicht erzeugt werden (in den gezeigten Beispielen ist dieser Anteil allerdings wahrscheinlich zu groß).
+
+Auf dem Iris Datensatz zeigt sich genau das Verhalten, das ich vermutet hatte: Anstatt Ein- und Ausgang über wenige Ebenen zu verbinden, bilden sich lange Pfade von Knoten.
+
+1. Kleineren Anteil an `disabled` Kanten testen.
+2. Anstatt die Anzahl der Knoten zu minimieren: Anzahl der Ebenen minimieren.
+3. Historie der Pfadbildung untersuchen: aus den Kanten Ids sollte sich
+   eine zeitliche Ordnung ableiten lassen.
