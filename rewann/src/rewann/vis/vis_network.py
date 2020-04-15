@@ -30,21 +30,19 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
     # Positions
     N = len(nodes)
 
-    layers = np.array([len(s) for s in net.layers(including_input=True)])
+    layers = list(enumerate([len(s) for s in net.layers(including_input=True)]))
 
     # pos x will be determined by layer, pos y will be iterated on
     # input, bias and output nodes will have static position, hidden node
     # positions will be determine iteratively
     pos = np.array([
         ((li), 0)
-        for li, ln in enumerate(layers)
+        for li, ln in layers
         for ni in range(ln)
     ], dtype=[('x', float), ('y', float)])
 
-    spread = lambda n: ((n-1) / 2 - np.arange(n)) / (n + 1)
-
-    pos['y'][0: net.offset] = spread(net.offset)
-    pos['y'][-net.n_out:] = spread(net.n_out)
+    pos['y'][0: net.offset] = np.arange(net.offset)
+    pos['y'][-net.n_out:] = np.arange(net.n_out)
 
     a = net.weight_matrix[:net.offset, :net.n_hidden]
     b = net.weight_matrix[net.offset:, :net.n_hidden]
@@ -66,9 +64,11 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
         update = np.dot(pos['y'], M)
         pos['y'][net.offset:-net.n_out] = update
 
-    y_hidden = pos['y'][net.offset:-net.n_out]
-
-    pos['y'][np.argsort(y_hidden) + net.offset] = np.linspace(-1,1, net.n_hidden)
+    i_0 = 0
+    for j, l in layers:
+        ns = i_0 + np.arange(l)
+        pos['y'][np.argsort(pos['y'][ns]) + i_0] = np.linspace(-1, 1, l)
+        i_0 += l
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
