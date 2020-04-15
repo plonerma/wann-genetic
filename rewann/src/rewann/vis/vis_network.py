@@ -66,11 +66,9 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
 
     i_0 = 0
     for j, l in layers:
-        if l > 1:
-            ns = i_0 + np.arange(l)
-            pos['y'][np.argsort(pos['y'][ns]) + i_0] = np.linspace(-l, l, l)
-        else:
-            pos['y'][i_0] = 0
+        bound = np.log(l)
+        ns = i_0 + np.arange(l)
+        pos['y'][np.argsort(pos['y'][ns]) + i_0] = np.linspace(-bound, bound, l)
         i_0 += l
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
