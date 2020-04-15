@@ -6,32 +6,38 @@ import numpy as np
 
 import cv2
 
-def digit_raw():
+def digit_raw(load_test=False):
     '''
     Converts 8x8 scikit digits to
     [samples x pixels]  ([N X 64])
     '''
     from sklearn import datasets
     digits = datasets.load_digits()
-    z = (digits.images/16)
+    z = digits.images
+    z = (z/16)
     z = z.reshape(-1, (64))
 
-    return ClassificationTask(z, digits['target'],
-                              n_in=64, n_out=len(digits['target_names']))
+    return z, digits['target']
 
 
-def mnist_256():
+def mnist_256(load_test=False):
     '''
     Converts 28x28 mnist digits to [16x16]
     [samples x pixels]  ([N X 256])
     '''
     import mnist
-    z = (mnist.train_images()/255)
-    z = preprocess(z,(16,16))
+    if not load_test:
+        x = mnist.train_images()
+        y_true = mnist.train_labels()
+    else:
+        x = mnist.test_images()/255
+        y_true = mnist.test_labels()
 
-    z = z.reshape(-1, (256))
-    return ClassificationTask(z, mnist.train_labels(),
-                              n_in=256, n_out=10)
+    x = x/255
+    x = preprocess(x,(16,16))
+    x = x.reshape(-1, (256))
+
+    return x, y_true
 
 def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
     """

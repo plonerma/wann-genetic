@@ -85,10 +85,10 @@ elif exp_view == 'population':
     ind = individuals[i]
 
     n_weights = st.slider('number of weights', 1, 1000, 100)
-    n_samples = st.slider('number of samples', 1, len(env.task.x), 100)
+    n_samples = st.slider('number of samples', 1, len(env.task.test_x), 100)
 
     env.sample_weights(n_weights)
-    evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False)
+    evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False, use_test_samples=True)
 
     ind_metrics = ind.metric_values
 

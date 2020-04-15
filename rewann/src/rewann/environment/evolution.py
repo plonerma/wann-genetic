@@ -39,14 +39,29 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
-def evaluate_inds(env, pop, n_samples=-1, reduce_values=True):
-    if n_samples < 0 or n_samples > len(env.task.x):
+def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
+                  use_test_samples=False):
+
+    if use_test_samples:
+        if env.task.test_x is None:
+            logging.warning("Evaluation on test data requires loading test data.")
+        x = env.task.test_x
+        y_true = env.task.test_y_true
+
+    else:
+        if env.task.x is None:
+            logging.warning("Evaluation on training data requires loading training data.")
+
         x = env.task.x
         y_true = env.task.y_true
-    else:
-        chosen_samples = np.random.choice(len(env.task.x), size=n_samples, replace=False)
-        x = env.task.x[chosen_samples]
-        y_true = env.task.y_true[chosen_samples]
+
+    if n_samples > 0 and n_samples < len(x):
+        chosen_samples = np.random.choice(len(x), size=n_samples, replace=False)
+        x = x[chosen_samples]
+        y_true = y_true[chosen_samples]
+
+
+
 
     apply_func=partial(apply_networks, x=x)
 

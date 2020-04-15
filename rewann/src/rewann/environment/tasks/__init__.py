@@ -2,23 +2,27 @@ from .base import ClassificationTask
 
 from .image import mnist_256, digit_raw
 
+from functools import partial
 
-def iris():
+
+def load_iris():
     from sklearn import datasets
 
     dataset = datasets.load_iris()
-    return ClassificationTask(dataset['data'], dataset['target'],
-                              n_in =len(dataset['feature_names']),
-                              n_out=len(dataset['target_names']))
-
+    return dataset['data'], dataset['target']
 
 
 available_tasks = {
-    'iris': iris,
-    'mnist256' : mnist_256,
-    'digits': digit_raw
+    'iris': ClassificationTask(n_in=4, n_out=3, train_loader=load_iris),
+    'mnist256': ClassificationTask(
+                    n_in=256, n_out=10,
+                    train_loader=mnist_256,
+                    test_loader=partial(mnist_256, load_test=True)),
+    'digits': ClassificationTask(
+                    n_in=256, n_out=10,
+                    train_loader=digit_raw,
+                    test_loader=partial(digit_raw, load_test=True)),
 }
 
 def select_task(task_name):
-    task = available_tasks.get(task_name, available_tasks.get('iris'))
-    return task()
+    return available_tasks.get(task_name, available_tasks.get('iris'))

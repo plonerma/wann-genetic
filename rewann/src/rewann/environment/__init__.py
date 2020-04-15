@@ -25,11 +25,12 @@ class Environment:
         self.metrics = list()
         self.pool= None
 
-        # choose task
-        self.task = select_task(self['task', 'name'])
+        use_test_samples = True
 
         # if this is an experiment to be run, setup logger etc.
         if not 'is_report' in self or not self['is_report']:
+
+            use_test_samples = False
 
             log_path = self.env_path(self['storage', 'log_filename'])
             logging.info (f"Check log ('{log_path}') for details.")
@@ -43,6 +44,9 @@ class Environment:
 
             if not self['debug']:
                 logger.setLevel(logging.INFO)
+
+        # choose task
+        self.task = select_task(self['task', 'name'], load_training=not use_test_samples, load_test=use_test_samples)
 
     def seed(self):
         np.random.seed(self['sampling', 'seed'])
