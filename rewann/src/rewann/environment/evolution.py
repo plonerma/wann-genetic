@@ -99,7 +99,7 @@ def evolution(env):
     pop = create_initial_population(env)
 
     # first hidden id after ins, bias, & outs
-    innov = InnovationRecord.empty(env.task.n_in + env.task.n_out + 1)
+    innov = InnovationRecord.empty(env.task.n_in + 1 + env.task.n_out)
 
     logging.debug('Created initial population.')
 

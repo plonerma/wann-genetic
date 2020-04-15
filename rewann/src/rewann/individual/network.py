@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 from .expression import (
     apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes,
@@ -82,15 +83,18 @@ class Network:
         # if a field does not exist, use 1 as default
         w_matrix[edges['src'], edges['dest']] = get_array_field(edges, 'enabled', 1) * get_array_field(edges, 'weight', 1)
 
-        # rearrange weight matrix
+        # rearrange matrices
         i_rows, i_cols = weight_matrix_arrangement(genes.n_in, genes.n_out, hidden_node_order)
         w_matrix = w_matrix[i_rows, :]
         w_matrix = w_matrix[:, i_cols]
 
+        conn_mat = conn_mat[i_rows, :]
+        conn_mat = conn_mat[:, i_cols]
+
         return cls(
             n_in=genes.n_in, n_out=genes.n_out,
             nodes=nodes,
-            weight_matrix=w_matrix, conn_mat=conn_mat,
+            weight_matrix=w_matrix, conn_mat=conn_mat!=0,
             propagation_steps=prop_steps,
         )
 

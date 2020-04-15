@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 def add_node(ind, env, innov):
     # Choose an enabled edge
@@ -49,9 +50,12 @@ def add_edge_layer_agnostic(ind, env, innov):
     """
 
     network = ind.network
+    hidden = np.s_[network.offset:, :-network.n_out]
 
-    reachability_matrix = np.copy(network.conn_matrix)
+    reachability_matrix = np.copy(network.conn_matrix[hidden])
+
     np.fill_diagonal(reachability_matrix, True)
+
 
     n_paths = 0
     while n_paths < np.sum(reachability_matrix):
@@ -61,12 +65,12 @@ def add_edge_layer_agnostic(ind, env, innov):
 
     # edges are possible where src can not be reached from dest and there is no
     # direct connection from src to dest
-    possible_edges = np.logical_and((reachability_matrix == False).T, (network.conn_matrix == False))
-    np.fill_diagonal(reachability_matrix, False) # don't allow loops
+    possible_edges = (network.conn_matrix == False)
+    possible_edges[hidden] = np.logical_and(possible_edges[hidden], (reachability_matrix == False).T)
 
     # Disallow edges from output and to inputs
-    possible_edges[network.offset:, :] = False
-    possible_edges[:, :-network.n_out] = False
+    #possible_edges[network.offset:, :] = False
+    #possible_edges[:, :-network.n_out] = False
 
     # only the edges that are possible are relevant
     src_options, dest_options = np.where(possible_edges)
@@ -77,9 +81,17 @@ def add_edge_layer_agnostic(ind, env, innov):
     i = np.random.randint(len(src_options))
     src, dest = src_options[i],  dest_options[i]
 
+    if src >= network.offset:
+        src = network.nodes['id'][src - network.offset]
+
+    if dest >= network.n_hidden:
+        dest = network.nodes['id'][dest]
+    else:
+        dest = network.nodes['id'][dest]
+
     new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
-    new_edge['src'] = src if src < network.offset else network.nodes['id'][src - network.offset]
-    new_edge['dest'] = network.nodes['id'][dest - network.offset]
+    new_edge['src'] = src
+    new_edge['dest'] = dest
     new_edge['enabled'] = True
     new_edge['id'] = innov.next_edge_id()
 
@@ -159,6 +171,8 @@ def mutation(ind, env, innov):
             #logging.debug(f"Mutation via {name}.")
             child = ind.__class__(genes=new_genes, id=innov.next_ind_id(), birth=innov.generation)
             child.parent = ind.id
+            #if name == 'new_edge':
+            #    logging.debug(f'new edge in {child.birth} {child.id}')
             return child
 
     logging.warning("No mutation possible.")
