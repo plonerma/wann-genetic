@@ -113,8 +113,14 @@ elif exp_view == 'population':
     draw_graph(net, ax)
     st.pyplot(fig)
 
+    st.write(net.nodes)
+
     names = node_names(net)
-    id_map = {n['id']: i for i, n in enumerate(ind.genes.nodes)}
+    id_map = {int(n['id']): i+net.offset for i, n in enumerate(net.nodes)}
+
+    id_map.update({
+        i: i for i in range(net.offset)
+    })
 
     data = list()
 
@@ -123,8 +129,8 @@ elif exp_view == 'population':
 
         data.append(dict(
             id=e['id'],
-            src=e['src'],
-            dest=e['dest'],
+            src=names[id_map[e['src']]].strip('$'),
+            dest=names[id_map[e['dest']]].strip('$'),
             enabled=e['enabled']
         ))
 
