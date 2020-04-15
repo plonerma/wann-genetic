@@ -6,12 +6,13 @@ from datetime import datetime
 import pandas as pd
 from collections.abc import Mapping
 import copy
+from contextlib import contextmanager
 
 import logging
 
 import io
 import numpy as np
-from base64 import b64encode, b64decode
+import h5py
 
 
 this_directory = os.path.dirname(os.path.abspath(__file__))
@@ -35,98 +36,114 @@ def env_path(env, *parts):
     if not os.path.exists(dir): os.makedirs(dir)  # make sure dir exists
     return p
 
-def ind_path(env, i):
+@contextmanager
+def open_data(env, mode='r'):
+    env.data_file = h5py.File(env.env_path('data.hdf5'), mode)
+    yield env.data_file
+    env.data_file.close()
+
+# Storing and retrieving individuals
+
+def ind_key(env, i):
     # maximum number of digits needed
     digits = len(str(env['population', 'num_generations'] * env['population', 'size']))
-    fstr = f'{{:0{digits}d}}.json'
-    return env_path(env, 'individuals', fstr.format(i))
+    return str(i).zfill(digits)
 
-def gen_path(env, i):
-    digits = len(str(env['population', 'num_generations']))
-    fstr = f'{{:0{digits}d}}.json'
-    return env_path(env, 'gen', fstr.format(i))
+inds_group_key = 'individuals'
 
-def encode_array(a : np.array):
-    # Encoding as b64 is not optimal, but it allows including it in a json file
-    return str(b64encode(a.tobytes()), 'utf-8')
+def store_ind(env, ind):
+    if inds_group_key in env.data_file:
+        inds_group = env.data_file[inds_group_key]
+    else:
+        inds_group = env.data_file.create_group(inds_group_key)
+    ki = ind_key(env, ind.id)
+    if ki in inds_group:
+        return inds_group[ki]
 
-def decode_array(s : str, dtype : np.dtype):
-    return np.frombuffer(b64decode(s), dtype)
+    data = inds_group.create_group(ki)
 
-def dump_ind(env, ind):
-    data = dict(birth=ind.birth, id=ind.id, parent=ind.parent,
-                edges=encode_array(ind.genes.edges),
-                nodes=encode_array(ind.genes.nodes),)
+    data['id'] = ind.id
+    data['birth'] = ind.birth
+    if ind.parent is not None:
+        data['parent'] = ind.parent
+    data.create_dataset('edges', data=ind.genes.edges)
+    data.create_dataset('nodes', data=ind.genes.nodes)
 
-    if env['storage']['include_prediction_records'] and ind.prediction_records:
-        cm_list, weight_list = ind.prediction_records
-
-        data['record'] = dict(
-            n_classes=cm_list[0].shape[0],
-            cm_stack=[encode_array(cm) for cm in cm_list],
-            weights=weight_list,
-        )
-
-    with open(ind_path(env, ind.id), 'w') as f:
-        json.dump(data, f)
-
-    return ind.id
+    return data
 
 def load_ind(env, i):
-    with open(ind_path(env, i), 'r') as f:
-        data = json.load(f)
+    inds_group = env.data_file[inds_group_key]
+    return ind_from_hdf(env, inds_group[ind_key(env, i)])
 
-    Genotype = env.ind_class.Genotype
-
-    p = dict(
-        genes=Genotype(
-            edges=decode_array(data['edges'], dtype=list(Genotype.edge_encoding)),
-            nodes=decode_array(data['nodes'], dtype=list(Genotype.node_encoding)),
-            n_in=env.task.n_in, n_out=env.task.n_out,
+def ind_from_hdf(env, data):
+    return env.ind_class(
+        genes=env.ind_class.Genotype(
+            edges=data['edges'][()],
+            nodes=data['nodes'][()],
+            n_in=env.task.n_in,
+            n_out=env.task.n_out,
         ),
-        parent=data.get('paent', None),
-        id=i,
+        parent=data.get('parent')[()],
+        id=data.get('id')[()],
+        birth=data.get('birth')[()]
     )
 
+# storing and retrieving a generation
 
-    if 'record' in data:
-        cm_list = list()
-        n_classes = data['record']['n_classes']
+def gen_key(env, i):
+    digits = len(str(env['population', 'num_generations']))
+    return str(i).zfill(digits)
 
-        for cm in data['record']['cm_stack']:
-            cm = decode_array(data['record']['cm_stack'], dtype=int)
-            s = cm.shape[0]
-            cm.reshape((n_classes, n_classes))
-            cm_list.append(cm)
+gens_group_key = 'generations'
 
-        weights = data['record']['weights']
+def store_gen(env, gen, population=None):
+    if gens_group_key in env.data_file:
+        gens_group = env.data_file[gens_group_key]
+    else:
+        gens_group = env.data_file.create_group(gens_group_key)
 
-        p['prediction_records'] = cm_list, weights
+    gen_data = gens_group.create_group(gen_key(env, gen))
 
-    return env.ind_class(**p)
+    gen_data['id'] = gen
 
-def dump_pop(env, gen, population):
-    with open(gen_path(env, gen), 'w') as f:
-        json.dump([dump_ind(env, i) for i in population], f)
+    if population is not None:
+        store_pop(env, gen_data, population)
+
+def store_pop(env, gen_data, population):
+    for ind in population:
+        store_ind(env, ind)
+    # store ids
+    ids = [ind.id for ind in population]
+    gen_data['individuals'] = np.array(ids, dtype=int)
+
+def load_gen(env, i):
+    gens_group = env.data_file[gens_group_key]
+    return gens_group[gen_key(env, i)]
 
 def load_pop(env, gen):
-    with open(gen_path(env, gen), 'r') as f:
-        pop = json.load(f)
-        return [load_ind(env, i) for i in pop]
+    if isinstance(gen, str):
+        gen = int(gen)
+    if isinstance(gen, int):
+        gen = load_gen(env, gen)
+    if not 'individuals' in gen:
+        return None
+    inds = gen['individuals']
+    return [load_ind(env, i) for i in inds]
 
-def dump_metrics(env, metrics):
+def existing_populations(env):
+    gens_group = env.data_file[gens_group_key]
+
+    return sorted([
+        gen for gen in gens_group.keys()
+        if 'individuals' in gens_group[gen]
+    ])
+
+def store_metrics(env, metrics):
     metrics.to_json(env_path(env, 'metrics.json'))
 
 def load_metrics(env):
     return pd.read_json(env_path(env, 'metrics.json'))
 
-def existing_populations(env):
-    populations = list()
-    for dir, _, files in os.walk(env_path(env, 'gen')):
-        for f in files:
-            gen, _ = f.split('.')
-            populations.append(int(gen))
-    return sorted(populations)
 
 def setup_params(env, params):
     # set up params based on path or dict and default parameters

@@ -33,7 +33,6 @@ elif len(args) == 0:
     paths = sorted(paths, key=os.path.getmtime, reverse=True)
     path = st.sidebar.selectbox('Path', options=paths)
 
-logging.info(f'Calling load env ({path})')
 env = load_env(path)
 
 exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log', 'population'])
@@ -75,64 +74,66 @@ elif exp_view == 'metrics':
         st.line_chart(data=metrics[s])
 
 elif exp_view == 'population':
-    pops = list(reversed(env.existing_populations()))
-    gen = st.selectbox('generation', options=pops)
-    pop = env.load_pop(gen)
+    with env.open_data():
+        env.task.load_test()
+        pops = list(reversed(env.existing_populations()))
+        gen = st.selectbox('generation', options=pops)
+        pop = env.load_pop(gen)
 
-    individuals = {f'{i}: {ind.id}': ind for i, ind in enumerate(pop)}
-    i = st.selectbox('individual', options=list(individuals.keys()))
+        individuals = {f'{i}: {ind.id}': ind for i, ind in enumerate(pop)}
+        i = st.selectbox('individual', options=list(individuals.keys()))
 
-    ind = individuals[i]
+        ind = individuals[i]
 
-    n_weights = st.slider('number of weights', 1, 1000, 100)
-    n_samples = st.slider('number of samples', 1, len(env.task.test_x), 100)
+        n_weights = st.slider('number of weights', 1, 1000, 100)
+        n_samples = st.slider('number of samples', 1, len(env.task.test_x), 100)
 
-    env.sample_weights(n_weights)
-    evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False, use_test_samples=True)
+        env.sample_weights(n_weights)
+        evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False, use_test_samples=True)
 
-    ind_metrics = ind.metric_values
+        ind_metrics = ind.metric_values
 
-    ind_metrics = ind_metrics.sort_values(by=['weight'])
+        ind_metrics = ind_metrics.sort_values(by=['weight'])
 
-    fig, ax = plt.subplots()
-    ind_metrics.plot(kind='line',x='weight',y='log_loss', ax=ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots()
+        ind_metrics.plot(kind='line',x='weight',y='log_loss', ax=ax)
+        st.pyplot(fig)
 
-    fig, ax = plt.subplots()
-    ind_metrics.plot(kind='line',x='weight',y='kappa', ax=ax)
-    ind_metrics.plot(kind='line',x='weight',y='accuracy', ax=ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots()
+        ind_metrics.plot(kind='line',x='weight',y='kappa', ax=ax)
+        ind_metrics.plot(kind='line',x='weight',y='accuracy', ax=ax)
+        st.pyplot(fig)
 
-    fig, ax = plt.subplots()
-    ind_metrics[['weight']].plot(kind='hist', ax=ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots()
+        ind_metrics[['weight']].plot(kind='hist', ax=ax)
+        st.pyplot(fig)
 
-    net = ind.network
+        net = ind.network
 
-    fig, ax = plt.subplots()
-    draw_graph(net, ax)
-    st.pyplot(fig)
+        fig, ax = plt.subplots()
+        draw_graph(net, ax)
+        st.pyplot(fig)
 
-    st.write(net.nodes)
+        st.write(net.nodes)
 
-    names = node_names(net)
-    id_map = {int(n['id']): i+net.offset for i, n in enumerate(net.nodes)}
+        names = node_names(net)
+        id_map = {int(n['id']): i+net.offset for i, n in enumerate(net.nodes)}
 
-    id_map.update({
-        i: i for i in range(net.offset)
-    })
+        id_map.update({
+            i: i for i in range(net.offset)
+        })
 
-    data = list()
+        data = list()
 
-    for e in ind.genes.edges:
-        #src, dest = id_map[], id_map[e['dest']]
+        for e in ind.genes.edges:
+            #src, dest = id_map[], id_map[e['dest']]
 
-        data.append(dict(
-            id=e['id'],
-            src=names[id_map[e['src']]].strip('$'),
-            dest=names[id_map[e['dest']]].strip('$'),
-            enabled=e['enabled']
-        ))
+            data.append(dict(
+                id=e['id'],
+                src=names[id_map[e['src']]].strip('$'),
+                dest=names[id_map[e['dest']]].strip('$'),
+                enabled=e['enabled']
+            ))
 
 
-    st.write(pd.DataFrame(data))
+        st.write(pd.DataFrame(data))
