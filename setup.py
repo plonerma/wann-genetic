@@ -14,5 +14,6 @@ setup(
             'run_experiment = rewann.cli.run:run_experiment',
         ],
     },
+    data_files=[('environment', ['src/rewann/environment/default.toml'])]
     install_requires=['pytest-watch', 'streamlit', 'sklearn', 'numpy', 'mnist', 'opencv-python', 'h5py']
 )
