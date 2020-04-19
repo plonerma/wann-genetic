@@ -74,13 +74,14 @@ class Environment:
         logging.info (f"Check log ('{log_path}') for details.")
 
         logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
 
         fh = logging.FileHandler(log_path)
         fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         logger.addHandler(fh)
 
-        if not self['debug']:
+        if self['debug']:
+            logger.setLevel(logging.DEBUG)
+        else:
             logger.setLevel(logging.INFO)
 
         logging.info(f"Package version {get_version()}")
