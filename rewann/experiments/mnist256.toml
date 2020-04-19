@@ -9,7 +9,13 @@ name='mnist256'
 
 [population]
 num_generations=1000
-size=100
+size=200
+
+[selection]
+  use_tournaments = true
+  elite_ratio = 0.1
+  culling_ratio = 0.2 # Don't use the worst 20% of the population for further variations
+  tournament_size = 10
 
 [sampling]
 seed=0
