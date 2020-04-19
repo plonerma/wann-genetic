@@ -19,7 +19,7 @@ available_tasks = {
                     train_loader=mnist_256,
                     test_loader=partial(mnist_256, load_test=True)),
     'digits': ClassificationTask(
-                    n_in=256, n_out=10,
+                    n_in=64, n_out=10,
                     train_loader=digit_raw,
                     test_loader=partial(digit_raw, load_test=True)),
 }
