@@ -9,10 +9,6 @@ import os
 
 from .ranking import rank_individuals
 
-def set_niceness(x=-19):
-    niceness = os.nice(0)
-    os.nice(x-niceness)
-
 class InnovationRecord(set):
     @classmethod
     def empty(cls, start_id):
@@ -44,14 +40,10 @@ class InnovationRecord(set):
         # potentially switch to dicts and store args as value
         self.add((src, dest))
 
-def task_apply_networks(params, x):
-    set_niceness()
+def apply_networks(params, x):
     network, weights = params
     return network.apply(x=x, weights=weights)
 
-def task_express_genes(gene, ind_class):
-    set_niceness()
-    return ind_class.Network.from_genes(gene)
 
 def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
                   use_test_samples=False):
@@ -97,9 +89,7 @@ def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))
 
-    express_func = partial(task_express_genes, ind_class=env.ind_class)
-
-    networks = env.pool_map(express_func, (i.genes for i in inds_to_express))
+    networks = env.pool_map(env.ind_class.Network.from_genes, (i.genes for i in inds_to_express))
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
