@@ -158,7 +158,8 @@ class Environment:
             self.store_metrics(pd.DataFrame(data=self.metrics))
 
         elif gen % self['storage', 'commit_population_freq'] == 0:
-            self.store_gen(gen, population=pop)
+            elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
+            self.store_gen(gen, population=pop[:elite_size])
             self.store_metrics(pd.DataFrame(data=self.metrics))
 
 
