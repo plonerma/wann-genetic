@@ -13,6 +13,7 @@ from time import time
 
 from .tasks import select_task
 from .evolution import evolution
+from .fs_util import get_version
 
 class Environment:
     from rewann.individual import Individual as ind_class
@@ -82,11 +83,7 @@ class Environment:
         if not self['debug']:
             logger.setLevel(logging.INFO)
 
-
-        git_label = subprocess.check_output(["git", "describe", "--always"]).strip()
-        git_label = git_label.decode('utf-8')
-
-        logging.info(f"Current commit {git_label}")
+        logging.info(f"Package version {get_version()}")
 
         p = os.path.abspath(self['experiment_path'])
         logging.info(f'Saving data at {p}.')

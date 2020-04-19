@@ -7,6 +7,7 @@ setup(
     packages=find_packages(src_dir),
     package_dir={'': src_dir},
     author='Max Ploner',
+    version='0.1a.0',
     author_email='rewann@maxploner.de',
     #scripts=['src/rewann/cli/inspect_run', 'src/rewann/cli/inspect_run.py'],
     entry_points={

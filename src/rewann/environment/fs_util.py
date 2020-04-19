@@ -14,10 +14,19 @@ import io
 import numpy as np
 import h5py
 
+try:
+    from importlib import metadata
+except ImportError:
+    # Running on pre-3.8 Python; use importlib-metadata package
+    import importlib_metadata as metadata
+
 
 this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
 default_params = toml.load(default_params_path)
+
+def get_version():
+    return metadata.version('rewann')
 
 
 def derive_path(env):
