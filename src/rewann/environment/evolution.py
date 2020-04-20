@@ -5,7 +5,6 @@ import numpy as np
 from itertools import count
 from functools import partial
 import logging
-import os
 
 from .ranking import rank_individuals
 
