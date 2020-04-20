@@ -6,7 +6,7 @@ def get_objective_values(ind):
     loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_layers', as_list=True)
     return -loss_min, -loss_mean, -n_hidden
 
-def rank_individuals(population, return_order=False):
+def rank_individuals(population, return_order=False, return_fronts=False):
     objectives = np.array([
         get_objective_values(ind) for ind in population
     ])
@@ -43,6 +43,10 @@ def rank_individuals(population, return_order=False):
         dist = np.sum(crowding_distances(objectives[front]), axis=-1)
         # sort
         front_list[front_index] = front[np.argsort(-dist)]
+
+        # store front_index for later inspection
+        for i in front_list[front_index]:
+            population[i].front = front_index
 
 
     order = np.hstack(front_list)

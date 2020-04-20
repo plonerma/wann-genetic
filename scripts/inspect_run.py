@@ -35,7 +35,7 @@ elif len(args) == 0:
 
 env = load_env(path)
 
-exp_view = st.sidebar.selectbox('Experiment', options=['metrics', 'params', 'log', 'population'])
+exp_view = st.sidebar.selectbox('Experiment', options=['generation metrics', 'params', 'log', 'population', 'indiv metrics'])
 
 if exp_view == 'log':
     "# Log"
@@ -48,10 +48,10 @@ elif exp_view == 'params':
 
     st.write(env.params)
 
-elif exp_view == 'metrics':
+elif exp_view == 'generation metrics':
     "# Generations"
 
-    metrics = env.load_metrics()
+    metrics = env.load_gen_metrics()
     metrics.index.names = ['generation']
 
     options = list(sorted(metrics.columns))
@@ -76,7 +76,7 @@ elif exp_view == 'metrics':
 elif exp_view == 'population':
     with env.open_data():
         env.task.load_test()
-        pops = list(reversed(env.existing_populations()))
+        pops = list(reversed(env.stored_populations()))
         gen = st.selectbox('generation', options=pops)
         pop = env.load_pop(gen)
 
@@ -137,3 +137,36 @@ elif exp_view == 'population':
 
 
         st.write(pd.DataFrame(data))
+
+elif exp_view == 'indiv metrics':
+    with env.open_data():
+        gens = list(reversed(env.stored_indiv_metrics()))
+        gen = st.selectbox('generation', options=gens)
+        indiv_metrics = env.load_indiv_metrics(gen)
+
+        fig, ax = plt.subplots()
+
+        cx, cy = 'log_loss.mean', 'n_layers'
+        x, y = indiv_metrics[cx], indiv_metrics[cy]
+        for i in range(3):
+            front, = np.where(indiv_metrics['front'] == i)
+            front = front[np.argsort(x[front])]
+            ax.scatter(
+                x[front],
+                y[front],
+                3,
+                label=f'front {i+1}')
+        front = indiv_metrics['front'] > i
+
+        ax.scatter(
+            x[front],
+            y[front],
+            1,
+            label=f'front >{i+1}')
+
+        ax.legend()
+        #ax.set_xlim(0.4,1.5)
+        #ax.set_ylim(0.4,1.25)
+        st.pyplot(fig)
+
+        st.write(indiv_metrics)

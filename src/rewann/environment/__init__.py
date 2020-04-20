@@ -18,8 +18,10 @@ from .util import get_version, TimeStore
 class Environment:
     from rewann.individual import Individual as ind_class
     from .util import (default_params, setup_params, open_data,
-                          store_gen, store_metrics, load_pop, load_metrics,
-                          env_path, existing_populations)
+                       store_gen, store_gen_metrics, load_pop, load_gen_metrics,
+                       stored_populations, stored_indiv_metrics,
+                       load_indiv_metrics,
+                       env_path)
 
     def __init__(self, params):
         self.setup_params(params)
@@ -143,8 +145,8 @@ class Environment:
 
             avg = (ts.total / gen)
             expected_time = (self['population', 'num_generations'] - gen) * avg
-            logging.info(f'Completed generation {gen}; {ts.dt:.2}s elapsed, {avg:.2}s avg, {ts.total:.2}s total. '
-                         f'Expected time remaining: {expected_time:.2}s')
+            logging.info(f'Completed generation {gen}; {ts.dt:.02}s elapsed, {avg:.02}s avg, {ts.total:.02}s total. '
+                         f'Expected time remaining: {expected_time:.02}s')
 
             self.store_data(gen, pop)
         self.store_data(gen, pop, last=True)
@@ -155,23 +157,24 @@ class Environment:
 
     def store_data(self, gen, pop, last=False):
         gen_metrics = self.generation_metrics(gen=gen, population=pop)
+        gen_metrics, indiv_metrics = self.generation_metrics(gen=gen, population=pop, return_indiv_metrics=True)
 
         logging.info(f"#{gen} mean, min log_loss: {gen_metrics['MAX:log_loss.mean']:.2}, {gen_metrics['MIN:log_loss.min']:.2}")
 
         self.metrics.append(gen_metrics)
 
         if last:
-            self.store_metrics(pd.DataFrame(data=self.metrics))
+            self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
         elif gen % self['storage', 'commit_population_freq'] == 0:
             elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
-            self.store_gen(gen, population=pop[:elite_size])
-            self.store_metrics(pd.DataFrame(data=self.metrics))
+            self.store_gen(gen, population=pop[:elite_size], indiv_metrics=indiv_metrics)
+            self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
 
 
 
-    def generation_metrics(self, population, gen=None):
+    def generation_metrics(self, population, gen=None, return_indiv_metrics=False):
         if gen is None:
             gen = self['population', 'num_generations']
 
@@ -179,7 +182,7 @@ class Environment:
         pfs = 'max', 'mean', 'min'
 
         metric_names = [
-            'n_hidden', 'n_edges', 'n_evaluations', 'age'] + [
+            'n_hidden', 'n_edges', 'n_evaluations', 'age', 'front', 'n_layers'] + [
             f'{m}.{p}' for p in pfs for m in names
         ]
 
@@ -209,8 +212,10 @@ class Environment:
             metrics[f'MEAN:{name}'] = values.mean()
             metrics[f'MEDIAN:{name}'] = values.median()
 
-        if include_individual_metrics:
-        return metrics,
+        if return_indiv_metrics:
+            return metrics, individual_metrics
+        else:
+            return metrics
 
     # magic methods for direct access of parameters
     def __getitem__(self, keys):

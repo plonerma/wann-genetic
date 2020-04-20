@@ -30,6 +30,7 @@ class Individual:
         self.id = id
         self.birth = birth
         self.parent = parent
+        self.front = -1
         if metric_values is None:
             self._metric_values = dict()
             self._metric_values['n_evaluations'] = 0
@@ -110,6 +111,7 @@ class Individual:
             n_hidden=self.network.n_hidden,
             n_layers=self.network.n_layers,
             n_edges=len(self.genes.edges),
+            front=self.front,
             age=None if current_gen is None else (current_gen - self.birth)
         )
 

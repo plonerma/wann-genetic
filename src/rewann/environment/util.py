@@ -99,13 +99,25 @@ def ind_from_hdf(env, data):
 
 # storing and retrieving a generation
 
+def make_index(raw):
+    """Utility for retrieving pandas dataframes.
+
+    Source: https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
+    """
+    index = raw.astype('U')
+    if index.ndim > 1:
+        return pd.MultiIndex.from_tuples(index.tolist())
+    else:
+        return pd.Index(index)
+
+
 def gen_key(env, i):
     digits = len(str(env['population', 'num_generations']))
     return str(i).zfill(digits)
 
 gens_group_key = 'generations'
 
-def store_gen(env, gen, population=None):
+def store_gen(env, gen, population=None, indiv_metrics=None):
     if gens_group_key in env.data_file:
         gens_group = env.data_file[gens_group_key]
     else:
@@ -117,6 +129,12 @@ def store_gen(env, gen, population=None):
 
     if population is not None:
         store_pop(env, gen_data, population)
+    if indiv_metrics is not None:
+        df = indiv_metrics
+        # https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
+        dataset = gen_data.create_dataset('indiv_metrics', data=df.values)
+        dataset.attrs['index'] = np.array(df.index.tolist(), dtype='S')
+        dataset.attrs['columns'] = np.array(df.columns.tolist(), dtype='S')
 
 def store_pop(env, gen_data, population):
     for ind in population:
@@ -125,32 +143,52 @@ def store_pop(env, gen_data, population):
     ids = [ind.id for ind in population]
     gen_data['individuals'] = np.array(ids, dtype=int)
 
-def load_gen(env, i):
-    gens_group = env.data_file[gens_group_key]
-    return gens_group[gen_key(env, i)]
-
-def load_pop(env, gen):
+def load_gen(env, gen):
     if isinstance(gen, str):
         gen = int(gen)
     if isinstance(gen, int):
-        gen = load_gen(env, gen)
+        gens_group = env.data_file[gens_group_key]
+        return gens_group[gen_key(env, gen)]
+    return gen
+
+def load_pop(env, gen):
+    gen = load_gen(env, gen)
     if not 'individuals' in gen:
         return None
     inds = gen['individuals']
     return [load_ind(env, i) for i in inds]
 
-def existing_populations(env):
+def load_indiv_metrics(env, gen):
+    gen = load_gen(env, gen)
+    if not 'indiv_metrics' in gen:
+        return None
+    # https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
+    dataset = gen['indiv_metrics']
+    index = make_index(dataset.attrs['index'])
+    columns = make_index(dataset.attrs['columns'])
+    df = pd.DataFrame(data=dataset[...], index=index, columns=columns)
+    return df
+
+def stored_generations(env):
     gens_group = env.data_file[gens_group_key]
+    return sorted(gens_group.keys())
 
-    return sorted([
-        gen for gen in gens_group.keys()
-        if 'individuals' in gens_group[gen]
-    ])
+def stored_populations(env):
+    gens_group = env.data_file[gens_group_key]
+    return [
+        gen for gen in stored_generations(env)
+        if 'individuals' in gens_group[gen]]
 
-def store_metrics(env, metrics):
+def stored_indiv_metrics(env):
+    gens_group = env.data_file[gens_group_key]
+    return [
+        gen for gen in stored_generations(env)
+        if 'indiv_metrics' in gens_group[gen]]
+
+def store_gen_metrics(env, metrics):
     metrics.to_json(env_path(env, 'metrics.json'))
 
-def load_metrics(env):
+def load_gen_metrics(env):
     return pd.read_json(env_path(env, 'metrics.json'))
 
 
