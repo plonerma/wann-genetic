@@ -139,13 +139,12 @@ def evolution(env):
 
 def evolve_population(env, pop, innov):
     pop_size = env['population', 'size']
-    elite_size = int(np.floor(env['selection', 'elite_ratio'] * pop_size))
     culling_size = int(np.floor(env['selection', 'culling_ratio'] * pop_size))
 
     # population is assumed to be ordered
 
     # Elitism (best `elite_size` individual surive without mutation)
-    new_pop = pop[:elite_size]
+    new_pop = pop[:env.elite_size]
 
     num_places_left = pop_size - len(new_pop)
     winner = None
@@ -169,3 +168,43 @@ def evolve_population(env, pop, innov):
         new_pop.append(child)
 
     return new_pop
+
+def update_hof(env, pop):
+    elite = pop[:env.elite_size]
+    hof_size = env['population', 'hof_size']
+
+    metric = 'accuracy.mean'
+
+    # make sure elite is properly evaluated
+
+    n_evals = env['sampling', 'hof_evaluation_iterations']
+    eval_size = env['sampling', 'num_weight_samples_per_iteration']
+
+    required_evaluations = [
+        max(0, n_evals - int(ind.metrics('n_evaluations') / eval_size))
+        for ind in elite
+    ]
+
+    for i in range(max(required_evaluations)):
+        inds = [
+            ind for ind, revs in zip(elite, required_evaluations)
+            if revs > i
+        ]
+        env.sample_weights()
+        evaluate_inds(env, inds, n_samples=env['sampling', 'num_training_samples_per_iteration'])
+
+
+    candidates = env.hall_of_fame + elite
+
+    if len(candidates) <= hof_size:
+        env.hall_of_fame = candidates
+        return env.hall_of_fame
+
+    else:
+        # sort candidates
+        scores = np.array([ind.metrics(metric) for ind in candidates])
+
+        env.hall_of_fame = [
+            candidates[i] for i in np.argsort(-scores)[:hof_size]
+        ]
+        return env.hall_of_fame

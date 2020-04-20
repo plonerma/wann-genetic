@@ -158,6 +158,27 @@ def load_pop(env, gen):
     inds = gen['individuals']
     return [load_ind(env, i) for i in inds]
 
+def store_hof(env):
+    for ind in env.hall_of_fame:
+        store_ind(env, ind)
+
+    ids = np.empty(env['population', 'hof_size'], dtype=int)
+    ids[:len(env.hall_of_fame)] = [ind.id for ind in env.hall_of_fame]
+    ids[len(env.hall_of_fame):] = np.nan
+
+    if 'hall_of_fame' not in env.data_file:
+        hof_data = env.data_file.create_dataset('hall_of_fame', data=np.array(ids, dtype=int))
+    else:
+        env.data_file['/hall_of_fame'][...] = np.array(ids, dtype=int)
+
+def load_hof(env):
+    if 'hall_of_fame' not in env.data_file:
+        return None
+    ids = env.data_file['hall_of_fame'][...]
+    env.hall_of_fame = [load_ind(env, i) for i in ids]
+    return env
+
+
 def load_indiv_metrics(env, gen):
     gen = load_gen(env, gen)
     if not 'indiv_metrics' in gen:
@@ -190,7 +211,6 @@ def store_gen_metrics(env, metrics):
 
 def load_gen_metrics(env):
     return pd.read_json(env_path(env, 'metrics.json'))
-
 
 def setup_params(env, params):
     # set up params based on path or dict and default parameters

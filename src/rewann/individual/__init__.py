@@ -117,7 +117,9 @@ class Individual:
 
         metric_values.update(self._metric_values)
 
-        if as_list:
+        if len(metric_names) == 1:
+            return metric_values[metric_names[0]]
+        elif as_list:
             return [metric_values[k] for k in metric_names]
         else:
             return {k: metric_values[k] for k in metric_names}

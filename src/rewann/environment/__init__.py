@@ -12,14 +12,14 @@ from multiprocessing import Pool
 
 
 from .tasks import select_task
-from .evolution import evolution
+from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
 
 class Environment:
     from rewann.individual import Individual as ind_class
     from .util import (default_params, setup_params, open_data,
                        store_gen, store_gen_metrics, load_pop, load_gen_metrics,
-                       stored_populations, stored_indiv_metrics,
+                       stored_populations, stored_indiv_metrics, store_hof, load_hof,
                        load_indiv_metrics,
                        env_path)
 
@@ -30,6 +30,8 @@ class Environment:
         self.pool= None
         self.data_file = None
 
+        self.hall_of_fame = list()
+
         use_test_samples = True
 
         # choose task
@@ -37,6 +39,10 @@ class Environment:
 
     def seed(self):
         np.random.seed(self['sampling', 'seed'])
+
+    @property
+    def elite_size(self):
+        return int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
 
     def sample_weights(self, n=None):
         if n is None:
@@ -141,6 +147,8 @@ class Environment:
 
             gen, pop = next(generations)
 
+            self.hall_of_fame = update_hof(self, pop)
+
             ts.stop()
 
             avg = (ts.total / gen)
@@ -160,15 +168,15 @@ class Environment:
 
         logging.info(f"#{gen} mean, min log_loss: {gen_metrics['MAX:log_loss.mean']:.2}, {gen_metrics['MIN:log_loss.min']:.2}")
 
+        logging.debug(f"Best mean accuracy: {gen_metrics['best_mean_acc']}")
+
         self.metrics.append(gen_metrics)
 
         if gen % self['storage', 'commit_population_freq'] == 0:
             elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
             self.store_gen(gen, population=pop[:elite_size], indiv_metrics=indiv_metrics)
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
-
-
-
+            self.store_hof()
 
     def generation_metrics(self, population, gen=None, return_indiv_metrics=False):
         if gen is None:
@@ -190,6 +198,8 @@ class Environment:
             num_unique_individuals=len(set(population)),
 
             num_individuals=len(population),
+
+            best_mean_acc=self.hall_of_fame[0].metrics('accuracy.mean'),
 
             # number of inds without edges
             num_no_edge_inds=np.sum(individual_metrics['n_edges'] == 0),

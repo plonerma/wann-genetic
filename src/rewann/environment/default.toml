@@ -10,7 +10,7 @@ debug = true
   upper_bound=2
   num_weight_samples_per_iteration=1
   num_training_samples_per_iteration=-1 # all
-
+  hof_evaluation_iterations = 20
 
 [task]
   name = 'iris'
@@ -27,12 +27,15 @@ debug = true
   size = 64
   initial_enabled_edge_probability = 0.05
   initial_with_edges=true
+  hof_size=10
 
 [selection]
   use_tournaments = true
   elite_ratio = 0.1
   culling_ratio = 0.2 # Don't use the worst 20% of the population for further variations
   tournament_size = 5
+
+
 
 [mutation]
   [mutation.new_edge]
