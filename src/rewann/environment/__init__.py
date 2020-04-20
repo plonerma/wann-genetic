@@ -149,13 +149,12 @@ class Environment:
                          f'Expected time remaining: {expected_time:.02}s')
 
             self.store_data(gen, pop)
-        self.store_data(gen, pop, last=True)
         self.last_population = pop
 
     def post_optimization(self):
         pass
 
-    def store_data(self, gen, pop, last=False):
+    def store_data(self, gen, pop):
         gen_metrics = self.generation_metrics(gen=gen, population=pop)
         gen_metrics, indiv_metrics = self.generation_metrics(gen=gen, population=pop, return_indiv_metrics=True)
 
@@ -163,10 +162,7 @@ class Environment:
 
         self.metrics.append(gen_metrics)
 
-        if last:
-            self.store_gen_metrics(pd.DataFrame(data=self.metrics))
-
-        elif gen % self['storage', 'commit_population_freq'] == 0:
+        if gen % self['storage', 'commit_population_freq'] == 0:
             elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
             self.store_gen(gen, population=pop[:elite_size], indiv_metrics=indiv_metrics)
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
