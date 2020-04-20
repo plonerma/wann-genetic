@@ -7,7 +7,7 @@ import pandas as pd
 from collections.abc import Mapping
 import copy
 from contextlib import contextmanager
-
+from time import time
 import logging
 
 import io
@@ -189,3 +189,16 @@ def nested_update(d, u):
         else:
             d[k] = v
     return d
+
+
+class TimeStore:
+    t0 = None
+    total = 0
+    dt = None
+
+    def start(self):
+        self.t0 = time()
+
+    def stop(self):
+        self.dt = time() - self.t0
+        self.total += self.dt

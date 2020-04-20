@@ -9,11 +9,11 @@ import logging
 
 from multiprocessing import Pool
 
-from time import time
+
 
 from .tasks import select_task
 from .evolution import evolution
-from .util import get_version
+from .util import get_version, TimeStore
 
 class Environment:
     from rewann.individual import Individual as ind_class
@@ -126,17 +126,25 @@ class Environment:
         generations = evolution(self)
 
         logging.info("Starting evolutionary algorithm")
-        start_time = time()
 
+        ts = TimeStore()
+
+        ts.start()
         for _ in range(self['population', 'num_generations']):
+
+            ts.start()
 
             w = self.sample_weights()
             logging.debug(f'Sampled weight {w}')
 
             gen, pop = next(generations)
 
-            elapsed_time = time() - start_time
-            logging.info(f'Completed generation {gen}, ({elapsed_time}s elapsed - avg.: {elapsed_time / gen}s).')
+            ts.stop()
+
+            avg = (ts.total / gen)
+            expected_time = (self['population', 'num_generations'] - gen) * avg
+            logging.info(f'Completed generation {gen}; {ts.dt:.2}s elapsed, {avg:.2}s avg, {ts.total:.2}s total. '
+                         f'Expected time remaining: {expected_time:.2}s')
 
             self.store_data(gen, pop)
         self.store_data(gen, pop, last=True)
