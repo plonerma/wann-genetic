@@ -13,11 +13,11 @@ from time import time
 
 from .tasks import select_task
 from .evolution import evolution
-from .fs_util import get_version
+from .util import get_version
 
 class Environment:
     from rewann.individual import Individual as ind_class
-    from .fs_util import (default_params, setup_params, open_data,
+    from .util import (default_params, setup_params, open_data,
                           store_gen, store_metrics, load_pop, load_metrics,
                           env_path, existing_populations)
 
@@ -175,7 +175,7 @@ class Environment:
             f'{m}.{p}' for p in pfs for m in names
         ]
 
-        df = pd.DataFrame(data=[
+        individual_metrics = pd.DataFrame(data=[
             ind.metrics(*metric_names, current_gen=gen) for ind in population
         ])
 
@@ -185,23 +185,24 @@ class Environment:
             num_individuals=len(population),
 
             # number of inds without edges
-            num_no_edge_inds=np.sum(df['n_edges'] == 0),
+            num_no_edge_inds=np.sum(individual_metrics['n_edges'] == 0),
 
             # number of inds without hidden nodes
-            num_no_hidden_inds=np.sum(df['n_hidden'] == 0),
+            num_no_hidden_inds=np.sum(individual_metrics['n_hidden'] == 0),
 
             # individual with the most occurences
             biggest_ind=max([population.count(i) for i in set(population)]),
-            covariance_mean_kappa_n_edges=df['n_edges'].cov(df['kappa.mean'])
+            covariance_mean_kappa_n_edges=individual_metrics['n_edges'].cov(individual_metrics['kappa.mean'])
         )
 
-        for name, values in df.items():
+        for name, values in individual_metrics.items():
             metrics[f'MAX:{name}'] = values.max()
             metrics[f'MIN:{name}'] = values.min()
             metrics[f'MEAN:{name}'] = values.mean()
             metrics[f'MEDIAN:{name}'] = values.median()
 
-        return metrics
+        if include_individual_metrics:
+        return metrics,
 
     # magic methods for direct access of parameters
     def __getitem__(self, keys):
