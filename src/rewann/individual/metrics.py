@@ -1,5 +1,6 @@
 import numpy as np
 import inspect
+import warnings
 
 import sklearn.metrics
 
@@ -25,7 +26,8 @@ def apply_metrics(values, names, pending=set()):
             continue
 
         if metric_name not in available_metrics:
-            raise RuntimeError(f"Metric {metric_name} was not defined.")
+            warnings.warn(f"Metric {metric_name} was not defined.")
+            continue
 
         func, deps = available_metrics[metric_name]
 

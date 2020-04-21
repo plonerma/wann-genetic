@@ -167,16 +167,16 @@ def store_hof(env):
     ids[len(env.hall_of_fame):] = np.nan
 
     if 'hall_of_fame' not in env.data_file:
-        hof_data = env.data_file.create_dataset('hall_of_fame', data=np.array(ids, dtype=int))
+        hof_data = env.data_file.create_dataset('hall_of_fame', data=ids)
     else:
-        env.data_file['/hall_of_fame'][...] = np.array(ids, dtype=int)
+        env.data_file['/hall_of_fame'][...] = ids
 
 def load_hof(env):
     if 'hall_of_fame' not in env.data_file:
         return None
     ids = env.data_file['hall_of_fame'][...]
     env.hall_of_fame = [load_ind(env, i) for i in ids]
-    return env
+    return env.hall_of_fame
 
 
 def load_indiv_metrics(env, gen):

@@ -59,7 +59,8 @@ class Environment:
             assert l is not None and u is not None
 
             w = np.random.uniform(l, u, size=n)
-
+        else:
+            raise RuntimeError(f'Distribution {dist} not implemented.')
         self['sampling', 'current_weight'] = w
         return w
 

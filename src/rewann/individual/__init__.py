@@ -102,7 +102,7 @@ class Individual:
             mv['n_evaluations'] += 1
 
     @expressed
-    def metrics(self, *metric_names, current_gen=None, as_list=False):
+    def metrics(self, *metric_names, current_gen=None, as_list=False, as_dict=False):
         if not metric_names:
             metric_names = ('kappa.max', 'kappa.mean', 'kappa.min',
                             'n_hidden', 'n_edges')
@@ -110,6 +110,8 @@ class Individual:
         metric_values = dict(
             n_hidden=self.network.n_hidden,
             n_layers=self.network.n_layers,
+            id = self.id,
+            birth = self.birth,
             n_edges=len(self.genes.edges),
             front=self.front,
             age=None if current_gen is None else (current_gen - self.birth)
@@ -117,12 +119,14 @@ class Individual:
 
         metric_values.update(self._metric_values)
 
-        if len(metric_names) == 1:
+        if len(metric_names) == 1 and not as_dict and not as_list:
             return metric_values[metric_names[0]]
-        elif as_list:
+        elif as_list and not as_dict:
             return [metric_values[k] for k in metric_names]
-        else:
+        elif not as_list:
             return {k: metric_values[k] for k in metric_names}
+        else:
+            raise RuntimeWarning("as_list and as_dict are mutually exclusive")
 
 
     @property

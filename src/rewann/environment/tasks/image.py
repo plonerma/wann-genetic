@@ -30,7 +30,7 @@ def mnist_256(load_test=False):
         x = mnist.train_images()
         y_true = mnist.train_labels()
     else:
-        x = mnist.test_images()/255
+        x = mnist.test_images()
         y_true = mnist.test_labels()
 
     x = x/255
