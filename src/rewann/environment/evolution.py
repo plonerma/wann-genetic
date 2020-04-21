@@ -170,7 +170,14 @@ def evolve_population(env, pop, innov):
     return new_pop
 
 def update_hof(env, pop):
-    elite = pop[:env.elite_size]
+    # best inds excluding indivs alread in hall of fame
+    elite = list()
+    inds = iter(pop)
+    while len(elite) < env.elite_size:
+        i = next(inds)
+        if i not in env.hall_of_fame:
+            elite.append(i)
+
     hof_size = env['population', 'hof_size']
 
     metric = 'accuracy.mean'
@@ -198,7 +205,6 @@ def update_hof(env, pop):
 
     if len(candidates) <= hof_size:
         env.hall_of_fame = candidates
-        return env.hall_of_fame
 
     else:
         # sort candidates
@@ -207,4 +213,4 @@ def update_hof(env, pop):
         env.hall_of_fame = [
             candidates[i] for i in np.argsort(-scores)[:hof_size]
         ]
-        return env.hall_of_fame
+    return env.hall_of_fame
