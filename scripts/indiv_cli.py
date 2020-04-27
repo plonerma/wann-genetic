@@ -4,7 +4,9 @@ from matplotlib import pyplot as plt
 import matplotlib
 matplotlib.use('Qt5Cairo')
 
+from line_parse_util import parse_line
 
+import argparse
 
 from rewann import Environment
 from rewann.environment.util import load_ind, load_hof
@@ -24,10 +26,6 @@ def ask_choice_default(*prompt, choices, default=None, **kwargs):
     s = cli_ui.ask_choice(*prompt, f'[default: {default}]', choices=choices, **kwargs)
     return default if s is None else s
 
-def parse_list(args):
-    l = (x.strip() for x in args.strip().split(' '))
-    return [x for x in l if len(x) > 0]
-
 class IndivExplorer(cmd.Cmd):
     intro = """Individual explorer.
 Start with selecting an individual ('select').
@@ -40,32 +38,63 @@ Type help or ? to list commands.
         self.env = env
         self.gens_with_pop = self.env.stored_indiv_metrics()
         self.selected_ind = None
+        self._current_subplots = None, None
 
     def emptyline(self): return
 
-    def evaluate_ind(self):
+    def warning(self, *elements):
+        cli_ui.info(*([cli_ui.red] + elements))
+
+    def subplots(self, keep=False):
+        if None in self._current_subplots:
+            if keep:
+                self._current_subplots = plt.subplots()
+                return self._current_subplots
+            else:
+                return plt.subplots()
+        else:
+            sp = self._current_subplots
+            if not keep:
+                self._current_subplot = None, None
+            return sp
+
+    @parse_line
+    def do_evaluate(self, weights : int=None, samples : int=None):
         ind = self.selected_ind
 
-        n_weights = ask_int('number of weights', default=100)
-        n_samples = ask_int('number of samples', default=100)
-        if n_weights is None or n_samples is None:
+        if weights is None:
+            weights = ask_int('number of weights', default=100)
+        if samples is None:
+            samples = ask_int('number of samples', default=100)
+
+        if weights is None or samples is None:
             return
 
         env.task.load_test()
-        env.sample_weights(n_weights)
-        evaluate_inds(env, [ind], n_samples=n_samples, reduce_values=False, use_test_samples=True)
+        env.sample_weights(weights)
+        evaluate_inds(env, [ind], n_samples=samples, reduce_values=False, use_test_samples=True)
 
-    def do_select(self, args):
-        args = args.strip().lower()
-        if args not in ('gen', 'hof'):
-            args = ask_choice_default('Select from', choices=['gen', 'hof'], default=-1, sort=False)
+    @parse_line
+    def do_select(self, hof_index=-1):
+        if hof_index >= 0:
 
-        if args == 'gen':
-            self.select_from_gen()
-        elif args == 'hof':
-            self.select_from_hof()
+            hof = load_hof(self.env)
+
+            try:
+                self.selected_ind = hof[hof_index]
+            except IndexError:
+                self.selected_ind = None
+
+                self.warning(f'{hof_index} is invalid index (hof has {len(hof)} entries).')
         else:
-            cli_ui.info(cli_ui.red, f'invalid selection {args}')
+            sel = ask_choice_default('Select from', choices=['gen', 'hof'], default=-1, sort=False)
+
+            if sel == 'gen':
+                self.select_from_gen()
+            elif sel == 'hof':
+                self.select_from_hof()
+            else:
+                self.warning(f'invalid selection {sel}')
 
     def select_from_gen(self):
         gens = self.gens_with_pop
@@ -78,7 +107,6 @@ Type help or ? to list commands.
 
         ind = individuals[i]
         self.selected_ind = ind
-        self.evaluate_ind()
 
     def select_from_hof(self):
         hof = load_hof(self.env)
@@ -88,27 +116,29 @@ Type help or ? to list commands.
         i = ask_choice_default('Select and individual', choices=list(individuals.keys()), default=0, sort=False)
         ind = individuals[i]
         self.selected_ind = ind
-        self.evaluate_ind()
-
 
     @property
     def ind_metrics(self):
-        if self.selected_ind is None:
-            self.do_select('')
-        return self.selected_ind.metric_values
+        if self.selected_ind is not None:
+            return self.selected_ind.metric_values
+        else:
+            return None
 
-    def do_print(self, args):
-        names = parse_list(args)
-
+    @parse_line
+    def do_print(self, names : list):
         data = [((k,), (v,)) for k,v in self.selected_ind.metrics(*names, as_dict=True).items()]
         cli_ui.info_table(data, headers=['key', 'value'])
 
-    def do_plot(self, args):
-        names = parse_list(args)
+    @parse_line
+    def do_plot(self, names : list, save_to="", keep_plotting=False, title=""):
+        if self.ind_metrics is None:
+            self.warning('No individual selected.')
+            return
 
-        fig, ax = plt.subplots()
-        ind_metrics = self.ind_metrics
-        ind_metrics = ind_metrics.sort_values(by=['weight'])
+        fig, ax = self.subplots(keep=keep_plotting)
+
+        ind_metrics = self.ind_metrics.sort_values(by=['weight'])
+
         cli_ui.info_3(f"Plotting metrics {', '.join(names)}")
 
         plotted_any = False
@@ -120,10 +150,14 @@ Type help or ? to list commands.
             plotted_any = True
             ind_metrics.plot(kind='line',x='weight',y=m, ax=ax)
 
-        if not plotted_any: return
+        if title:
+            fig.suptitle(f"Plot for individual #{self.selected_ind.id}")
 
-        fig.suptitle(f"Plot for individual #{self.selected_ind.id}")
-        fig.show()
+        if save_to:
+            fig.savefig(save_to)
+            cli_ui.info_3(f"Saving to '{save_to}'")
+        elif plotted_any and not keep_plotting:
+            fig.show()
 
     def do_plot_network(self, args):
         fig, ax = plt.subplots()
@@ -137,6 +171,23 @@ Type help or ? to list commands.
 
 
 if __name__ == '__main__':
-    env = Environment(sys.argv[1])
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('experiment_path', type=str,
+                        help='path to experiment')
+    parser.add_argument('--script',default=None,
+                        help='run commands from script (instead of interactive mode)')
+
+    args = parser.parse_args()
+
+    env = Environment(args.experiment_path)
+
     with env.open_data('r'):
-        IndivExplorer(env).cmdloop()
+        ie = IndivExplorer(env)
+
+        if not args.script:
+            sys.exit(ie.cmdloop())
+        else:
+            with open(args.script) as f:
+                ie.cmdqueue.extend(f.read().splitlines())
+            ie.cmdqueue.extend(['EOF'])
+            sys.exit(ie.cmdloop())
