@@ -129,7 +129,7 @@ class Report:
         )
 
         self.write_stats({
-            key: value for key, values, *_ in stats
+            key: value for key, value, *_ in stats
         })
 
         # add generation metrics
