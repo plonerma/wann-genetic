@@ -232,8 +232,9 @@ def setup_params(env, params):
         if 'is_report' in params and params['is_report']:
             params['experiment_path'] = os.path.dirname(params_path)
 
+    env.params = copy.deepcopy(env.default_params)
 
-    env.params = nested_update(copy.deepcopy(env.default_params), params)
+    nested_update(env.params, params)
 
     derive_path(env)
 
