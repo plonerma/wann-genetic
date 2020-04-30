@@ -129,7 +129,7 @@ class Environment:
             # run optimization
             self.optimize()
 
-        if self['config', 'run_post_opt']:
+        if self['postopt', 'run_postopt']:
             with self.open_data('r'):
                 # evaluate individuals in hall of fame
                 self.post_optimization()
@@ -168,10 +168,13 @@ class Environment:
         self.last_population = pop
 
     def post_optimization(self):
-        Report(self).run_evaluations( # run evaluations on test data
-            num_weights=1000,
-            num_samples=-1 # all
-        ).compile() # plot metrics, derive stats
+        r = Report(self).run_evaluations( # run evaluations on test data
+            num_weights=self['postopt', 'num_weights'],
+            num_samples=self['postopt', 'num_samples'] # all
+        )
+
+        if self['postopt', 'compile_report']:
+            r.compile() # plot metrics, derive stats
 
     def store_data(self, gen, pop):
         gen_metrics = self.population_metrics(gen=gen, population=pop)
