@@ -142,8 +142,7 @@ class Report:
                       use_test_samples=True)
         return self
 
-
-if __name__ == '__main__':
+def compile_report():
     from rewann import Environment
 
     logging.getLogger().setLevel(logging.INFO)

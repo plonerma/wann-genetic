@@ -12,7 +12,7 @@ setup(
     #scripts=['src/rewann/cli/inspect_run', 'src/rewann/cli/inspect_run.py'],
     entry_points={
         'console_scripts': [
-            'run_experiment = rewann.cli.run:run_experiment',
+            'run_experiment = rewann.environment.run:run_experiment',
         ],
     },
     package_data={'rewann': ['environment/default.toml']},
