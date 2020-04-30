@@ -13,7 +13,7 @@ def test_experiment(tmp_path):
     exp.run()
     # Assert that there is at least moderate agreement between predicted and true classifications
 
-    metrics = exp.generation_metrics(exp.last_population)
+    metrics = exp.population_metrics(exp.hall_of_fame, reduced_values=False)
     max_kappa = metrics['MAX:kappa.max']
     mean_kappa = metrics['MEAN:kappa.mean']
 

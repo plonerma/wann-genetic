@@ -91,6 +91,9 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
     edge_color = -edge_weights*edge_activ
     edge_widths = edge_weights
 
+    if len(edge_color) == 0:
+        edge_color = [0]
+
     nx.draw(
         g, ax=ax, pos=pos, node_color=color,
         with_labels=True, node_size=node_size, font_color="k", font_size=9,

@@ -15,6 +15,8 @@ from .tasks import select_task
 from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
 
+from rewann.postopt import Report
+
 class Environment:
     from rewann.individual import Individual as ind_class
     from .util import (default_params, setup_params, open_data,
@@ -127,9 +129,13 @@ class Environment:
             # run optimization
             self.optimize()
 
-        with self.open_data('r'):
-            # evaluate individuals in hall of fame
-            self.post_optimization()
+        if self['config', 'run_post_opt']:
+            with self.open_data('r'):
+                # evaluate individuals in hall of fame
+                self.post_optimization()
+        if self.pool is not None:
+            logging.info('Closing pool')
+            self.pool.close()
 
     def optimize(self):
         generations = evolution(self)
@@ -148,6 +154,7 @@ class Environment:
 
             gen, pop = next(generations)
 
+            logging.debug('Updating hall of fame')
             self.hall_of_fame = update_hof(self, pop)
 
             ts.stop()
@@ -161,11 +168,14 @@ class Environment:
         self.last_population = pop
 
     def post_optimization(self):
-        pass
+        Report(self).run_evaluations( # run evaluations on test data
+            num_weights=1000,
+            num_samples=-1 # all
+        ).compile() # plot metrics, derive stats
 
     def store_data(self, gen, pop):
-        gen_metrics = self.generation_metrics(gen=gen, population=pop)
-        gen_metrics, indiv_metrics = self.generation_metrics(gen=gen, population=pop, return_indiv_metrics=True)
+        gen_metrics = self.population_metrics(gen=gen, population=pop)
+        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_metrics=True)
 
         logging.info(f"#{gen} mean, min log_loss: {gen_metrics['MAX:log_loss.mean']:.2}, {gen_metrics['MIN:log_loss.min']:.2}")
 
@@ -179,38 +189,62 @@ class Environment:
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
             self.store_hof()
 
-    def generation_metrics(self, population, gen=None, return_indiv_metrics=False):
+    def population_metrics(self, population, gen=None, return_indiv_metrics=False, reduced_values=True):
         if gen is None:
             gen = self['population', 'num_generations']
 
-        names = 'kappa', 'accuracy', 'log_loss'
-        pfs = 'max', 'mean', 'min'
+        base_metrix = ['n_hidden', 'n_enabled_edges', 'n_total_edges',
+                       'n_evaluations', 'age', 'front', 'n_layers']
+        prefixed_metrics = ['kappa', 'accuracy', 'log_loss']
+        prefixes = {'max': np.max, 'mean': np.mean, 'min': np.min}
 
-        metric_names = [
-            'n_hidden', 'n_edges', 'n_evaluations', 'age', 'front', 'n_layers'] + [
-            f'{m}.{p}' for p in pfs for m in names
-        ]
+        if reduced_values:
+            metric_names = base_metrix + [
+                f'{m}.{p}' for p in prefixes for m in prefixed_metrics
+            ]
+            individual_metrics = pd.DataFrame(data=[
+                ind.metrics(*metric_names, current_gen=gen) for ind in population
+            ])
 
-        individual_metrics = pd.DataFrame(data=[
-            ind.metrics(*metric_names, current_gen=gen) for ind in population
-        ])
+        else:
+            metric_names = base_metrix + prefixed_metrics
+            individual_metrics = [
+                ind.metrics(*metric_names, current_gen=gen) for ind in population
+            ]
+            for im in individual_metrics:
+                im.update({
+                    f'{pm}.{pf}': pfunc(im[pm])
+                    for pm in prefixed_metrics
+                    for pf, pfunc in prefixes.items()
+                })
+                for pm in prefixed_metrics:
+                    del im[pm]
+
+            individual_metrics = pd.DataFrame(data=individual_metrics)
+
+
+        best_mean_acc = (
+            self.hall_of_fame[0].metrics('accuracy.mean')
+            if reduced_values else
+            np.max(self.hall_of_fame[0].metrics('accuracy')))
+
 
         metrics = dict(
             num_unique_individuals=len(set(population)),
 
             num_individuals=len(population),
 
-            best_mean_acc=self.hall_of_fame[0].metrics('accuracy.mean'),
+            best_mean_acc=best_mean_acc,
 
             # number of inds without edges
-            num_no_edge_inds=np.sum(individual_metrics['n_edges'] == 0),
+            num_no_edge_inds=np.sum(individual_metrics['n_enabled_edges'] == 0),
 
             # number of inds without hidden nodes
             num_no_hidden_inds=np.sum(individual_metrics['n_hidden'] == 0),
 
             # individual with the most occurences
             biggest_ind=max([population.count(i) for i in set(population)]),
-            covariance_mean_kappa_n_edges=individual_metrics['n_edges'].cov(individual_metrics['kappa.mean'])
+            covariance_mean_kappa_n_enabled_edges=individual_metrics['n_enabled_edges'].cov(individual_metrics['kappa.mean'])
         )
 
         for name, values in individual_metrics.items():
@@ -218,6 +252,7 @@ class Environment:
             metrics[f'MIN:{name}'] = values.min()
             metrics[f'MEAN:{name}'] = values.mean()
             metrics[f'MEDIAN:{name}'] = values.median()
+            metrics[f'STD:{name}'] = values.std()
 
         if return_indiv_metrics:
             return metrics, individual_metrics

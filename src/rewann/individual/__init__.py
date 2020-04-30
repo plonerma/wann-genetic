@@ -112,7 +112,8 @@ class Individual:
             n_layers=self.network.n_layers,
             id = self.id,
             birth = self.birth,
-            n_edges=len(self.genes.edges),
+            n_enabled_edges=np.sum(self.genes.edges['enabled'] == True),
+            n_total_edges=len(self.genes.edges),
             front=self.front,
             age=None if current_gen is None else (current_gen - self.birth)
         )
@@ -120,7 +121,11 @@ class Individual:
         metric_values.update(self._metric_values)
 
         if len(metric_names) == 1 and not as_dict and not as_list:
-            return metric_values[metric_names[0]]
+            try:
+                return metric_values[metric_names[0]]
+            except KeyError as e:
+                logging.warning(str(list(metric_values.keys())))
+                raise e
         elif as_list and not as_dict:
             return [metric_values[k] for k in metric_names]
         elif not as_list:
@@ -131,7 +136,7 @@ class Individual:
 
     @property
     def metric_values(self):
-        return pd.DataFrame(data=self._metric_values)
+        return pd.DataFrame(data=self._metric_values).sort_values(by=['weight'])
 
     @classmethod
     def base(cls, *args, **kwargs):

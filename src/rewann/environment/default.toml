@@ -2,6 +2,7 @@ debug = true
 
 [config]
   num_workers=1
+  run_post_opt=true
 
 [sampling]
   seed=0

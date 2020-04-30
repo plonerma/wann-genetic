@@ -1,0 +1,161 @@
+import os
+from functools import partial
+import argparse
+
+from tabulate import tabulate
+
+tabulate = partial(tabulate, tablefmt='pipe')
+
+from matplotlib import pyplot as plt
+import matplotlib
+matplotlib.use('Qt5Cairo')
+
+import numpy as np
+
+import logging
+
+from rewann.vis import draw_graph, draw_weight_matrix, node_names
+from rewann.environment.util import load_ind, load_hof
+from rewann.environment.evolution import evaluate_inds
+
+class Report:
+    def __init__(self, env, report_name='report'):
+        self.path = partial(env.env_path, report_name)
+        self.env = env
+
+        self.elements = list()
+
+        self.fig, self.ax = plt.subplots()
+
+    def rel_path(self, abspath):
+        return os.path.relpath(abspath, start=self.path())
+
+    def add(self, *elements):
+        self.elements += elements
+
+    def add_image(self, path, caption=""):
+        self.add(f"![{caption}]({self.rel_path(path)})\n")
+
+    def add_fig(self, name, caption=""):
+        p = self.path('media', f'{name}.svg')
+        plt.savefig(p)
+        self.add_image(p, caption=caption)
+        plt.cla()
+
+    def write_main_doc(self, doc_name='index.md'):
+        with open(self.path(doc_name), 'w') as f:
+            print('\n\n'.join(self.elements), file=f)
+
+    def add_gen_metrics(self):
+        metrics = self.env.load_gen_metrics()
+        metrics.index.names = ['generation']
+
+        for bm in ('log_loss.mean', 'accuracy.mean', 'kappa.mean'):
+            mean = metrics[f'MEAN:{bm}']
+            min = metrics[f'MIN:{bm}']
+            max = metrics[f'MAX:{bm}']
+            gen = metrics.index
+            try:
+                std = metrics[f'STD:{bm}']
+            except KeyError:
+                std = None
+
+            plt.plot(gen, mean, '-')
+            if std is not None:
+                plt.fill_between(gen, mean+std, mean-std, alpha=0.2)
+            plt.fill_between(gen, min, max, alpha=0.1)
+            caption = f"{bm} over generations"
+            plt.suptitle(caption)
+            self.add_fig(f'gen_metrics_{bm}', caption)
+
+    def add_ind_info(self, ind, metrics):
+        self.add(f"### Individual {ind.id}\n")
+
+        self.add(tabulate([
+            ('mean log_loss:', metrics['log_loss'].mean()),
+            ('mean accuracy:', metrics['accuracy'].mean()),
+            ('mean kappa:', metrics['kappa'].mean()),
+            ('number of edges', len(ind.genes.edges)),
+            ('number of hidden nodes', ind.network.n_hidden),
+            ('number of layers', ind.network.n_layers),
+            ('birth', ind.birth),
+        ], ['key', 'value']))
+
+        # plot graphs
+        for m in ('log_loss', 'accuracy', 'kappa'):
+            metrics.plot(kind='line',x='weight',y=m, ax=plt.gca())
+            caption = f'Metric {m}'
+            self.add_fig(f'metric_{m}_{ind.id}', caption)
+
+        self.add('#### Network')
+
+        # plot network
+        draw_graph(ind.network, plt.gca())
+        caption = f"Network of individual {ind.id}"
+        self.add_fig(f'network_{ind.id}', caption)
+        plt.clf()
+
+    def compile(self):
+        self.add("# Report")
+
+        hof_metrics = [ind.metric_values for ind in self.env.hall_of_fame]
+
+        stat_funcs = [('mean', np.mean), ('max', np.max)]
+
+        stats = list()
+
+        for measure in ('accuracy', 'kappa'):
+            for func_name, func in stat_funcs:
+                descr = f'{func_name} {measure}'
+                measures = [func(m[measure]) for m in hof_metrics]
+                i = np.argmax(measures)
+                indiv_id = self.env.hall_of_fame[i].id
+                value = measures[i]
+                stats.append((f'{func_name} {measure}', value, indiv_id))
+
+        self.add(
+            "## Best results in hall of fame",
+            tabulate(stats, ['measure', 'value', 'individual'])
+        )
+
+        # add generation metrics
+        self.add_gen_metrics()
+
+        self.add("## Individuals in hall of fame")
+
+        for ind, metrics in zip(self.env.hall_of_fame, hof_metrics):
+            self.add_ind_info(ind, metrics)
+
+        self.write_main_doc()
+
+    def run_evaluations(self, num_weights=100, num_samples=1000):
+        self.env.sample_weights(num_weights)
+
+        self.env.load_hof()
+        self.env.task.load_test()
+
+        logging.info('Evaluating indivs in hall of fame.')
+
+        evaluate_inds(self.env, self.env.hall_of_fame,
+                      n_samples=num_samples,
+                      reduce_values=False,
+                      use_test_samples=True)
+        return self
+
+
+if __name__ == '__main__':
+    from rewann import Environment
+
+    logging.getLogger().setLevel(logging.INFO)
+    parser = argparse.ArgumentParser(description='Post Optimization')
+    parser.add_argument('experiment_path', type=str, help='path to experiment')
+    parser.add_argument('--num_weights', type=int, default=100)
+    parser.add_argument('--num_samples', type=int, default=1000)
+
+    args = parser.parse_args()
+    env = Environment(args.experiment_path)
+
+    with env.open_data('r'):
+        Report(env).run_evaluations(
+            num_weights=args.num_weights, num_samples=args.num_samples
+        ).compile()

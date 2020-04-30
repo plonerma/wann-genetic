@@ -82,9 +82,14 @@ def store_ind(env, ind):
 
 def load_ind(env, i):
     inds_group = env.data_file[inds_group_key]
-    return ind_from_hdf(env, inds_group[ind_key(env, i)])
+    data = inds_group[ind_key(env, i)]
+    if data is None:
+        raise IndexError(f"Individual {i} is not stored in data.")
+    return ind_from_hdf(env, data)
 
 def ind_from_hdf(env, data):
+    p = data.get('parent')
+    p = None if p is None else p[()]
     return env.ind_class(
         genes=env.ind_class.Genotype(
             edges=data['edges'][()],
@@ -92,7 +97,7 @@ def ind_from_hdf(env, data):
             n_in=env.task.n_in,
             n_out=env.task.n_out,
         ),
-        parent=data.get('parent')[()],
+        parent=p,
         id=data.get('id')[()],
         birth=data.get('birth')[()]
     )
@@ -151,12 +156,15 @@ def load_gen(env, gen):
         return gens_group[gen_key(env, gen)]
     return gen
 
-def load_pop(env, gen):
+def load_pop(env, gen, ids_only=False):
     gen = load_gen(env, gen)
     if not 'individuals' in gen:
         return None
     inds = gen['individuals']
-    return [load_ind(env, i) for i in inds]
+    if ids_only:
+        return inds
+    else:
+        return [load_ind(env, i) for i in inds]
 
 def store_hof(env):
     for ind in env.hall_of_fame:

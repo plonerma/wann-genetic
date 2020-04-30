@@ -171,7 +171,7 @@ Type help or ? to list commands.
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('experiment_path', type=str,
                         help='path to experiment')
     parser.add_argument('--script',default=None,

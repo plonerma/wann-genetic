@@ -70,17 +70,17 @@ def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
 
     apply_func=partial(apply_networks, x=x)
 
-    logging.debug('expressing individuals')
+    #logging.debug('expressing individuals')
 
     express_inds(env, pop)
 
     weights = env['sampling', 'current_weight']
 
-    logging.debug(f'Applying networks ({n_samples})')
+    #logging.debug(f'Applying networks ({n_samples})')
 
     results = env.pool_map(apply_func, [(ind.network, weights) for ind in pop])
 
-    logging.debug('recording metrics')
+    #logging.debug('recording metrics')
 
     for y_probs, ind in zip(results, pop):
         ind.record_metrics(weights, y_true, y_probs, reduce_values=reduce_values)
