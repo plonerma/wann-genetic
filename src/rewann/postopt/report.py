@@ -52,19 +52,24 @@ class Report:
 
         for bm in ('log_loss.mean', 'accuracy.mean', 'kappa.mean'):
             mean = metrics[f'MEAN:{bm}']
+            median = metrics[f'MEDIAN:{bm}']
             min = metrics[f'MIN:{bm}']
             max = metrics[f'MAX:{bm}']
             gen = metrics.index
             try:
                 q1 = metrics[f'Q_1:{bm}']
-                q3 = metrics[f'Q_1:{bm}']
+                q3 = metrics[f'Q_3:{bm}']
             except KeyError:
+                logging.warning('Quantiles not included in measurements.')
                 q1, q3 = None, None
 
-            plt.plot(gen, mean, '-')
+            plt.plot(gen, median, '-', label='median', linewidth=.25, color='tab:blue')
+            plt.plot(gen, mean, '-', label='mean', linewidth=.75, color='tab:green')
+            plt.legend()
+
             if q1 is not None:
-                plt.fill_between(gen, q1, q3, alpha=0.2)
-            plt.fill_between(gen, min, max, alpha=0.1)
+                plt.fill_between(gen, q1, q3, alpha=0.2, fc='tab:blue')
+            plt.fill_between(gen, min, max, alpha=0.1, fc='tab:blue')
             caption = f"{bm} over generations"
             plt.suptitle(caption)
             self.add_fig(f'gen_metrics_{bm}', caption)
