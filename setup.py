@@ -17,5 +17,5 @@ setup(
         ],
     },
     package_data={'rewann': ['environment/default.toml']},
-    install_requires=['pytest-watch', 'streamlit', 'sklearn', 'numpy', 'mnist', 'opencv-python', 'h5py', 'tabulate']
+    install_requires=['pytest-watch', 'streamlit', 'sklearn', 'numpy', 'mnist', 'opencv-python', 'h5py', 'tabulate', 'matplotlib']
 )
