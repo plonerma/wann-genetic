@@ -12,6 +12,8 @@ import numpy as np
 
 import logging
 
+import json
+
 from .vis import draw_graph
 from rewann.environment.util import load_ind, load_hof
 from rewann.environment.evolution import evaluate_inds
@@ -43,6 +45,10 @@ class Report:
     def write_main_doc(self, doc_name='index.md'):
         with open(self.path(doc_name), 'w') as f:
             print('\n\n'.join(self.elements), file=f)
+
+    def write_stats(self, stats, fname='stats.json'):
+        with open(self.path(fname), 'w') as f:
+            json.dump(stats, f)
 
     def add_gen_metrics(self):
         metrics = self.env.load_gen_metrics()
@@ -121,6 +127,10 @@ class Report:
             "## Best results in hall of fame",
             tabulate(stats, ['measure', 'value', 'individual'])
         )
+
+        self.write_stats({
+            key: value for key, values, *_ in stats
+        })
 
         # add generation metrics
         self.add_gen_metrics()
