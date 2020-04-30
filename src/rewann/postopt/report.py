@@ -100,7 +100,7 @@ class Report:
         plt.clf()
 
     def compile(self):
-        self.add("# Report")
+        self.add(f"# Report {env['experiment_name']}")
 
         hof_metrics = [ind.metric_values for ind in self.env.hall_of_fame]
 
