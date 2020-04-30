@@ -14,7 +14,7 @@ import numpy as np
 
 import logging
 
-from rewann.vis import draw_graph, draw_weight_matrix, node_names
+from .vis import draw_graph
 from rewann.environment.util import load_ind, load_hof
 from rewann.environment.evolution import evaluate_inds
 
@@ -56,13 +56,14 @@ class Report:
             max = metrics[f'MAX:{bm}']
             gen = metrics.index
             try:
-                std = metrics[f'STD:{bm}']
+                q1 = metrics[f'Q_1:{bm}']
+                q3 = metrics[f'Q_1:{bm}']
             except KeyError:
-                std = None
+                q1, q3 = None, None
 
             plt.plot(gen, mean, '-')
-            if std is not None:
-                plt.fill_between(gen, mean+std, mean-std, alpha=0.2)
+            if q1 is not None:
+                plt.fill_between(gen, q1, q3, alpha=0.2)
             plt.fill_between(gen, min, max, alpha=0.1)
             caption = f"{bm} over generations"
             plt.suptitle(caption)

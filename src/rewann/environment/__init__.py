@@ -251,10 +251,13 @@ class Environment:
         )
 
         for name, values in individual_metrics.items():
-            metrics[f'MAX:{name}'] = values.max()
-            metrics[f'MIN:{name}'] = values.min()
+            metrics[f'Q_0:{name}'] = metrics[f'MIN:{name}'] = values.min()
+            metrics[f'Q_1:{name}'] = np.quantile(values, .25)
+            metrics[f'Q_2:{name}'] = metrics[f'MEDIAN:{name}'] = values.median()
+            metrics[f'Q_3:{name}'] = np.quantile(values, .75)
+            metrics[f'Q_4:{name}'] = metrics[f'MAX:{name}'] = values.max()
+
             metrics[f'MEAN:{name}'] = values.mean()
-            metrics[f'MEDIAN:{name}'] = values.median()
             metrics[f'STD:{name}'] = values.std()
 
         if return_indiv_metrics:

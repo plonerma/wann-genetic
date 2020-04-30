@@ -13,6 +13,7 @@ setup(
     entry_points={
         'console_scripts': [
             'run_experiment = rewann.environment.run:run_experiment',
+            'compile_report = rewann.postopt.report:compile_report',
         ],
     },
     package_data={'rewann': ['environment/default.toml']},
