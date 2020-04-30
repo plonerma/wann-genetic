@@ -7,8 +7,6 @@ from tabulate import tabulate
 tabulate = partial(tabulate, tablefmt='pipe')
 
 from matplotlib import pyplot as plt
-import matplotlib
-matplotlib.use('Qt5Cairo')
 
 import numpy as np
 
