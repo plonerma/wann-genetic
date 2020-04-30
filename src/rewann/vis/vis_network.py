@@ -1,4 +1,3 @@
-import streamlit as st
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,7 +11,7 @@ def node_names(net):
     )
 
 
-def draw_graph(net, ax=None, activation=None, pos_iterations=None):
+def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
     g = nx.DiGraph()
 
     # Add nodes
@@ -30,16 +29,12 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
     # Positions
     N = len(nodes)
 
-    layers = list(enumerate([len(s) for s in net.layers(including_input=True)]))
+    layers = list([len(s) for s in net.layers(including_input=True)])
 
     # pos x will be determined by layer, pos y will be iterated on
     # input, bias and output nodes will have static position, hidden node
     # positions will be determine iteratively
-    pos = np.array([
-        ((li), 0)
-        for li, ln in layers
-        for ni in range(ln)
-    ], dtype=[('x', float), ('y', float)])
+    pos = np.zeros(net.n_nodes, dtype=[('x', float), ('y', float)])
 
     pos['y'][0: net.offset] = np.arange(net.offset)
     pos['y'][-net.n_out:] = np.arange(net.n_out)
@@ -65,42 +60,42 @@ def draw_graph(net, ax=None, activation=None, pos_iterations=None):
         pos['y'][net.offset:-net.n_out] = update
 
     i_0 = 0
-    for j, l in layers:
+    x_0 = 0
+    for l in layers:
         bound = np.log(l)
         ns = i_0 + np.arange(l)
-        pos['y'][np.argsort(pos['y'][ns]) + i_0] = np.linspace(-bound, bound, l)
+        order = np.argsort(pos['y'][ns]) + i_0
+
+
+        x_n = l // layer_h + 1
+
+        xi = np.mod(np.arange(l), x_n)
+        yi = np.arange(l) // x_n
+
+        y_n = min(layer_h, l)
+
+        y_rel = np.linspace(bound, -bound, y_n)
+        x_rel = np.linspace(-np.log(x_n), np.log(x_n), x_n)
+
+        x_0 += np.log(x_n) + 1
+
+        pos['y'][order] = y_rel[yi] - x_rel[xi]*0.1
+        pos['x'][order] = x_rel[xi] + x_0
+
+        x_0 += np.log(x_n) + 1
         i_0 += l
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
-    if activation is not None:
-        node_size = 600 * activation / np.max(activation)
-    else:
-        node_size = 300
 
     # Edges
     for row, col in zip(*np.where(net.weight_matrix != 0)):
-        ns = nodes[row], nodes[col + net.offset]
-        w = net.weight_matrix[row, col]
-        a = 1 if activation is None else activation[row]
-        g.add_edge(*ns, weight=w, activation=a)
-
-    edge_weights = np.array([g[u][v]['weight'] for u,v in g.edges()])
-    edge_activ = np.array([g[u][v]['activation'] for u,v in g.edges()])
-
-    edge_color = -edge_weights*edge_activ
-    edge_widths = edge_weights
-
-    if len(edge_color) == 0:
-        edge_color = [0]
+        g.add_edge(nodes[row], nodes[col + net.offset])
 
     nx.draw(
-        g, ax=ax, pos=pos, node_color=color,
-        with_labels=True, node_size=node_size, font_color="k", font_size=9,
-        arrows=True, linewidths=0, alpha=.9, arrowstyle='-|>', style='dotted',
-        edge_color=edge_color, vmax=0, vmin=np.min(edge_color), cmap='magma',
-        width=edge_widths,
-        label="CAPTION")
+        g, ax=ax, pos=pos, node_color=color, edge_color='k',
+        with_labels=False, node_size=50, width=.4,
+        arrows=True, linewidths=0, alpha=.9, arrowstyle='-')
 
 def draw_weight_matrix(net, ax=None):
     x_ticks = list(range(net.n_hidden + net.n_out))
