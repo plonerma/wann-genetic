@@ -1,3 +1,7 @@
+""" Command Line Script for generating a series of experiments based on
+    specification and base parameters for multivariate testing. """
+
+
 import argparse
 import toml
 import os
@@ -49,23 +53,23 @@ def apply_variations(params, variations, exp_name_fstr, name_parts=dict()):
             # traverse to next variation
             yield from apply_variations(p_next, list(variations), exp_name_fstr, name_parts)
 
-def generate_experiments(template_path, out_dir):
-    assert os.path.isfile(template_path)
+def generate_experiments(specification_path, out_dir):
+    assert os.path.isfile(specification_path)
 
-    template = toml.load(template_path)
+    specification = toml.load(specification_path)
 
-    exp_fmt_str = template['experiment_name']
+    exp_fmt_str = specification['experiment_name']
 
     base_params_path = os.path.join(
         os.path.dirname(template_path),
-        template['base_params']
+        specification['base_params']
     )
 
     base_params = toml.load(base_params_path)
 
     variations = list()
 
-    for name, variation in template.items():
+    for name, variation in specification.items():
         if not isinstance(variation, dict):
             if not name in ('experiment_name', 'base_params'):
                 logging.warning(f'Key {name} unkown. Skipping.')
@@ -85,8 +89,9 @@ def generate_experiments(template_path, out_dir):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Experiment generation')
-    parser.add_argument('template', type=str)
+    parser = argparse.ArgumentParser(
+        description="Generate a series of experiments based on specification and base parameters for multivariate testing.")
+    parser.add_argument('specification', type=str)
     parser.add_argument('--build_dir', '-o', type=str, default='build')
     args = parser.parse_args()
-    generate_experiments(args.template, args.build_dir)
+    generate_experiments(args.specification, args.build_dir)
