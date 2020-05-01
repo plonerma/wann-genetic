@@ -14,6 +14,8 @@ setup(
         'console_scripts': [
             'run_experiment = rewann.environment.run:run_experiment',
             'compile_report = rewann.postopt.report:compile_report',
+            'generate_experiment_series = rewann.tools.generate_experiments:generate_experiments',
+            'compare_experiment_series = rewann.tools.compare_experiments:compare_experiment_series'
         ],
     },
     package_data={'rewann': ['environment/default.toml']},
