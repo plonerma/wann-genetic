@@ -78,8 +78,9 @@ class Report:
             plt.suptitle(caption)
             self.add_fig(f'gen_metrics_{bm}', caption)
 
-    def add_ind_info(self, ind, metrics):
+    def add_ind_info(self, ind):
         self.add(f"### Individual {ind.id}\n")
+        metrics = ind.metric_values
 
         self.add(tabulate([
             ('mean log_loss:', metrics['log_loss'].mean()),
@@ -105,12 +106,9 @@ class Report:
         self.add_fig(f'network_{ind.id}', caption)
         plt.clf()
 
-    def compile(self):
-        self.add(f"# Report {self.env['experiment_name']}")
-
-        hof_metrics = [ind.metric_values for ind in self.env.hall_of_fame]
-
+    def compile_stats(self):
         stat_funcs = [('mean', np.mean), ('max', np.max)]
+        hof_metrics = [ind.metric_values for ind in self.env.hall_of_fame]
 
         stats = list()
 
@@ -132,13 +130,18 @@ class Report:
             key: value for key, value, *_ in stats
         })
 
+    def compile(self):
+        self.add(f"# Report {self.env['experiment_name']}")
+
+        self.compile_stats()
+
         # add generation metrics
         self.add_gen_metrics()
 
         self.add("## Individuals in hall of fame")
 
         for ind, metrics in zip(self.env.hall_of_fame, hof_metrics):
-            self.add_ind_info(ind, metrics)
+            self.add_ind_info(ind)
 
         self.write_main_doc()
 

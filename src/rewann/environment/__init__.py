@@ -75,7 +75,7 @@ class Environment:
             assert m is not None and s is not None
 
             w = np.random.normal(m, s, size=n)
-        
+
         else:
             raise RuntimeError(f'Distribution {dist} not implemented.')
         self['sampling', 'current_weight'] = w
@@ -190,6 +190,8 @@ class Environment:
 
         if self['postopt', 'compile_report']:
             r.compile() # plot metrics, derive stats
+        else:
+            r.compile_stats() # at least derive and store stats
 
     def store_data(self, gen, pop):
         gen_metrics = self.population_metrics(gen=gen, population=pop)
