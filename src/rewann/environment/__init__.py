@@ -181,6 +181,7 @@ class Environment:
 
             self.store_data(gen, pop)
         self.last_population = pop
+        self.store_hof()
 
     def post_optimization(self):
         r = Report(self).run_evaluations( # run evaluations on test data
@@ -203,7 +204,8 @@ class Environment:
 
         self.metrics.append(gen_metrics)
 
-        if gen % self['storage', 'commit_population_freq'] == 0:
+        if (self['storage', 'commit_population_freq'] > 0
+            and gen % self['storage', 'commit_population_freq'] == 0):
             elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
             self.store_gen(gen, population=pop[:elite_size], indiv_metrics=indiv_metrics)
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
