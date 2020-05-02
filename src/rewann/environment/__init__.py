@@ -61,6 +61,21 @@ class Environment:
             assert l is not None and u is not None
 
             w = np.random.uniform(l, u, size=n)
+
+        elif dist == 'lognormal':
+            m = self['sampling', 'mean']
+            s = self['sampling', 'sigma']
+            assert m is not None and s is not None
+
+            w = np.random.lognormal(m, s, size=n)
+
+        elif dist == 'normal':
+            m = self['sampling', 'mean']
+            s = self['sampling', 'sigma']
+            assert m is not None and s is not None
+
+            w = np.random.normal(m, s, size=n)
+        
         else:
             raise RuntimeError(f'Distribution {dist} not implemented.')
         self['sampling', 'current_weight'] = w
