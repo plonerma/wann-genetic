@@ -204,12 +204,14 @@ class Environment:
 
         self.metrics.append(gen_metrics)
 
-        if (self['storage', 'commit_population_freq'] > 0
-            and gen % self['storage', 'commit_population_freq'] == 0):
-            elite_size = int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
-            self.store_gen(gen, population=pop[:elite_size], indiv_metrics=indiv_metrics)
+
+        commit_freq = self['storage', 'commit_elite_freq']
+        if (commit_freq > 0 and gen % commit_freq == 0):
+            self.store_gen(gen, population=pop[:self.elite_size], indiv_metrics=indiv_metrics)
+
+        commit_freq = self['storage', 'commit_metrics_freq']
+        if (commit_freq > 0 and gen % commit_freq == 0):
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
-            self.store_hof()
 
     def population_metrics(self, population, gen=None, return_indiv_metrics=False, reduced_values=True):
         if gen is None:

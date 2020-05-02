@@ -23,10 +23,11 @@ debug = true
 
 [storage]
   data_base_path='data'
-  commit_population_freq=10
   log_filename='execution.log'
   # if the confusion_matrices are required during inspection, they can still be calculated
   include_prediction_records=false
+  commit_elite_freq=-1 # never
+  commit_metrics_freq=10
 
 [population]
   num_generations = 20
