@@ -1,5 +1,6 @@
 import json, toml
 import pandas as pd
+import numpy as np
 import os
 import argparse
 import matplotlib.pyplot as plt
@@ -9,7 +10,7 @@ import logging
 
 from .multi_spec import Specification
 
-def assemble_dataframe(spec_path, dir_path):
+def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
     _, potential_results, _ = next(os.walk(dir_path))
 
     spec = Specification(spec_path)
@@ -17,6 +18,7 @@ def assemble_dataframe(spec_path, dir_path):
     exp = dict()
 
     for name in spec.generate_experiments(names_only=True):
+        name = name.lower()
         exp[name] = dict(_loaded=False)
         exp[name].update(spec.name_parts)
 
@@ -32,16 +34,32 @@ def assemble_dataframe(spec_path, dir_path):
 
         params = toml.load(params_path)
 
-        exp_name = params['experiment_name']
+        exp_name = params['experiment_name'].lower()
 
         if exp_name not in exp:
             logging.info(f'Found non-matching experiment: {exp_name}')
             continue
 
+        if exp[exp_name]['_loaded']:
+            logging.warning(f'Duplicate experiment {exp_name}. Skipping.')
+
         with open(stats_path, 'r') as f:
             stats = json.load(f)
 
         exp[exp_name].update(stats)
+
+        for target, source in map_from_params.items():
+            try:
+                if isinstance(source, str):
+                    v = params[source]
+                else:
+                    v = params
+                    for k in source:
+                        v = v[k]
+                exp[exp_name][target] = v
+            except KeyError:
+                exp[exp_name][target] = np.nan
+
         exp[exp_name]['_loaded'] = True
 
 
@@ -59,30 +77,52 @@ def assemble_dataframe(spec_path, dir_path):
     return pd.DataFrame(data=data)
 
 
-def multivariate_analysis(df):
+def multivariate_analysis(args):
+
+    df = assemble_dataframe(args.specification, args.experiments_dir,
+         map_from_params=dict(
+            lower_bound=['sampling', 'lower_bound'],
+            upper_bound=['sampling', 'upper_bound'],
+         ))
+
     if len(df) == 0:
         logging.error("No data loaded.")
         return
 
-    df = df.sort_values(by='interval')
+    df = df.sort_values(by='distribution')
 
-    sns.stripplot(x="interval", y="mean accuracy", data=df)
+    print ("Visualising uniform distributions")
+
+    df['is_uniform'] = df.agg(lambda x: x['distribution'].startswith('uniform'), axis=1)
+
+    uniform_df = df[df['is_uniform']]
+
+    uniform_df['interval'] = uniform_df.agg('{0[lower_bound]}, {0[upper_bound]}'.format, axis=1)
+
+    uniform_df['lower_bound_type'] = np.sign(uniform_df['lower_bound'])
+
+    uniform_df['interval_size'] = uniform_df['upper_bound'] - uniform_df['lower_bound']
+
+    sns.stripplot(x="interval", y="mean accuracy", data=uniform_df)
     plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
     plt.show()
 
-    sns.stripplot(x="interval", y="max accuracy", data=df)
-    plt.suptitle("Best Max Accuracy (per individual, max over sampled weights)")
+    sns.stripplot(x="lower_bound_type", y="mean accuracy", data=uniform_df)
+    plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
     plt.show()
+
+    sns.stripplot(x="interval_size", y="mean accuracy", data=uniform_df)
+    plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
+    plt.show()
+
 
 
 def compare_experiment_series():
     parser = argparse.ArgumentParser(description='Experiment generation')
     parser.add_argument('specification', type=str)
     parser.add_argument('experiments_dir', type=str)
-    args = parser.parse_args()
 
-    df = assemble_dataframe(args.specification, args.experiments_dir)
-    multivariate_analysis(df)
+    multivariate_analysis(parser.parse_args())
 
 if __name__ == '__main__':
     compare_experiment_series()
