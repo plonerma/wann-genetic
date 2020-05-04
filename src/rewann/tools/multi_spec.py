@@ -37,15 +37,19 @@ class Specification:
         name, _, _, fmt = self.variations[var_index]
 
         # update name parts
-        if fmt is not None:
+        if isinstance(v, dict) and '_fmt' in v:
+            fmt = v.pop('_fmt')
+
+        if fmt is None:
+            self.name_parts[name] = str(v)
+        else:
             if isinstance(v, dict):
                 self.name_parts[name] = fmt.format(**v)
             elif isinstance(v, list):
                 self.name_parts[name] = fmt.format(*v)
             else:
                 self.name_parts[name] = fmt.format(v)
-        else:
-            self.name_parts[name] = str(v)
+
 
     def get_exp_name(self):
         return self.name_fstr.format(**self.name_parts)
@@ -82,12 +86,13 @@ class Specification:
         _, _, values, _ = self.variations[var_index]
 
         for v in values:
+            self.update_name_parts(var_index, v)
+
+
             if not names_only:
                 p_next = self.update_params(params, var_index, v)
             else:
                 p_next = None
-
-            self.update_name_parts(var_index, v)
 
 
             if len(self.variations) - 1 == var_index:  # last variation
