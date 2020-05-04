@@ -42,7 +42,49 @@ def add_edge_layer_based(ind, env, innov):
     The implementation of this method is equivalent to strategy used in the
     original implementation.
     """
-    raise NotImplementedError()
+
+    # Source: https://github.com/google/brain-tokyo-workshop/blob/73eb4531746825203a3c591896a79ac563d393e7/WANNRelease/prettyNeatWann/neat_src/ind.py#L293
+
+    # To avoid recurrent connections nodes are sorted into layers, and
+    # connections are only allowed from lower to higher layers
+
+    layers = ind.network.node_layers()
+
+    src_options = np.arange(ind.network.offset + ind.network.n_hidden)
+    np.random.shuffle(src_options)
+
+    for src in src_options:
+        src_layer = layers[src]
+
+        dest_options = NotImplementedError()
+
+        # source: https://stackoverflow.com/a/16244044
+        first_possible_dest = np.argmax(layers > src_layer)
+
+        dest_options = np.arange(first_possible_dest, ind.network.n_nodes)
+        np.random.shuffle(dest_options)
+
+        for dest in dest_options:
+            if ind.network.conn_matrix[src, dest - ind.network.offset]:
+                continue # connection already exists
+
+            if src >= ind.network.offset:
+                src = ind.network.nodes['id'][src - ind.network.offset]
+
+            dest = ind.network.nodes['id'][dest - ind.network.offset]
+
+            # add edge
+            new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
+            new_edge['src'] = src
+            new_edge['dest'] = dest
+            new_edge['enabled'] = True
+            new_edge['id'] = innov.next_edge_id()
+
+            return ind.genes.__class__(
+                edges=np.append(ind.genes.edges, new_edge), nodes=np.copy(ind.genes.nodes),
+                n_in=ind.genes.n_in, n_out=ind.genes.n_out
+            )
+
 
 def add_edge_layer_agnostic(ind, env, innov):
     """Introduce edges regardless of node layers.
