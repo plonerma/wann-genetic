@@ -8,6 +8,12 @@ name='iris'
 num_generations=200
 size=100
 
+[postopt]
+  run_postopt=true
+  compile_report=false
+  num_weights=100
+  num_samples=-1
+
 [sampling]
 seed=0
 distribution='uniform'
