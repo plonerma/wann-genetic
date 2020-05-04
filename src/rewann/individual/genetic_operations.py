@@ -42,6 +42,7 @@ def add_edge_layer_based(ind, env, innov):
     The implementation of this method is equivalent to strategy used in the
     original implementation.
     """
+    raise NotImplementedError()
 
 def add_edge_layer_agnostic(ind, env, innov):
     """Introduce edges regardless of node layers.
