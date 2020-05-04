@@ -99,15 +99,18 @@ class Network:
         )
 
     def layers(self, including_input=False):
-        if self.propagation_steps is None:
-            return np.arange(self.n_hidden + self.n_out)
-        i = self.offset
+        o = self.offset
         if including_input:
-            yield np.arange(0, i)
-        for n in self.propagation_steps:
-            yield np.arange(i, i+n)
-            i = i + n
-        yield np.arange(i, i+self.n_out)
+            yield np.arange(0, o)
+
+        if self.propagation_steps is None:
+            yield np.arange(self.n_hidden) + o
+            o += self.n_hidden
+        else:
+            for n in self.propagation_steps:
+                yield np.arange(n) + o
+                o += n
+        yield np.arange(self.n_out) + o
 
     @property
     def n_layers(self):
@@ -116,8 +119,10 @@ class Network:
     def node_layers(self):
         """Return layer index for each node"""
         layers = np.full(self.n_nodes, np.nan)
-        for l, i in enumerate(self.layers(include_input=True)):
+        for i, l in enumerate(self.layers(including_input=True)):
             layers[l] = i
+
+        return layers
 
     def apply(self, x, func='softmax', return_activation=False, weights=1):
         # one dimensional for single input, two dimensional for multiple inputs
