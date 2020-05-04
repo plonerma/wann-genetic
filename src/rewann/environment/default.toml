@@ -11,6 +11,9 @@ debug = true
 
 [sampling]
   seed=0
+  # if not false, set seed after initial population was generated
+  # used to determine how much influence the initial pop has
+  post_init_seed=false
   distribution='uniform'
   lower_bound=-2
   upper_bound=2

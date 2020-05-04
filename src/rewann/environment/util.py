@@ -236,12 +236,14 @@ def setup_params(env, params):
 
     nested_update(env.params, params)
 
+    # ensure experiment name is defined
+    if 'experiment_name' not in env:
+        env['experiment_name'] = '{}_run'.format(env['task', 'name'])
+
     derive_path(env)
 
 
-    # ensure experiment name is defined
-    if env['experiment_name'] is None:
-        env['experiment_name'] = '{}_run'.format(task_name)
+
 
 
 

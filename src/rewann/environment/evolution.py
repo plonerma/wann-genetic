@@ -117,6 +117,9 @@ def create_initial_population(env):
 def evolution(env):
     pop = create_initial_population(env)
 
+    if env['sampling', 'post_init_seed'] is not False:
+        env.seed(env['sampling', 'post_init_seed'])
+
     # first hidden id after ins, bias, & outs
     innov = InnovationRecord.empty(env.task.n_in + 1 + env.task.n_out)
 

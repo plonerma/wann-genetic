@@ -39,8 +39,11 @@ class Environment:
         # choose task
         self.task = select_task(self['task', 'name'])
 
-    def seed(self):
-        np.random.seed(self['sampling', 'seed'])
+    def seed(self, seed=None):
+        if seed is not None:
+            np.random.seed(seed)
+        else:
+            np.random.seed(self['sampling', 'seed'])
 
     @property
     def elite_size(self):
