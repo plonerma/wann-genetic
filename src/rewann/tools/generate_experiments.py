@@ -24,22 +24,24 @@ def generate_experiments():
 
     args = parser.parse_args()
 
+    logging.getLogger().setLevel(logging.DEBUG)
+
     spec = Specification(args.specification)
 
     # ensure the build directory exists
     if not os.path.exists(args.build_dir):
         os.makedirs(args.build_dir)
 
-    for params in spec.generate_experiments():
+    for n, params in enumerate(spec.generate_experiments()):
 
         slug = params['experiment_name'].lower().replace(' ', '_')
         file_path = os.path.join(args.build_dir, f"{slug}.toml")
 
-        print(f'Saving {file_path}')
+        logging.info(f'Saving {file_path}')
 
         with open(file_path, 'w') as f:
             toml.dump(params, f)
-
+    logging.info(f'Generated {n} files.')
 
 if __name__ == '__main__':
     generate_experiments()
