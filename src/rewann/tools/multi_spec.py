@@ -16,7 +16,7 @@ class Specification:
 
         self.base_params_path = os.path.join(
             os.path.dirname(path),
-            spec['base_params']
+            spec.get('base_params', 'base.toml'),
         )
 
         self.base_params = toml.load(self.base_params_path)
