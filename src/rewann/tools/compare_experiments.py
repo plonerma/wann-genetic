@@ -2,15 +2,16 @@ import json, toml
 import pandas as pd
 import numpy as np
 import os
-import argparse
-import matplotlib.pyplot as plt
-import seaborn as sns
+from scipy.stats import ttest_ind
+
+from itertools import product
 
 import logging
 
 from .multi_spec import Specification
 
 def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
+    assert os.path.isdir(dir_path)
     _, potential_results, _ = next(os.walk(dir_path))
 
     spec = Specification(spec_path)
@@ -29,7 +30,8 @@ def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
         stats_path = os.path.join(dir, 'report', 'stats.json')
 
 
-        if not os.path.isfile(params_path) or not os.path.isfile(stats_path):
+        if not os.path.exists(params_path) or not os.path.exists(stats_path):
+            logging.info(f'Non-experiment directory: {dir}')
             continue
 
         params = toml.load(params_path)
@@ -71,58 +73,36 @@ def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
         else:
             data.append(v)
 
-    if len(data) < len(exp):
-        logging.warning(f'Only {len(data)} out of {len(exp)} experiments found.')
+    df =  pd.DataFrame(data=data)
 
-    return pd.DataFrame(data=data)
-
-
-def multivariate_analysis(args):
-
-    df = assemble_dataframe(args.specification, args.experiments_dir,
-         map_from_params=dict(
-            lower_bound=['sampling', 'lower_bound'],
-            upper_bound=['sampling', 'upper_bound'],
-         ))
 
     if len(df) == 0:
         logging.error("No data loaded.")
-        return
+    elif len(data) < len(exp):
+        logging.warning(f'Only {len(data)} out of {len(exp)} experiments found.')
 
-    df = df.sort_values(by='distribution')
-
-    print ("Visualising uniform distributions")
-
-    df['is_uniform'] = df.agg(lambda x: x['distribution'].startswith('uniform'), axis=1)
-
-    uniform_df = df[df['is_uniform']]
-
-    uniform_df['interval'] = uniform_df.agg('{0[lower_bound]}, {0[upper_bound]}'.format, axis=1)
-
-    uniform_df['lower_bound_type'] = np.sign(uniform_df['lower_bound'])
-
-    uniform_df['interval_size'] = uniform_df['upper_bound'] - uniform_df['lower_bound']
-
-    sns.stripplot(x="interval", y="mean accuracy", data=uniform_df)
-    plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
-    plt.show()
-
-    sns.stripplot(x="lower_bound_type", y="mean accuracy", data=uniform_df)
-    plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
-    plt.show()
-
-    sns.stripplot(x="interval_size", y="mean accuracy", data=uniform_df)
-    plt.suptitle("Best Mean Accuracy (per individual, mean over sampled weights)")
-    plt.show()
+    return df
 
 
 
-def compare_experiment_series():
-    parser = argparse.ArgumentParser(description='Experiment generation')
-    parser.add_argument('specification', type=str)
-    parser.add_argument('experiments_dir', type=str)
+def load_experiment_series(path, params_map=dict(), sort_by=False):
+    spec_path = os.path.join(path, 'spec.toml')
+    data_path = os.path.join(path, 'data')
+    df = assemble_dataframe(spec_path, data_path, map_from_params=params_map)
 
-    multivariate_analysis(parser.parse_args())
+    if sort_by is not False:
+        df = df.sort_values(by=sort_by)
+    return df
 
-if __name__ == '__main__':
-    compare_experiment_series()
+def mean_comparison(df, group_var, group_values, measure='mean accuracy'):
+    for v1, v2 in product(group_values, repeat=2):
+        if v1 == v2: continue
+        g1 = df[df[group_var] == v1][measure]
+        g2 = df[df[group_var] == v2][measure]
+
+        # greater-than test
+        t, p = ttest_ind(g1, g2, equal_var=False)
+
+        if t > 0 and p < 0.05:
+            print(f"{group_var}={v1} is significantly ({p:.1%}) better than {group_var}={v2}")
+            print (t, p)
