@@ -6,8 +6,8 @@ import numpy as np
 
 import logging
 
-def test_experiment(tmp_path):
-    params = toml.load('tests/test_experiment.toml')
+def experiment_test(params_path, tmp_path):
+    params = toml.load(params_path)
     params['experiment_path'] = tmp_path
     exp = Environment(params=params)
     exp.run()
@@ -20,3 +20,10 @@ def test_experiment(tmp_path):
     logging.info(f'Mean kappa score: {mean_kappa}')
     logging.info(f'Max kappa score: {max_kappa}')
     assert mean_kappa > 0 and max_kappa > 0.4
+
+def test_layer_agnostic(tmp_path):
+    experiment_test('tests/test_layer_agnostic.toml', tmp_path)
+
+
+def test_layer_based(tmp_path):
+    experiment_test('tests/test_layer_based.toml', tmp_path)
