@@ -85,10 +85,7 @@ def add_edge_layer_agnostic(ind, env, innov):
     if src >= network.offset:
         src = network.nodes['id'][src - network.offset]
 
-    if dest >= network.n_hidden:
-        dest = network.nodes['id'][dest]
-    else:
-        dest = network.nodes['id'][dest]
+    dest = network.nodes['id'][dest]
 
     new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
     new_edge['src'] = src
