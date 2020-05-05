@@ -140,7 +140,7 @@ class Report:
 
         self.add("## Individuals in hall of fame")
 
-        for ind, metrics in zip(self.env.hall_of_fame, hof_metrics):
+        for ind in self.env.hall_of_fame:
             self.add_ind_info(ind)
 
         self.write_main_doc()

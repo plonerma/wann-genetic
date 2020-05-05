@@ -41,7 +41,7 @@ def generate_experiments():
 
         with open(file_path, 'w') as f:
             toml.dump(params, f)
-    logging.info(f'Generated {n} files.')
+    logging.info(f'Generated {n+1} files.')
 
 if __name__ == '__main__':
     generate_experiments()

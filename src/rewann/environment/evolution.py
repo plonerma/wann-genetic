@@ -134,7 +134,6 @@ def evolution(env):
 
         evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
         order = rank_individuals(pop, return_order=True)
-        logging.debug(order)
         pop = [pop[i] for i in order]
 
         # yield next generation
