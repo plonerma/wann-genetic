@@ -20,7 +20,7 @@ class EchoTask(Task):
         # If non-constant sequence should be required, consider filling the
         # last inputs with buffer values
         # This allows matrix computation even on sequence data
-        size = (self.sample_length, samples)
+        size = (samples, self.sample_length)
 
         x_class = np.random.randint(self.n_in, size=size)
 
@@ -31,7 +31,6 @@ class EchoTask(Task):
         y = np.empty(size, dtype=int)
 
         y[:, :delay] = -1  # there is nothing to echo
-
         y[:, delay:] = x_class[:, :-delay]  # output is input shifted by delay
 
         return x, y
