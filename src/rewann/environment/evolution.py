@@ -17,7 +17,7 @@ class InnovationRecord(set):
         """
         self = cls()
         self.node_counter = count(start_id)
-        self.edge_counter = count(0)
+        self.edge_counter = count(1) # 0 are initial edges
         self.individual_counter = count(0)
         self.generation = 0
         return self
@@ -106,7 +106,8 @@ def create_initial_population(env):
         for i in range(env['population', 'size']):
             pop.append(
                 env.ind_class.full_initial(env.task.n_in, env.task.n_out,
-                                           id=i, prob_enabled=prob_enabled))
+                    id=i, prob_enabled=prob_enabled,
+                    negative_edges_allowed=env['population', 'enable_edge_signs']))
             # disable some edges
         express_inds(env, pop)
         evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])

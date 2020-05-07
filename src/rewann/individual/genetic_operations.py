@@ -3,7 +3,7 @@ import logging
 
 def add_node(ind, env, innov):
     # Choose an enabled edge
-    options, = np.where(ind.genes.edges['enabled'])
+    options, = np.where(ind.genes.edges['sign'].astype(bool))
     if len(options) == 0: return None
 
     edge_to_disable = np.random.choice(options)
@@ -14,7 +14,13 @@ def add_node(ind, env, innov):
     new_node['func'] = np.random.randint(ind.network.n_act_funcs)
 
     new_edges = np.zeros(2, dtype=ind.genes.edges.dtype)
+
     new_edges['enabled'] = True
+
+    # first edge will have same sign as original edge, the second one will be 1
+    # (so the total factor will stay the same if act func is linear)
+    new_edges[0]['sign'] = ind.genes.edges[edge_to_disable]['sign']
+    new_edges[1]['sign'] = 1
 
     # edge from src to new node
     new_edges[0]['src'] = ind.genes.edges[edge_to_disable]['src']
@@ -35,6 +41,19 @@ def add_node(ind, env, innov):
         edges=edges, nodes=np.append(ind.genes.nodes, new_node),
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
+
+def new_edge(env, innov, ind, src, dest):
+    e = np.zeros(1, dtype=ind.genes.edges.dtype)
+    e['src'] = src
+    e['dest'] = dest
+    e['enabled'] = True
+    if env['population']['enable_edge_signs']:
+        e['sign'] = np.random.choice([-1,1])
+    else:
+        e['sign'] = 1
+
+    e['id'] = innov.next_edge_id()
+    return e
 
 def add_edge_layer_based(ind, env, innov):
     """Layer-based edge introduction strategy.
@@ -73,15 +92,10 @@ def add_edge_layer_based(ind, env, innov):
 
             dest = ind.network.nodes['id'][dest - ind.network.offset]
 
-            # add edge
-            new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
-            new_edge['src'] = src
-            new_edge['dest'] = dest
-            new_edge['enabled'] = True
-            new_edge['id'] = innov.next_edge_id()
 
             return ind.genes.__class__(
-                edges=np.append(ind.genes.edges, new_edge), nodes=np.copy(ind.genes.nodes),
+                edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest)),
+                nodes=ind.genes.nodes,
                 n_in=ind.genes.n_in, n_out=ind.genes.n_out
             )
 
@@ -129,14 +143,9 @@ def add_edge_layer_agnostic(ind, env, innov):
 
     dest = network.nodes['id'][dest]
 
-    new_edge = np.zeros(1, dtype=ind.genes.edges.dtype)
-    new_edge['src'] = src
-    new_edge['dest'] = dest
-    new_edge['enabled'] = True
-    new_edge['id'] = innov.next_edge_id()
-
     return ind.genes.__class__(
-        edges=np.append(ind.genes.edges, new_edge), nodes=np.copy(ind.genes.nodes),
+        edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest)),
+        nodes=ind.genes.nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
@@ -148,7 +157,6 @@ def add_edge(ind, env, innov):
 
 def reenable_edge(ind, env, innov):
     edges = np.copy(ind.genes.edges)
-    nodes = np.copy(ind.genes.nodes)
 
     # Choose an disabled edge
     options, = np.where(edges['enabled'] == False)
@@ -159,13 +167,12 @@ def reenable_edge(ind, env, innov):
     edges[edge_to_enable]['enabled'] = True
 
     return ind.genes.__class__(
-        edges=edges, nodes=nodes,
+        edges=edges, nodes=ind.genes.nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
 def change_activation(ind, env, innov):
     nodes = np.copy(ind.genes.nodes)
-    edges = np.copy(ind.genes.edges)
 
     selected_node = np.random.randint(len(nodes))
 
@@ -176,7 +183,22 @@ def change_activation(ind, env, innov):
     nodes[selected_node]['func'] = new_act
 
     return ind.genes.__class__(
-        edges=edges, nodes=nodes,
+        edges=ind.genes.edges, nodes=nodes,
+        n_in=ind.genes.n_in, n_out=ind.genes.n_out
+    )
+
+def change_edge_sign(ind, env, innov):
+    edges = np.copy(ind.genes.edges)
+    # Choose an enabled edge
+    options, = np.where(ind.genes.edges['sign'].astype(bool))
+    if len(options) == 0: return None
+
+    edge_to_change = np.random.choice(options)
+
+    edges['sign'][edge_to_change] = -1
+
+    return ind.genes.__class__(
+        edges=edges, nodes=ind.genes.nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
@@ -187,13 +209,20 @@ def mutation(ind, env, innov):
         ('new_node', add_node),
         ('reenable_edge', reenable_edge),
         ('change_activation', change_activation),
+        ('change_edge_sign', change_edge_sign) # might be disabled
     ], dtype=[('name', 'U32'), ('func', object)])
 
     # get probabilities from params
     probabilities = np.array([
-        env['mutation', name, 'propability']
+        env['mutation', name, 'probability']
         for name in supported_mutation_types['name']
     ])
+
+    num_choices = len(supported_mutation_types)
+
+    if not env['population']['enable_edge_signs']:
+        probabilities[-1] = 0
+        num_choices -= 1
 
     # normalize
     probabilities = probabilities / np.sum(probabilities)
@@ -201,7 +230,7 @@ def mutation(ind, env, innov):
     # Generate permutation of functions (every function occurs only once)
 
     permutated_mutation_functions = np.random.choice(
-        supported_mutation_types, len(supported_mutation_types),
+        supported_mutation_types, num_choices,
         p=probabilities, replace=False)
 
     # apply functions until one actually generates a mutation

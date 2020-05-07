@@ -15,16 +15,31 @@ class Genotype:
     n_out : int
 
     edge_encoding : GeneEncoding = (
-        ('id', np.dtype(int)), # innovation number
-        ('src', np.dtype(int)), # node id
-        ('dest', np.dtype(int)), # node id
-    #    ('weight', np.dtype(int)), # WANN for now
-        ('enabled', np.dtype(bool)), # node id
+        # innovation number
+        ('id', np.dtype(int)),
+
+         # id of source node (any but output)
+        ('src', np.dtype(int)),
+
+        # id of destination node (either hidden or output)
+        ('dest', np.dtype(int)),
+
+        # in {-1,+1} if negative signs allowed, else 1
+        ('sign', np.dtype(int)),
+
+        # sign needs to be retained even if disabled, in case the edge is
+        # reenabled
+        ('enabled', np.dtype(bool))
     )
     node_encoding : GeneEncoding = (
         ('id', np.dtype(int)),
-        ('out', np.dtype(bool)), # don't store ins and bias as genes
-        ('func', np.dtype(int)) # activation function
+
+        # input and bias nodes are not stored in genes, since no activation
+        # function is required (ids are still reserved for these nodes)
+        ('out', np.dtype(bool)),
+
+        # int representation of activation function
+        ('func', np.dtype(int))
     )
 
     def node_out_factory(self, id):
@@ -66,7 +81,7 @@ class Genotype:
 
     def __eq__(self, other):
         return (
-                self.n_in == other.n_in
+            self.n_in == other.n_in
             and self.n_out == other.n_out
             and np.all(self.edges == other.edges)
             and np.all(self.nodes == other.nodes)
@@ -88,16 +103,25 @@ class Genotype:
         return cls(edges=edges, nodes=nodes, n_in=n_in, n_out=n_out)
 
     @classmethod
-    def full_initial(cls, n_in, n_out, prob_enabled=1):
+    def full_initial(cls, n_in, n_out, prob_enabled=1, negative_edges_allowed=False):
         """Create new base gene with all input nodes connected to the output nodes."""
         # connect all input (and bias) nodes to all output nodes
         n_edges = (n_in+1)*n_out
 
         edges = np.zeros(n_edges, dtype=list(cls.edge_encoding))
-        edges['id'] = np.arange(n_edges)
+
+        edges['id'] = 0 # initial edges dont keep an id
+
         edges['src'] = np.tile(np.arange(n_in+1), n_out)
         edges['dest'] = np.repeat(n_in+1 + np.arange(n_out), n_in+1)
+
         edges['enabled'] = np.random.rand(n_edges) < prob_enabled
+
+        if negative_edges_allowed:
+            edges['sign'] = np.random.choice([-1,+1], n_edges)
+        else:
+            edges['sign'] = 1
+
 
         # start only with output nodes (input and bias nodes are implicit)
         nodes = np.zeros(n_out, dtype=list(cls.node_encoding))

@@ -11,5 +11,5 @@ name='iris'
   num_samples=-1
 
 [population]
-num_generations=20
-size=64
+  num_generations=20
+  size=64

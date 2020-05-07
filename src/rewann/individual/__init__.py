@@ -113,6 +113,7 @@ class Individual:
             id = self.id,
             birth = self.birth,
             n_enabled_edges=np.sum(self.genes.edges['enabled'] == True),
+            n_disabled_edges=np.sum(self.genes.edges['enabled'] == False),
             n_total_edges=len(self.genes.edges),
             front=self.front,
             age=None if current_gen is None else (current_gen - self.birth)

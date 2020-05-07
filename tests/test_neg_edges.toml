@@ -13,7 +13,4 @@ debug=true
 [population]
   num_generations=20
   size=64
-
-[mutation]
-  [mutation.new_edge]
-    strategy = 'layer_based'
+  enable_edge_signs=true

@@ -2,7 +2,7 @@ import numpy as np
 import logging
 
 from .expression import (
-    apply_act_function, remap_node_ids, get_array_field, sort_hidden_nodes,
+    apply_act_function, remap_node_ids, sort_hidden_nodes,
     weight_matrix_arrangement, softmax)
 
 class Network:
@@ -80,8 +80,7 @@ class Network:
         nodes[: -genes.n_out] = genes.nodes[hidden_node_order + genes.n_out]
         nodes[-genes.n_out: ] = genes.nodes[:genes.n_out]
 
-        # if a field does not exist, use 1 as default
-        w_matrix[edges['src'], edges['dest']] = get_array_field(edges, 'enabled', 1) * get_array_field(edges, 'weight', 1)
+        w_matrix[edges['src'], edges['dest']] = edges['sign'] * edges['enabled']
 
         # rearrange matrices
         i_rows, i_cols = weight_matrix_arrangement(genes.n_in, genes.n_out, hidden_node_order)

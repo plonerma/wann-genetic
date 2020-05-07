@@ -87,13 +87,18 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
+    edge_colors = list()
 
     # Edges
     for row, col in zip(*np.where(net.weight_matrix != 0)):
         g.add_edge(nodes[row], nodes[col + net.offset])
+        edge_colors.append(
+            'k' if net.weight_matrix[row][col] > 0
+            else 'r'
+        )
 
     nx.draw(
-        g, ax=ax, pos=pos, node_color=color, edge_color='k',
+        g, ax=ax, pos=pos, node_color=color, edge_color=edge_colors,
         with_labels=False, node_size=50, width=.4,
         arrows=True, linewidths=0, alpha=.9, arrowstyle='-')
 

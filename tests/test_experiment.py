@@ -27,3 +27,6 @@ def test_layer_agnostic(tmp_path):
 
 def test_layer_based(tmp_path):
     experiment_test('tests/test_layer_based.toml', tmp_path)
+
+def test_negative_edges(tmp_path):
+    experiment_test('tests/test_neg_edges.toml', tmp_path)

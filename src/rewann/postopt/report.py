@@ -40,7 +40,7 @@ class Report:
         p = self.path('media', f'{name}.svg')
         plt.savefig(p)
         self.add_image(p, caption=caption)
-        plt.cla()
+        plt.clf()
 
     def write_main_doc(self, doc_name='index.md'):
         with open(self.path(doc_name), 'w') as f:
@@ -94,8 +94,10 @@ class Report:
 
         # plot graphs
         for m in ('log_loss', 'accuracy', 'kappa'):
-            metrics.plot(kind='line',x='weight',y=m, ax=plt.gca())
+            plt.plot(metrics['weight'], metrics[m])
             caption = f'Metric {m}'
+            plt.xlabel('weight')
+            plt.ylabel(m)
             self.add_fig(f'metric_{m}_{ind.id}', caption)
 
         self.add('#### Network')

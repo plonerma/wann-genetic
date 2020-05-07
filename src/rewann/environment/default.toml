@@ -38,6 +38,7 @@ debug = true
   initial_enabled_edge_probability = 0.05
   initial_with_edges=true
   hof_size=10
+  enable_edge_signs=false
 
 [selection]
   use_tournaments = true
@@ -49,11 +50,15 @@ debug = true
 
 [mutation]
   [mutation.new_edge]
-    propability = 0.20
+    probability = 0.20
     strategy = 'layer_agnostic'
   [mutation.new_node]
-    propability = 0.25
+    probability = 0.25
   [mutation.reenable_edge]
-    propability = 0.05
+    probability = 0.05
   [mutation.change_activation]
-    propability = 0.5
+    probability = 0.5
+
+  # will be ignored if edges signs are disabled
+  [mutation.change_edge_sign]
+    probability = 0.2
