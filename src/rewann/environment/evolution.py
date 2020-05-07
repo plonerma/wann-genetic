@@ -47,26 +47,7 @@ def apply_networks(params, x):
 def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
                   use_test_samples=False):
 
-    if use_test_samples:
-        if env.task.test_x is None:
-            logging.warning("Evaluation on test data requires loading test data.")
-        x = env.task.test_x
-        y_true = env.task.test_y_true
-
-    else:
-        if env.task.x is None:
-            logging.warning("Evaluation on training data requires loading training data.")
-
-        x = env.task.x
-        y_true = env.task.y_true
-
-    if n_samples > 0 and n_samples < len(x):
-        chosen_samples = np.random.choice(len(x), size=n_samples, replace=False)
-        x = x[chosen_samples]
-        y_true = y_true[chosen_samples]
-
-
-
+    x, y_true = task.get_data(test=use_test_samples, samples=n_samples)
 
     apply_func=partial(apply_networks, x=x)
 
