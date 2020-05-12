@@ -11,7 +11,7 @@ def node_names(net):
     )
 
 
-def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
+def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
 
     if ax is None:
         ax = plt.gca()
@@ -23,6 +23,13 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
 
     # Add nodes
     nodes = node_names(net)
+    node_labels = [''] * (net.n_in + 1) + [
+        net.available_act_functions[func][0][:5] for func in net.nodes['func']
+    ]
+
+    node_labels = dict(zip(nodes, node_labels))
+
+
     g.add_nodes_from(nodes)
 
     # Colors
@@ -132,9 +139,15 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
     nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
                            width=2,  arrows=True, **edge_params)
 
+
     nx.draw_networkx_nodes(
-        g, ax=ax, pos=pos, node_color=color,
-        with_labels=False, node_size=50, linewidths=0)
+        g, ax=ax, pos=pos, node_color=color, node_size=50, linewidths=0)
+
+    if with_lables:
+        nx.draw_networkx_labels(
+            g, ax=ax, pos=pos, labels=node_labels,
+            font_size=8,
+        )
 
 def draw_weight_matrix(net, ax=None):
     x_ticks = list(range(net.n_hidden + net.n_out))
