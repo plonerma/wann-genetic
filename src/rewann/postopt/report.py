@@ -16,7 +16,7 @@ import json
 
 from .vis import draw_graph
 from rewann.environment.util import load_ind, load_hof
-from rewann.environment.evolution import evaluate_inds
+from rewann.environment.evolution import evaluate_inds, express_inds
 
 class Report:
     def __init__(self, env, report_name='report'):
@@ -103,7 +103,10 @@ class Report:
         self.add('#### Network')
 
         # plot network
-        draw_graph(ind.network, plt.gca())
+        self.add_network(ind)
+
+    def add_network(self, ind):
+        draw_graph(ind.network)
         caption = f"Network of individual {ind.id}"
         self.add_fig(f'network_{ind.id}', caption)
         plt.clf()
@@ -167,8 +170,8 @@ def compile_report():
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('experiment_path', type=str, help='path to experiment')
-    parser.add_argument('--num_weights', type=int, default=100)
-    parser.add_argument('--num_samples', type=int, default=1000)
+    parser.add_argument('--weights', type=int, default=100)
+    parser.add_argument('--samples', type=int, default=1000)
 
     args = parser.parse_args()
     env = Environment(args.experiment_path)
@@ -177,3 +180,22 @@ def compile_report():
         Report(env).run_evaluations(
             num_weights=args.num_weights, num_samples=args.num_samples
         ).compile()
+
+def draw_network():
+    from rewann import Environment
+
+    logging.getLogger().setLevel(logging.INFO)
+    parser = argparse.ArgumentParser(description='Post Optimization')
+    parser.add_argument('experiment_path', type=str, help='path to experiment')
+    parser.add_argument('--hof_index', type=int, help='hall of fame index of network to be drawn')
+
+    args = parser.parse_args()
+    env = Environment(args.experiment_path)
+
+
+    with env.open_data('r'):
+        env.load_hof()
+        ind = env.hall_of_fame[args.hof_index]
+        express_inds(env, [ind])
+        Report(env).add_network(ind)
+        logging.info(f'Plotted network for individual {ind.id}')

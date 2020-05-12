@@ -12,10 +12,15 @@ setup(
     #scripts=['src/rewann/cli/inspect_run', 'src/rewann/cli/inspect_run.py'],
     entry_points={
         'console_scripts': [
+            # execution of a single experiment
             'run_experiment = rewann.environment.run:run_experiment',
+
+            # post execution reporting
             'compile_report = rewann.postopt.report:compile_report',
+            'draw_network = rewann.postopt.report:draw_network',
+
+            # multivariate experiment series generation
             'generate_experiment_series = rewann.tools.generate_experiments:generate_experiments',
-            'compare_experiment_series = rewann.tools.compare_experiments:compare_experiment_series'
         ],
     },
     package_data={'rewann': ['environment/default.toml']},

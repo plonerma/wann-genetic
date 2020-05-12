@@ -14,7 +14,7 @@ def node_names(net):
 def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
 
     if ax is None:
-        ax = cf.gca()
+        ax = plt.gca()
 
 
     ax.set_axis_off()
@@ -94,34 +94,43 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
+    edge_params=dict(
+        edge_cmap = plt.get_cmap('tab10'),
+        alpha=.6,
+        ax=ax, pos=pos,
+        edge_vmin=0,
+        edge_vmax=9
+    )
+
     # draw feed forward edges
 
-    edge_colors = list()
-    edges = list()
+    edge_col = list()
+    edgelist = list()
 
     for row, col in zip(*np.where(net.weight_matrix != 0)):
-        edges.append((nodes[row], nodes[col + net.offset]))
-        edge_colors.append(
-            'k' if net.weight_matrix[row][col] > 0
-            else 'r'
+        edgelist.append((nodes[row], nodes[col + net.offset]))
+        edge_col.append(
+            2 if net.weight_matrix[row][col] > 0
+            else 3
         )
 
-    nx.draw_networkx_edges(g, edgelist=edges, ax=ax, pos=pos, edge_color=edge_colors, width=1, alpha=.6, arrows=False)
+    nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
+        width=1, arrows=False, **edge_params)
 
     # draw recurrent edges
 
-    edge_colors = list()
-    edges = list()
+    edge_col = list()
+    edgelist = list()
 
     for row, col in zip(*np.where(net.recurrent_weight_matrix != 0)):
-        edges.append((nodes[row], nodes[col + net.offset]))
-        edge_colors.append(
-            'k' if net.recurrent_weight_matrix[row][col] > 0
-            else 'r'
+        edgelist.append((nodes[row], nodes[col + net.offset]))
+        edge_col.append(
+            0 if net.recurrent_weight_matrix[row][col] > 0
+            else 1
         )
 
-    nx.draw_networkx_edges(g, edgelist=edges, ax=ax, pos=pos, edge_color=edge_colors,
-                           width=2, alpha=.6, arrows=True, style='dotted')
+    nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
+                           width=2,  arrows=True, **edge_params)
 
     nx.draw_networkx_nodes(
         g, ax=ax, pos=pos, node_color=color,
