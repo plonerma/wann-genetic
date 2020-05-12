@@ -1,4 +1,8 @@
+import logging
+
 class Task:
+    is_recurrent = False
+    
     def load_training(self):
         pass
 
@@ -8,8 +12,11 @@ class Task:
     def get_data(self):
         raise NotImplementedError()
 
+class RecurrentTask(Task):
+    is_recurrent = True
+
 class ClassificationTask(Task):
-    x, y_true, test_x, test_y_true = None, None, None, None
+    x, y, test_x, test_y = None, None, None, None
 
     def __init__(self, n_in, n_out, train_loader, test_loader=None):
         self.n_in = n_in
@@ -21,13 +28,15 @@ class ClassificationTask(Task):
     def load_training(self):
         if self.x is None:
             self.x, self.y = self.train_loader()
+            logging.debug(f"Loaded {len(self.y)} samples.")
 
     def load_test(self):
         if self.test_x is None:
             self.test_x, self.test_y = self.test_loader()
+            logging.debug(f"Loaded {len(self.test_y)} samples.")
 
     def get_data(self, samples, test=False):
-        if samples:
+        if test:
             if self.test_x is None:
                 logging.warning("Evaluation on test data requires loading test data.")
             x = self.test_x

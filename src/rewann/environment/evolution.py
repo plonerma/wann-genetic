@@ -47,7 +47,7 @@ def apply_networks(params, x):
 def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
                   use_test_samples=False):
 
-    x, y_true = task.get_data(test=use_test_samples, samples=n_samples)
+    x, y_true = env.task.get_data(test=use_test_samples, samples=n_samples)
 
     apply_func=partial(apply_networks, x=x)
 

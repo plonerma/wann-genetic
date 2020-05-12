@@ -62,3 +62,7 @@ debug = true
   # will be ignored if edges signs are disabled
   [mutation.change_edge_sign]
     probability = 0.2
+
+  # will be ignored if task does not require recurrence
+  [mutation.add_recurrent_edge]
+    probability = 0.3

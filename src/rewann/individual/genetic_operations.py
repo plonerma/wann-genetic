@@ -1,9 +1,16 @@
 import numpy as np
 import logging
 
+from .expression import get_array_field
+
 def add_node(ind, env, innov):
     # Choose an enabled edge
-    options, = np.where(ind.genes.edges['sign'].astype(bool))
+
+    enabled = get_array_field(ind.genes.edges, 'enabled', True)
+    recurrent = get_array_field(ind.genes.edges, 'recurrent', False)
+
+
+    options, = np.where(enabled & ~recurrent)
     if len(options) == 0: return None
 
     edge_to_disable = np.random.choice(options)
@@ -42,7 +49,7 @@ def add_node(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
-def new_edge(env, innov, ind, src, dest):
+def new_edge(env, innov, ind, src, dest, recurrent=False):
     e = np.zeros(1, dtype=ind.genes.edges.dtype)
     e['src'] = src
     e['dest'] = dest
@@ -51,6 +58,9 @@ def new_edge(env, innov, ind, src, dest):
         e['sign'] = np.random.choice([-1,1])
     else:
         e['sign'] = 1
+
+    if env.task.is_recurrent:
+        e['recurrent'] = recurrent
 
     e['id'] = innov.next_edge_id()
     return e
@@ -202,6 +212,34 @@ def change_edge_sign(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
+def add_recurrent_edge(ind, env, innov):
+    network = ind.network
+    src_options, dest_options = np.where(network.recurrent_weight_matrix == 0)
+
+    if len(src_options) == 0: return None  # We can't introduce another edge
+
+    i_options = np.arange(len(src_options))
+    np.random.shuffle(i_options)
+
+    for i in i_options:
+        src = src_options[i]
+        dest = dest_options[i]
+
+        if src >= network.offset:
+            src = network.nodes['id'][src - network.offset]
+        dest = network.nodes['id'][dest]
+
+        e = ind.genes.edges
+        matches = e['recurrent'] & (e['src'] == src) & (e['dest'] == dest)
+        if np.any(matches): continue
+
+        return ind.genes.__class__(
+            edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest, recurrent=True)),
+            nodes=ind.genes.nodes,
+            n_in=ind.genes.n_in, n_out=ind.genes.n_out
+        )
+
+
 # Genetic Operations
 def mutation(ind, env, innov):
     supported_mutation_types = np.array([
@@ -209,7 +247,8 @@ def mutation(ind, env, innov):
         ('new_node', add_node),
         ('reenable_edge', reenable_edge),
         ('change_activation', change_activation),
-        ('change_edge_sign', change_edge_sign) # might be disabled
+        ('change_edge_sign', change_edge_sign), # might be disabled
+        ('add_recurrent_edge', add_recurrent_edge), # might be disabled
     ], dtype=[('name', 'U32'), ('func', object)])
 
     # get probabilities from params
@@ -221,6 +260,10 @@ def mutation(ind, env, innov):
     num_choices = len(supported_mutation_types)
 
     if not env['population']['enable_edge_signs']:
+        probabilities[-2] = 0
+        num_choices -= 1
+
+    if not env.task.is_recurrent:
         probabilities[-1] = 0
         num_choices -= 1
 

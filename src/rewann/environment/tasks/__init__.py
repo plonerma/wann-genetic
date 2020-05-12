@@ -1,6 +1,8 @@
-from .base import ClassificationTask
+from .base import ClassificationTask, RecurrentTask
 
 from .image import mnist_256, digit_raw
+
+from .rnn import EchoTask
 
 from functools import partial
 
@@ -22,6 +24,8 @@ available_tasks = {
                     n_in=64, n_out=10,
                     train_loader=digit_raw,
                     test_loader=partial(digit_raw, load_test=True)),
+
+    'echo20': EchoTask(20),
 }
 
 def select_task(task_name):

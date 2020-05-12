@@ -10,6 +10,7 @@ import logging
 from multiprocessing import Pool
 
 
+from rewann.individual import Individual, RecurrentIndividual
 
 from .tasks import select_task
 from .evolution import evolution, update_hof
@@ -18,7 +19,6 @@ from .util import get_version, TimeStore
 from rewann.postopt import Report
 
 class Environment:
-    from rewann.individual import Individual as ind_class
     from .util import (default_params, setup_params, open_data,
                        store_gen, store_gen_metrics, load_pop, load_gen_metrics,
                        stored_populations, stored_indiv_metrics, store_hof, load_hof,
@@ -38,6 +38,11 @@ class Environment:
 
         # choose task
         self.task = select_task(self['task', 'name'])
+
+        if self.task.is_recurrent:
+            self.ind_class = RecurrentIndividual
+        else:
+            self.ind_class = Individual
 
     def seed(self, seed=None):
         if seed is not None:
@@ -120,9 +125,6 @@ class Environment:
 
         logging.debug('Loading training dataset')
         self.task.load_training()
-
-        n_samples = len(self.task.y_true)
-        logging.debug(f'{n_samples} samples in training data set.')
 
         # log used parameters
         params_toml = toml.dumps(self.params)

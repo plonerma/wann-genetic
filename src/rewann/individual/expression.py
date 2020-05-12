@@ -11,16 +11,25 @@ class NetworkCyclicException(Exception):
     """Raised when encountering a gene which would lead to a cyclic network."""
 
 
-def weight_matrix_arrangement(n_in, n_out, hidden_node_order):
-    indices_in  = np.r_[: n_in + 1] # includes bias
-    indices_out = np.r_[  n_in + 1 : n_in + 1 + n_out]
-    indices_hid = n_in + 1 + n_out + hidden_node_order
+def build_weight_matrix(n_nodes, edges):
+    m = np.zeros((n_nodes, n_nodes), dtype=float)
 
-    # indices to use for rows, columns
-    return np.append(indices_in, indices_hid), np.append(indices_hid, indices_out)
+    # get values from edges
+    m[edges['src'], edges['dest']] = (
+        get_array_field(edges, 'sign', 1)
+        * get_array_field(edges, 'enabled', True)
+    )
+    return m
 
+def rearrange_matrix(m, indices):
+    # rearrange
+    i_rows, i_cols = indices
+    m = m[i_rows, :]
+    m = m[:, i_cols]
+    return m
 
-def get_array_field(array, key, default=None):
+def get_array_field(array : np.ndarray, key : str, default=None):
+    """Return field if it exists else return default value."""
     return array[key] if key in array.dtype.names else default
 
 

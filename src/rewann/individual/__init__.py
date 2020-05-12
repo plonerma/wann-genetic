@@ -60,6 +60,10 @@ class Individual:
 
 
     def record_metrics(self, weights, y_true, y_probs, reduce_values=True):
+        valid = y_true >= 0  # only use predictions, where labels are set
+        y_true = y_true[valid]
+
+        y_probs = y_probs[:, valid, :]
         y_preds = np.argmax(y_probs, axis=-1)
 
         mv = self._metric_values
@@ -146,3 +150,8 @@ class Individual:
     @classmethod
     def full_initial(cls, *args, id=0, **kwargs):
         return cls(genes=cls.Genotype.full_initial(*args, **kwargs), birth=0, id=id)
+
+
+class RecurrentIndividual(Individual):
+    from .genes import RecurrentGenotype as Genotype
+    from .network import RecurrentNetwork as Network

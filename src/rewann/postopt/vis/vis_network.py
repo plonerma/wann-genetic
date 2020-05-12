@@ -12,6 +12,13 @@ def node_names(net):
 
 
 def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
+
+    if ax is None:
+        ax = cf.gca()
+
+
+    ax.set_axis_off()
+
     g = nx.DiGraph()
 
     # Add nodes
@@ -87,20 +94,38 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17):
 
     pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
-    edge_colors = list()
+    # draw feed forward edges
 
-    # Edges
+    edge_colors = list()
+    edges = list()
+
     for row, col in zip(*np.where(net.weight_matrix != 0)):
-        g.add_edge(nodes[row], nodes[col + net.offset])
+        edges.append((nodes[row], nodes[col + net.offset]))
         edge_colors.append(
             'k' if net.weight_matrix[row][col] > 0
             else 'r'
         )
 
-    nx.draw(
-        g, ax=ax, pos=pos, node_color=color, edge_color=edge_colors,
-        with_labels=False, node_size=50, width=.4,
-        arrows=True, linewidths=0, alpha=.9, arrowstyle='-')
+    nx.draw_networkx_edges(g, edgelist=edges, ax=ax, pos=pos, edge_color=edge_colors, width=1, alpha=.6, arrows=False)
+
+    # draw recurrent edges
+
+    edge_colors = list()
+    edges = list()
+
+    for row, col in zip(*np.where(net.recurrent_weight_matrix != 0)):
+        edges.append((nodes[row], nodes[col + net.offset]))
+        edge_colors.append(
+            'k' if net.recurrent_weight_matrix[row][col] > 0
+            else 'r'
+        )
+
+    nx.draw_networkx_edges(g, edgelist=edges, ax=ax, pos=pos, edge_color=edge_colors,
+                           width=2, alpha=.6, arrows=True, style='dotted')
+
+    nx.draw_networkx_nodes(
+        g, ax=ax, pos=pos, node_color=color,
+        with_labels=False, node_size=50, linewidths=0)
 
 def draw_weight_matrix(net, ax=None):
     x_ticks = list(range(net.n_hidden + net.n_out))

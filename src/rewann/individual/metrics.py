@@ -56,9 +56,6 @@ def apply_metrics(values, names, pending=set()):
 
 @prediction_metric
 def cm(y_true, y_pred, labels):
-    valid = y_true >= 0  # only use predictions, where labels are set
-    y_true = y_true[valid]
-    y_pred = y_pred[valid]
     return sklearn.metrics.confusion_matrix(y_true, y_pred, labels=labels, normalize='all')
 
 @prediction_metric

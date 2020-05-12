@@ -1,0 +1,18 @@
+experiment_name='pytest'
+debug=true
+
+[task]
+name='echo20'
+
+[postopt]
+  run_postopt=true
+  compile_report=false
+  num_weights=10
+  num_samples=1000
+
+[population]
+  num_generations=40
+  size=64
+
+[sampling]
+  num_training_samples_per_iteration=100

@@ -1,8 +1,10 @@
 import numpy as np
 
-from .base import Task
+from .base import RecurrentTask
 
-class EchoTask(Task):
+class EchoTask(RecurrentTask):
+    recurrent = True
+
     def __init__(self, length, delay=1, dim=2):
         assert delay >= 0 # can't go back in time
         assert dim > 1 # (case 1 is trivial)

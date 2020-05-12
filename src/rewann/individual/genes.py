@@ -7,6 +7,7 @@ GeneEncoding = Tuple[Tuple[str, np.dtype], ...]
 
 
 class Genotype:
+    """Genetic encoding of Feed Forward Networks."""
     # data
     edges : np.array
     nodes : np.array
@@ -137,3 +138,26 @@ class Genotype:
             edges=np.copy(self.edges), nodes=np.copy(self.nodes),
             n_in=self.n_in, n_out=self.n_out
         )
+
+
+class RecurrentGenotype(Genotype):
+    """Genetic encoding of Recurrent Networks."""
+    edge_encoding : GeneEncoding = (
+        # innovation number
+        ('id', np.dtype(int)),
+
+         # id of source node (any but output)
+        ('src', np.dtype(int)),
+
+        # id of destination node (either hidden or output)
+        ('dest', np.dtype(int)),
+
+        # in {-1,+1} if negative signs allowed, else 1
+        ('sign', np.dtype(int)),
+
+        # sign needs to be retained even if disabled, in case the edge is
+        # reenabled
+        ('enabled', np.dtype(bool)),
+
+        ('recurrent', np.dtype(bool)),
+    )

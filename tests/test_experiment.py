@@ -7,11 +7,14 @@ import numpy as np
 import logging
 
 def experiment_test(params_path, tmp_path):
+    logging.info("Starting training")
     params = toml.load(params_path)
     params['experiment_path'] = tmp_path
     exp = Environment(params=params)
     exp.run()
     # Assert that there is at least moderate agreement between predicted and true classifications
+
+    logging.info("Starting evaluation")
 
     metrics = exp.population_metrics(exp.hall_of_fame, reduced_values=False)
     max_kappa = metrics['MAX:kappa.max']
@@ -30,3 +33,6 @@ def test_layer_agnostic(tmp_path):
 
 #def test_negative_edges(tmp_path):
 #    experiment_test('tests/test_neg_edges.toml', tmp_path)
+
+def test_recurrent(tmp_path):
+    experiment_test('tests/test_recurrent_echo.toml', tmp_path)
