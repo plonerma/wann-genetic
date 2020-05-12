@@ -193,15 +193,14 @@ def draw_network():
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('--path', type=str, help='path to experiment', default='.')
-    parser.add_argument('--hof_index', type=int, help='hall of fame index of network to be drawn')
+    parser.add_argument('id', type=int, help='id of the network')
 
     args = parser.parse_args()
-    env = Environment(args.experiment_path)
+    env = Environment(args.path)
 
 
     with env.open_data('r'):
-        env.load_hof()
-        ind = env.hall_of_fame[args.hof_index]
+        ind = load_ind(env, args.id)
         express_inds(env, [ind])
         Report(env).add_network(ind)
         logging.info(f'Plotted network for individual {ind.id}')
