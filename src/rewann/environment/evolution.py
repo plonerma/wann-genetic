@@ -73,17 +73,15 @@ def express_inds(env, pop):
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
-
-
 def create_initial_population(env):
     initial = env['population', 'initial_genes']
-    
+
     if initial == 'empty':
         base_ind = env.ind_class.empty_inital(n_in, n_out)
         express_inds(env, [base_ind])
         return [base_ind]*env['population', 'size']
 
-    else:
+    elif initial == 'full':
         pop = list()
         prob_enabled = env['population', 'initial_enabled_edge_probability']
         for i in range(env['population', 'size']):
@@ -94,9 +92,11 @@ def create_initial_population(env):
             # disable some edges
         express_inds(env, pop)
         evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
-        order = rank_individuals(pop, return_order=True)
+        order = rank_individuals(pop, objectives=env.objectives, return_order=True)
         pop = [pop[i] for i in order]
         return pop
+    else:
+        raise RuntimeError(f'Unknown initial genes type {initial}')
 
 def evolution(env):
     pop = create_initial_population(env)
@@ -117,7 +117,7 @@ def evolution(env):
         pop = evolve_population(env, pop, innov)
 
         evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
-        order = rank_individuals(pop, return_order=True)
+        order = rank_individuals(pop, objectives=env.objectives, return_order=True)
         pop = [pop[i] for i in order]
 
         # yield next generation

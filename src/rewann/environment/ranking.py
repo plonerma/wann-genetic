@@ -2,13 +2,16 @@ from itertools import count
 import numpy as np
 import logging
 
-def get_objective_values(ind):
-    loss_min, loss_mean, n_hidden = ind.metrics('log_loss.min', 'log_loss.mean', 'n_layers', as_list=True)
-    return -loss_min, -loss_mean, -n_hidden
+def get_objective_values(ind, objectives):
+    metric_names, signs = objectives
 
-def rank_individuals(population, return_order=False, return_fronts=False):
+    metric_values = ind.metrics(*metric_names, as_list=True)
+
+    return [s*v for v,s in zip(metric_values, signs)]
+
+def rank_individuals(population, objectives, return_order=False, return_fronts=False):
     objectives = np.array([
-        get_objective_values(ind) for ind in population
+        get_objective_values(ind, objectives) for ind in population
     ])
 
 

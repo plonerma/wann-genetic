@@ -244,7 +244,16 @@ def setup_params(env, params):
 
     derive_path(env)
 
+    objs = list()
+    for o in env['selection', 'objectives']:
+        if o[0] == '-':
+            objs.append((o[1:], -1))
+        else:
+            objs.append((o, 1))
 
+    assert len(objs) > 0
+
+    env.objectives = list(zip(*objs))
 
 
 

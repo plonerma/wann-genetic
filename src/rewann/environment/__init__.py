@@ -223,7 +223,7 @@ class Environment:
             gen = self['population', 'num_generations']
 
         base_metrix = ['n_hidden', 'n_enabled_edges', 'n_total_edges',
-                       'n_evaluations', 'age', 'front', 'n_layers']
+                       'n_evaluations', 'age', 'front', 'n_layers', 'n_mutations']
         prefixed_metrics = ['kappa', 'accuracy', 'log_loss']
         prefixes = {'max': np.max, 'mean': np.mean, 'min': np.min}
 
