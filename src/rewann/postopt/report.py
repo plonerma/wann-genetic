@@ -90,6 +90,7 @@ class Report:
             ('number of hidden nodes', ind.network.n_hidden),
             ('number of layers', ind.network.n_layers),
             ('birth', ind.birth),
+            ('number of mutations', ind.mutations),
         ], ['key', 'value']))
 
         # plot graphs

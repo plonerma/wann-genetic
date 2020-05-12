@@ -280,11 +280,12 @@ def mutation(ind, env, innov):
     for name, func in permutated_mutation_functions:
         new_genes = func(ind, env, innov)
         if new_genes is not None: # mutation was successful
-            #logging.debug(f"Mutation via {name}.")
-            child = ind.__class__(genes=new_genes, id=innov.next_ind_id(), birth=innov.generation)
-            child.parent = ind.id
-            #if name == 'new_edge':
-            #    logging.debug(f'new edge in {child.birth} {child.id}')
+
+            child = ind.__class__(
+                genes=new_genes, id=innov.next_ind_id(),
+                birth=innov.generation,
+                parent=ind.id, mutations=ind.mutations+1)
+
             return child
 
     logging.warning("No mutation possible.")

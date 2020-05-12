@@ -24,13 +24,14 @@ class Individual:
 
     recorded_metrics = 'accuracy', 'kappa', 'log_loss'
 
-    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None, parent=None):
+    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None, parent=None, mutations=0):
         self.genes = genes
         self.network = network
         self.id = id
         self.birth = birth
         self.parent = parent
         self.front = -1
+        self.mutations = mutations
         if metric_values is None:
             self._metric_values = dict()
             self._metric_values['n_evaluations'] = 0
@@ -116,6 +117,7 @@ class Individual:
             n_layers=self.network.n_layers,
             id = self.id,
             birth = self.birth,
+            n_mutations = self.mutations,
             n_enabled_edges=np.sum(self.genes.edges['enabled'] == True),
             n_disabled_edges=np.sum(self.genes.edges['enabled'] == False),
             n_total_edges=len(self.genes.edges),

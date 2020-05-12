@@ -73,6 +73,7 @@ def store_ind(env, ind):
 
     data['id'] = ind.id
     data['birth'] = ind.birth
+    data['mutations'] = ind.mutations
     if ind.parent is not None:
         data['parent'] = ind.parent
     data.create_dataset('edges', data=ind.genes.edges)
@@ -99,7 +100,8 @@ def ind_from_hdf(env, data):
         ),
         parent=p,
         id=data.get('id')[()],
-        birth=data.get('birth')[()]
+        birth=data.get('birth')[()],
+        mutations=data.get('mutations')[()],
     )
 
 # storing and retrieving a generation
