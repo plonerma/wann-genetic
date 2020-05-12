@@ -4,6 +4,8 @@ from rewann import Environment
 import toml
 import numpy as np
 
+import pytest
+
 import logging
 
 def experiment_test(params_path, tmp_path):
@@ -27,12 +29,14 @@ def experiment_test(params_path, tmp_path):
 def test_layer_agnostic(tmp_path):
     experiment_test('tests/test_layer_agnostic.toml', tmp_path)
 
+@pytest.mark.slow
+def test_layer_based(tmp_path):
+    experiment_test('tests/test_layer_based.toml', tmp_path)
 
-#def test_layer_based(tmp_path):
-#    experiment_test('tests/test_layer_based.toml', tmp_path)
+@pytest.mark.slow
+def test_negative_edges(tmp_path):
+    experiment_test('tests/test_neg_edges.toml', tmp_path)
 
-#def test_negative_edges(tmp_path):
-#    experiment_test('tests/test_neg_edges.toml', tmp_path)
-
+@pytest.mark.slow
 def test_recurrent(tmp_path):
     experiment_test('tests/test_recurrent_echo.toml', tmp_path)
