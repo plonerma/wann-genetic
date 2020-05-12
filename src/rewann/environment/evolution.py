@@ -76,8 +76,10 @@ def express_inds(env, pop):
 
 
 def create_initial_population(env):
-    if not env['population', 'initial_with_edges']:
-        base_ind = env.ind_class.base(n_in, n_out)
+    initial = env['population', 'initial_genes']
+    
+    if initial == 'empty':
+        base_ind = env.ind_class.empty_inital(n_in, n_out)
         express_inds(env, [base_ind])
         return [base_ind]*env['population', 'size']
 

@@ -144,8 +144,8 @@ class Individual:
         return pd.DataFrame(data=self._metric_values).sort_values(by=['weight'])
 
     @classmethod
-    def base(cls, *args, **kwargs):
-        return cls(genes=cls.Genotype.base(*args, **kwargs), birth=0, id=0)
+    def empty_initial(cls, *args, **kwargs):
+        return cls(genes=cls.Genotype.empty_initial(*args, **kwargs), birth=0, id=0)
 
     @classmethod
     def full_initial(cls, *args, id=0, **kwargs):

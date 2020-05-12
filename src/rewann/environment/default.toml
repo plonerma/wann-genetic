@@ -36,7 +36,7 @@ debug = true
   num_generations = 20
   size = 64
   initial_enabled_edge_probability = 0.05
-  initial_with_edges=true
+  initial_genes='full'
   hof_size=10
   enable_edge_signs=false
 

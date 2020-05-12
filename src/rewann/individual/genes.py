@@ -89,7 +89,7 @@ class Genotype:
         )
 
     @classmethod
-    def base(cls, n_in, n_out):
+    def empty_initial(cls, n_in, n_out):
         """Create new base gene for given encodings."""
         # start without any edges
         edges = np.array([], dtype=list(cls.edge_encoding))
