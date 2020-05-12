@@ -163,6 +163,11 @@ class Report:
                       n_samples=num_samples,
                       reduce_values=False,
                       use_test_samples=True)
+
+        self.env.hall_of_fame = sorted(self.env.hall_of_fame,
+            key=lambda ind: -np.mean(ind.metrics('kappa'))
+        )
+
         return self
 
 def compile_report():
@@ -170,16 +175,16 @@ def compile_report():
 
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
-    parser.add_argument('experiment_path', type=str, help='path to experiment')
+    parser.add_argument('--path', type=str, help='path to experiment', default='.')
     parser.add_argument('--weights', type=int, default=100)
     parser.add_argument('--samples', type=int, default=1000)
 
     args = parser.parse_args()
-    env = Environment(args.experiment_path)
+    env = Environment(args.path)
 
     with env.open_data('r'):
         Report(env).run_evaluations(
-            num_weights=args.num_weights, num_samples=args.num_samples
+            num_weights=args.weights, num_samples=args.samples
         ).compile()
 
 def draw_network():
@@ -187,7 +192,7 @@ def draw_network():
 
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
-    parser.add_argument('experiment_path', type=str, help='path to experiment')
+    parser.add_argument('--path', type=str, help='path to experiment', default='.')
     parser.add_argument('--hof_index', type=int, help='hall of fame index of network to be drawn')
 
     args = parser.parse_args()
