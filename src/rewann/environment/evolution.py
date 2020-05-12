@@ -77,7 +77,7 @@ def create_initial_population(env):
     initial = env['population', 'initial_genes']
 
     if initial == 'empty':
-        base_ind = env.ind_class.empty_inital(n_in, n_out)
+        base_ind = env.ind_class.empty_initial(env.task.n_in, env.task.n_out)
         express_inds(env, [base_ind])
         return [base_ind]*env['population', 'size']
 
