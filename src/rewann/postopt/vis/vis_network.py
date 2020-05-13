@@ -2,6 +2,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
+from matplotlib.path import Path
+
 def node_names(net):
     return (
         [f"$x_{{{i}}}$" for i in range(net.n_in)]          # inputs
@@ -11,7 +13,7 @@ def node_names(net):
     )
 
 
-def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
+def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
 
     if ax is None:
         ax = plt.gca()
@@ -23,12 +25,6 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
 
     # Add nodes
     nodes = node_names(net)
-    node_labels = [''] * (net.n_in + 1) + [
-        net.available_act_functions[func][0][:5] for func in net.nodes['func']
-    ]
-
-    node_labels = dict(zip(nodes, node_labels))
-
 
     g.add_nodes_from(nodes)
 
@@ -99,14 +95,60 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
         x_0 += np.log(x_n) + 1
         i_0 += l
 
-    pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
+
+
+
+    if labels == 'func_names':
+        node_labels = [''] * (net.n_in + 1) + [
+            net.available_act_functions[func][0][:5] for func in net.nodes['func']
+        ]
+        pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
+        nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
+        nx.draw_networkx_labels(
+            g, ax=ax, pos=pos, labels=dict(zip(nodes, node_labels)),
+            font_size=8,
+        )
+    elif labels == 'names':
+        pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
+        nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
+        nx.draw_networkx_labels(
+            g, ax=ax, pos=pos, labels=dict(zip(nodes, nodes)),
+            font_size=8,
+        )
+    elif labels == 'func_plots':
+        # draw circles
+        ax.scatter(pos['x'], pos['y'], 150, color, marker='o', zorder=10)
+
+        pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
+
+
+        for func, n in zip(net.nodes['func'], nodes[net.offset:]):
+            func = net.available_act_functions[func][1]
+
+            x = np.linspace(0, 2, 10)
+            x = np.hstack([x, 1-x, -x, x-1])
+            y = func(x)
+            y = y - np.min(y)
+            y = y - np.max(y)/2
+
+            verts = np.column_stack([x, y])
+
+
+            ax.scatter(*pos[n], 50, 'k', marker=verts, zorder=200)
+    else:
+        pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
+        nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
+
+
+
 
     edge_params=dict(
         edge_cmap = plt.get_cmap('tab10'),
         alpha=.6,
         ax=ax, pos=pos,
         edge_vmin=0,
-        edge_vmax=9
+        edge_vmax=9,
+        arrows=True,
     )
 
     # draw feed forward edges
@@ -122,7 +164,9 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
         )
 
     nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
-        width=1, arrows=False, **edge_params)
+        width=1, arrowstyle='-',
+        min_source_margin=10, min_target_margin=5,
+        **edge_params)
 
     # draw recurrent edges
 
@@ -137,17 +181,9 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, with_lables=True):
         )
 
     nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
-                           width=2,  arrows=True, **edge_params)
+        min_source_margin=30, min_target_margin=20,
+        width=2, **edge_params)
 
-
-    nx.draw_networkx_nodes(
-        g, ax=ax, pos=pos, node_color=color, node_size=50, linewidths=0)
-
-    if with_lables:
-        nx.draw_networkx_labels(
-            g, ax=ax, pos=pos, labels=node_labels,
-            font_size=8,
-        )
 
 def draw_weight_matrix(net, ax=None):
     x_ticks = list(range(net.n_hidden + net.n_out))

@@ -106,8 +106,8 @@ class Report:
         # plot network
         self.add_network(ind)
 
-    def add_network(self, ind):
-        draw_graph(ind.network)
+    def add_network(self, ind, labels=None):
+        draw_graph(ind.network, labels=labels)
         caption = f"Network of individual {ind.id}"
         self.add_fig(f'network_{ind.id}', caption)
         plt.clf()
@@ -191,9 +191,19 @@ def draw_network():
     from rewann import Environment
 
     logging.getLogger().setLevel(logging.INFO)
+
     parser = argparse.ArgumentParser(description='Post Optimization')
-    parser.add_argument('--path', type=str, help='path to experiment', default='.')
     parser.add_argument('id', type=int, help='id of the network')
+
+    parser.add_argument('--path', '-p', type=str, default='.',
+                        help='path to experiment')
+
+    parser.add_argument('--function_names', '-l', action='store_true',
+                        help='use names of activation as node labels')
+    parser.add_argument('--function_plots', '-g', action='store_true',
+                        help='use plot functions on nodes')
+    parser.add_argument('--names', '-n', action='store_true',
+                        help='use names of nodes as labels')
 
     args = parser.parse_args()
     env = Environment(args.path)
@@ -202,5 +212,15 @@ def draw_network():
     with env.open_data('r'):
         ind = load_ind(env, args.id)
         express_inds(env, [ind])
-        Report(env).add_network(ind)
+
+        if args.names:
+            labels = 'names'
+        elif args.function_names:
+            labels = 'func_names'
+        elif args.function_plots:
+            labels = 'func_plots'
+        else:
+            labels = None
+
+        Report(env).add_network(ind, labels=labels)
         logging.info(f'Plotted network for individual {ind.id}')
