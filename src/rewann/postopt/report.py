@@ -176,8 +176,8 @@ def compile_report():
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('--path', type=str, help='path to experiment', default='.')
-    parser.add_argument('--weights', type=int, default=100)
-    parser.add_argument('--samples', type=int, default=1000)
+    parser.add_argument('--weights', '-w', type=int, default=100)
+    parser.add_argument('--samples', '-s', type=int, default=1000)
 
     args = parser.parse_args()
     env = Environment(args.path)
