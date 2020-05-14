@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from matplotlib.path import Path
 
+from rewann.individual.network import RecurrentNetwork
+
 def node_names(net):
     return (
         [f"$x_{{{i}}}$" for i in range(net.n_in)]          # inputs
@@ -168,21 +170,23 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         min_source_margin=10, min_target_margin=5,
         **edge_params)
 
-    # draw recurrent edges
 
-    edge_col = list()
-    edgelist = list()
+    if isinstance(net, RecurrentNetwork):
+        # draw recurrent edges
 
-    for row, col in zip(*np.where(net.recurrent_weight_matrix != 0)):
-        edgelist.append((nodes[row], nodes[col + net.offset]))
-        edge_col.append(
-            0 if net.recurrent_weight_matrix[row][col] > 0
-            else 1
-        )
+        edge_col = list()
+        edgelist = list()
 
-    nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
-        min_source_margin=30, min_target_margin=20,
-        width=2, **edge_params)
+        for row, col in zip(*np.where(net.recurrent_weight_matrix != 0)):
+            edgelist.append((nodes[row], nodes[col + net.offset]))
+            edge_col.append(
+                0 if net.recurrent_weight_matrix[row][col] > 0
+                else 1
+            )
+
+        nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
+            min_source_margin=30, min_target_margin=20,
+            width=2, **edge_params)
 
 
 def draw_weight_matrix(net, ax=None):
