@@ -138,7 +138,7 @@ class Network:
         assert isinstance(weights, np.ndarray)
 
         # initial activations
-        act_vec = np.empty((weights.shape[0], x.shape[0], self.n_nodes))
+        act_vec = np.empty((weights.shape[0], x.shape[0], self.n_nodes), dtype=float)
         act_vec[..., :self.n_in] = x[...]
         act_vec[..., self.n_in] = 1 # bias
 
@@ -171,6 +171,12 @@ class Network:
 
         x3d = x[..., :addend_nodes]
 
+        assert not np.any(np.isnan(M3d))
+        assert np.all(np.isfinite(M3d))
+
+        assert not np.any(np.isnan(x3d))
+        assert np.all(np.isfinite(x3d))
+
         act_sums = np.matmul(x3d, M3d) + add_to_sum
 
         # apply activation function for active nodes
@@ -196,7 +202,7 @@ class RecurrentNetwork(Network):
         outputs = np.empty((num_weights, num_samples, sample_length, self.n_out))
 
         # activation is only stored for current iteration
-        act_vec = np.empty((num_weights, num_samples, self.n_nodes))
+        act_vec = np.empty((num_weights, num_samples, self.n_nodes), dtype=float)
 
         for i in range(sample_length):
             # set input nodes
@@ -214,6 +220,9 @@ class RecurrentNetwork(Network):
                 M = M[None, :, :] * weights[:, None, None]
 
                 recurrent_sum =  np.matmul(act_vec, M)
+
+                assert not np.any(np.isnan(recurrent_sum))
+                assert np.all(np.isfinite(recurrent_sum))
             else:
                 recurrent_sum = None
 
