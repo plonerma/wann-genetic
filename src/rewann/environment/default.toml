@@ -48,6 +48,7 @@ debug = true
   tournament_size = 5
   objectives = ['-log_loss.min', '-log_loss.mean', '-n_hidden']
   recorded_metrics = ['accuracy', 'kappa', 'log_loss']
+  hof_metric = '-accuracy.mean'
 
 
 

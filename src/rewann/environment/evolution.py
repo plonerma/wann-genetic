@@ -166,7 +166,7 @@ def update_hof(env, pop):
 
     hof_size = env['population', 'hof_size']
 
-    metric = 'accuracy.mean'
+    metric, metric_sign = env.hof_metric
 
     # make sure elite is properly evaluated
 
@@ -194,7 +194,7 @@ def update_hof(env, pop):
 
     else:
         # sort candidates
-        scores = np.array([ind.metrics(metric) for ind in candidates])
+        scores = np.array([metric_sign * ind.metrics(metric) for ind in candidates])
 
         env.hall_of_fame = [
             candidates[i] for i in np.argsort(-scores)[:hof_size]

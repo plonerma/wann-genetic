@@ -54,7 +54,7 @@ class Report:
         metrics = self.env.load_gen_metrics()
         metrics.index.names = ['generation']
 
-        for bm in ('log_loss.mean', 'accuracy.mean', 'kappa.mean'):
+        for bm in [f'{m}.mean' for m in self.env.ind_class.recorded_metrics]:
             mean = metrics[f'MEAN:{bm}']
             median = metrics[f'MEDIAN:{bm}']
             min = metrics[f'MIN:{bm}']
@@ -83,9 +83,10 @@ class Report:
         metrics = ind.metric_values
 
         self.add(tabulate([
-            ('mean log_loss:', metrics['log_loss'].mean()),
-            ('mean accuracy:', metrics['accuracy'].mean()),
-            ('mean kappa:', metrics['kappa'].mean()),
+            (f'mean {m}:', metrics[m].mean())
+            for m in ind.recorded_metrics
+        ] +
+        [
             ('number of edges', len(ind.genes.edges)),
             ('number of hidden nodes', ind.network.n_hidden),
             ('number of layers', ind.network.n_layers),
@@ -94,7 +95,7 @@ class Report:
         ], ['key', 'value']))
 
         # plot graphs
-        for m in ('log_loss', 'accuracy', 'kappa'):
+        for m in ind.recorded_metrics:
             plt.plot(metrics['weight'], metrics[m])
             caption = f'Metric {m}'
             plt.xlabel('weight')
@@ -118,7 +119,7 @@ class Report:
 
         stats = list()
 
-        for measure in ('accuracy', 'kappa'):
+        for measure in self.env.ind_class.recorded_metrics:
             for func_name, func in stat_funcs:
                 descr = f'{func_name} {measure}'
                 measures = [func(m[measure]) for m in hof_metrics]
@@ -164,8 +165,18 @@ class Report:
                       reduce_values=False,
                       use_test_samples=True)
 
+        metric, metric_sign = self.env.hof_metric
+        metric, m_func = metric.split('.')
+
+        m_func = m_func.lower()
+        m_func = dict(
+            mean=np.mean,
+            max=np.max,
+            min=np.min
+        ).get(m_func, np.mean)
+
         self.env.hall_of_fame = sorted(self.env.hall_of_fame,
-            key=lambda ind: -np.mean(ind.metrics('kappa'))
+            key=lambda ind: -metric_sign*m_func(ind.metrics(metric))
         )
 
         return self

@@ -213,12 +213,13 @@ class Environment:
         gen_metrics = self.population_metrics(gen=gen, population=pop)
         gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_metrics=True)
 
-        logging.info(f"#{gen} mean, min log_loss: {gen_metrics['MAX:log_loss.mean']:.2}, {gen_metrics['MIN:log_loss.min']:.2}")
+        metric, metric_sign = self.hof_metric
+        p = ("MAX" if metric_sign > 0 else "MIN")
+        metric_value = gen_metrics[f"{p}:{metric}"]
 
-        logging.debug(f"Best mean accuracy: {gen_metrics['best_mean_acc']}")
+        logging.info(f"#{gen} {p}:{metric}: {metric_value:.2}")
 
         self.metrics.append(gen_metrics)
-
 
         commit_freq = self['storage', 'commit_elite_freq']
         if (commit_freq > 0 and gen % commit_freq == 0):
@@ -234,7 +235,11 @@ class Environment:
 
         base_metrix = ['n_hidden', 'n_enabled_edges', 'n_total_edges',
                        'n_evaluations', 'age', 'front', 'n_layers', 'n_mutations']
-        prefixed_metrics = ['kappa', 'accuracy', 'log_loss']
+
+
+        prefixed_metrics = self.ind_class.recorded_metrics
+
+
         prefixes = {'max': np.max, 'mean': np.mean, 'min': np.min}
 
         if reduced_values:
@@ -262,18 +267,10 @@ class Environment:
             individual_metrics = pd.DataFrame(data=individual_metrics)
 
 
-        best_mean_acc = (
-            self.hall_of_fame[0].metrics('accuracy.mean')
-            if reduced_values else
-            np.max(self.hall_of_fame[0].metrics('accuracy')))
-
-
         metrics = dict(
             num_unique_individuals=len(set(population)),
 
             num_individuals=len(population),
-
-            best_mean_acc=best_mean_acc,
 
             # number of inds without edges
             num_no_edge_inds=np.sum(individual_metrics['n_enabled_edges'] == 0),
@@ -283,7 +280,6 @@ class Environment:
 
             # individual with the most occurences
             biggest_ind=max([population.count(i) for i in set(population)]),
-            covariance_mean_kappa_n_enabled_edges=individual_metrics['n_enabled_edges'].cov(individual_metrics['kappa.mean'])
         )
 
         for name, values in individual_metrics.items():

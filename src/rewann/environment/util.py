@@ -244,18 +244,19 @@ def setup_params(env, params):
 
     derive_path(env)
 
-    objs = list()
-    for o in env['selection', 'objectives']:
-        if o[0] == '-':
-            objs.append((o[1:], -1))
+    def signed_metric(m):
+        if m[0] == '-':
+            return (m[1:], -1)
         else:
-            objs.append((o, 1))
+            return (m, 1)
+
+    objs = list(map(signed_metric, env['selection', 'objectives']))
 
     assert len(objs) > 0
 
     env.objectives = list(zip(*objs))
 
-
+    env.hof_metric = signed_metric(env['selection', 'hof_metric'])
 
 
 def nested_update(d, u):
