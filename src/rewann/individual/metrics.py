@@ -105,3 +105,21 @@ def kappa(accuracy, true_class_sum, pred_class_sum):
     """Cohens Kappa"""
     expected_acc = np.sum(true_class_sum * pred_class_sum, axis=0)
     return (accuracy - expected_acc) / (1 - expected_acc)
+
+
+
+
+def num_used_activation_functions(nodes, available_funcs):
+    prefix = 'n_nodes_with_act_func_'
+
+    values = dict()
+    for func in available_funcs:
+        name = prefix + func[0]
+        values[name] = 0
+
+    unique, counts = np.unique(nodes['func'], return_counts=True)
+    for func_id, num in zip(unique, counts):
+        name = prefix + available_funcs[func_id][0]
+        values[name] = num
+
+    return values

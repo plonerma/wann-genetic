@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from .metrics import apply_metrics
+from .metrics import apply_metrics, num_used_activation_functions
 
 import logging
 
@@ -124,6 +124,10 @@ class Individual:
             front=self.front,
             age=None if current_gen is None else (current_gen - self.birth)
         )
+
+        metric_values.update(
+            num_used_activation_functions(
+                self.genes.nodes, self.network.available_act_functions))
 
         metric_values.update(self._metric_values)
 
