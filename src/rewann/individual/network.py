@@ -13,17 +13,23 @@ class Network:
 
     ### Definition of the activations functions
     available_act_functions = [
-#        ('linear', lambda x: x),
-        ('step (unsigned)', lambda x: 1.0*(x>0.0)),
-#        ('sin ', lambda x: np.sin(np.pi*x)),
-        ('gaussian with mean 0 and sigma 1', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
-        ('tanh (signed)', lambda x: np.tanh(x)),
-        ('sigmoid (unsigned)', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
-        ('inverse linear', lambda x: -x),
-#        ('abs', lambda x: np.abs(x)),
+
         ('relu', lambda x: np.maximum(0, x)),
-#        ('cos', lambda x: np.cos(np.pi*x)),
-#        ('squared', lambda x: x**2),
+
+        ('sigmoid', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
+        ('tanh', lambda x: np.tanh(x)),
+
+        ('gaussian (standard)', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
+
+        ('step', lambda x: 1.0*(x>0.0)),
+        ('identity', lambda x: x),
+        ('inverse', lambda x: -x),
+        ('squared', lambda x: x**2),
+        ('abs', lambda x: np.abs(x)),
+
+        ('cos', lambda x: np.cos(np.pi*x)),
+        ('sin ', lambda x: np.sin(np.pi*x)),
+
     ]
 
     def __init__(self, n_in, n_out, nodes, weight_matrix, conn_mat,

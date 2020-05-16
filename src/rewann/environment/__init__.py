@@ -39,10 +39,18 @@ class Environment:
         # choose task
         self.task = select_task(self['task', 'name'])
 
+        # choose adequate type of individuals
         if self.task.is_recurrent:
             self.ind_class = RecurrentIndividual
         else:
             self.ind_class = Individual
+
+        # only use enabeld activations functions
+        funcs = self.ind_class.Network.available_act_functions
+        if self['population', 'enabled_activation_functions'] != 'all':
+            self.ind_class.Network.available_act_functions = [
+                funcs[i] for i in self['population', 'enabled_activation_functions']
+            ]
 
     def seed(self, seed=None):
         if seed is not None:

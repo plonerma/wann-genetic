@@ -39,6 +39,7 @@ debug = true
   initial_genes='full'
   hof_size=10
   enable_edge_signs=false
+  enabled_activation_functions='all'
 
 [selection]
   use_tournaments = true
