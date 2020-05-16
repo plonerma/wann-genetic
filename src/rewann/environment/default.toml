@@ -47,6 +47,7 @@ debug = true
   culling_ratio = 0.2 # Don't use the worst 20% of the population for further variations
   tournament_size = 5
   objectives = ['-log_loss.min', '-log_loss.mean', '-n_hidden']
+  recorded_metrics = ['accuracy', 'kappa', 'log_loss']
 
 
 

@@ -45,6 +45,8 @@ class Environment:
         else:
             self.ind_class = Individual
 
+        self.ind_class.recorded_metrics = self['selection', 'recorded_metrics']
+
         # only use enabeld activations functions
         funcs = self.ind_class.Network.available_act_functions
         if self['population', 'enabled_activation_functions'] != 'all':

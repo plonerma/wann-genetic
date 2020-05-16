@@ -22,6 +22,7 @@ class Individual:
 
     from .genetic_operations import mutation
 
+    # can be changed via selection.recorded_metrics
     recorded_metrics = 'accuracy', 'kappa', 'log_loss'
 
     def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None, parent=None, mutations=0):
