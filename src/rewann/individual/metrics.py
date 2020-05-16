@@ -1,8 +1,11 @@
 import numpy as np
 import inspect
 import warnings
+import logging
 
 import sklearn.metrics
+
+from .expression import softmax
 
 available_metrics = dict()
 available_prefixes = dict()
@@ -53,6 +56,17 @@ def apply_metrics(values, names, pending=set()):
 
     return values # not really necessary since dict is edited in place
 
+@prediction_metric
+def y_pred(y_raw):
+    return np.argmax(y_raw, axis=-1)
+
+@prediction_metric
+def y_prob(y_raw):
+    return softmax(y_raw, axis=-1)
+
+@prediction_metric
+def mean_squared_error(y_true, y_raw):
+    return np.mean((y_true - y_raw) ** 2)
 
 @prediction_metric
 def cm(y_true, y_pred, labels):

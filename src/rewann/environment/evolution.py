@@ -41,7 +41,7 @@ class InnovationRecord(set):
 
 def apply_networks(params, x):
     network, weights = params
-    return network.apply(x=x, weights=weights)
+    return network.apply(x=x, weights=weights, func='raw')
 
 
 def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
@@ -63,8 +63,11 @@ def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
 
     #logging.debug('recording metrics')
 
-    for y_probs, ind in zip(results, pop):
-        ind.record_metrics(weights, y_true, y_probs, reduce_values=reduce_values)
+    for y_raw, ind in zip(results, pop):
+        ind.record_metrics(
+            weights=weights,
+            y_true=y_true, y_raw=y_raw,
+            reduce_values=reduce_values)
 
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))

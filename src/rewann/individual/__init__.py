@@ -56,26 +56,21 @@ class Individual:
         if not isinstance(weights, np.ndarray):
             weights = np.array([weights])
 
-        y_probs = self.apply(x, func='softmax', weights=weights)
+        y_raw = self.apply(x, func='raw', weights=weights)
 
-        self.record_metrics(weights, y_true, y_probs)
+        self.record_metrics(weights, y_true, y_raw)
 
 
-    def record_metrics(self, weights, y_true, y_probs, reduce_values=True):
-        valid = y_true >= 0  # only use predictions, where labels are set
-        y_true = y_true[valid]
-
-        y_probs = y_probs[:, valid, :]
-        y_preds = np.argmax(y_probs, axis=-1)
+    def record_metrics(self, *, weights, y_true, y_raw, reduce_values=True):
+        assert len(y_raw.shape) == 3 # weights, samples, nodes
 
         mv = self._metric_values
 
-        for y_prob, y_pred, weight in zip(y_probs, y_preds, weights):
+        for y_raw, weight in zip(y_raw, weights):
 
             values = dict(
-                y_prob=y_prob,
-                y_pred=y_pred,
                 y_true=y_true,
+                y_raw=y_raw,
                 labels=list(range(self.genes.n_out))
             )
             metrics = apply_metrics(values, self.recorded_metrics)
@@ -162,3 +157,19 @@ class Individual:
 class RecurrentIndividual(Individual):
     from .genes import RecurrentGenotype as Genotype
     from .network import RecurrentNetwork as Network
+
+    def record_metrics(self, *, y_true, y_raw, **kwargs):
+        assert len(y_raw.shape) == 4 # weights, samples, sequence elements, nodes
+        #w, s, e, n = y_raw.shape
+
+        valid = ~np.isnan(y_true)  # only use predictions, where labels are set
+        y_true = y_true[valid]
+        y_raw = y_raw[:, valid, :]
+
+        #assert len(y_raw.shape) == 4
+
+        #y_raw = np.reshape(y_raw, (w, -1, n))
+        super().record_metrics(
+            y_raw=y_raw,
+            y_true=y_true,
+            **kwargs)
