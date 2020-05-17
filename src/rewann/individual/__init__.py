@@ -70,8 +70,7 @@ class Individual:
 
             values = dict(
                 y_true=y_true,
-                y_raw=y_raw,
-                labels=list(range(self.genes.n_out))
+                y_raw=y_raw
             )
             metrics = apply_metrics(values, self.recorded_metrics)
 

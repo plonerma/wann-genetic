@@ -69,12 +69,12 @@ def mean_squared_error(y_true, y_raw):
     return np.mean((y_true - y_raw) ** 2)
 
 @prediction_metric
-def cm(y_true, y_pred, labels):
-    return sklearn.metrics.confusion_matrix(y_true, y_pred, labels=labels, normalize='all')
+def cm(y_true, y_pred):
+    return sklearn.metrics.confusion_matrix(y_true, y_pred, normalize='all')
 
 @prediction_metric
-def log_loss(y_true, y_prob, labels):
-    return sklearn.metrics.log_loss(y_true, y_prob, labels=labels)
+def log_loss(y_true, y_prob):
+    return sklearn.metrics.log_loss(y_true, y_prob)
 
 @prediction_metric
 def true_positives(cm):
