@@ -4,8 +4,6 @@ from io import StringIO
 import os
 from datetime import datetime
 import pandas as pd
-from collections.abc import Mapping
-import copy
 from contextlib import contextmanager
 from time import time
 import logging
@@ -234,9 +232,8 @@ def setup_params(env, params):
         if 'is_report' in params and params['is_report']:
             params['experiment_path'] = os.path.dirname(params_path)
 
-    env.params = copy.deepcopy(env.default_params)
-
-    nested_update(env.params, params)
+    env.update_params(env.default_params)
+    env.update_params(params)
 
     # ensure experiment name is defined
     if 'experiment_name' not in env:
@@ -257,19 +254,6 @@ def setup_params(env, params):
     env.objectives = list(zip(*objs))
 
     env.hof_metric = signed_metric(env['selection', 'hof_metric'])
-
-
-def nested_update(d, u):
-    """ Update nested parameters.
-
-    Source:
-    https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth#3233356"""
-    for k, v in u.items():
-        if isinstance(v, Mapping):
-            d[k] = nested_update(d.get(k, {}), v)
-        else:
-            d[k] = v
-    return d
 
 
 class TimeStore:

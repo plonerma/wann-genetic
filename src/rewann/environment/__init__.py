@@ -15,10 +15,11 @@ from rewann.individual import Individual, RecurrentIndividual
 from .tasks import select_task
 from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
+from .params import ParamTree
 
 from rewann.postopt import Report
 
-class Environment:
+class Environment(ParamTree):
     from .util import (default_params, setup_params, open_data,
                        store_gen, store_gen_metrics, load_pop, load_gen_metrics,
                        stored_populations, stored_indiv_metrics, store_hof, load_hof,
@@ -26,6 +27,8 @@ class Environment:
                        env_path)
 
     def __init__(self, params):
+        super().__init__()
+
         self.setup_params(params)
 
         self.metrics = list()
@@ -296,34 +299,3 @@ class Environment:
             return metrics, individual_metrics
         else:
             return metrics
-
-    # magic methods for direct access of parameters
-    def __getitem__(self, keys):
-        if not isinstance(keys, tuple):
-            keys = [keys]
-
-        d = self.params
-        for k in keys: d = d[k]
-        return d
-
-    def __setitem__(self, keys, value):
-        if not isinstance(keys, tuple):
-            keys = [keys]
-
-        *first_keys, last_key = keys
-        d = self.params
-        for k in first_keys:
-            d[k] = d.get(k, dict())
-            d = d[k]
-        d[last_key] = value
-
-    def __contains__(self, keys):
-        if not isinstance(keys, tuple):
-            keys = [keys]
-
-        d = self.params
-
-        for k in keys:
-            try: d = d[k]
-            except: return False
-        return True
