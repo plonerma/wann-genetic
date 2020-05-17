@@ -20,7 +20,7 @@ class Network:
         ('step', lambda x: 1.0*(x>0.0)),
         ('identity', lambda x: x),
         ('inverse', lambda x: -x),
-        #('squared', lambda x: x**2), #  unstable if applied multiple times
+        ('squared', lambda x: x**2), #  unstable if applied multiple times
         ('abs', lambda x: np.abs(x)),
         ('cos', lambda x: np.cos(np.pi*x)),
         ('sin ', lambda x: np.sin(np.pi*x)),
