@@ -141,6 +141,10 @@ class Network:
         for active_nodes in self.layers():
             act_vec[..., active_nodes] = self.calc_act(act_vec, active_nodes, weights)
 
+        # if any node is nan, we cant rely on the result
+        valid = np.all(~np.isnan(act_vec), axis=-1)
+        act_vec[~valid, :] = np.nan
+
         y = act_vec[..., -self.n_out:]
 
         if func == 'argmax':
@@ -161,16 +165,13 @@ class Network:
         addend_nodes = active_nodes[0]
         M = self.weight_matrix[:addend_nodes, active_nodes - self.offset]
 
+        # x3d: weights, samples, source nodes
+        # M3d: weights, source, target
+
         # multiply relevant weight matrix with base weights
         M3d = M[None, :, :] * base_weights[:, None, None]
 
         x3d = x[..., :addend_nodes]
-
-        assert not np.any(np.isnan(M3d))
-        assert np.all(np.isfinite(M3d))
-
-        assert not np.any(np.isnan(x3d))
-        assert np.all(np.isfinite(x3d))
 
         act_sums = np.matmul(x3d, M3d) + add_to_sum
 
@@ -194,7 +195,7 @@ class RecurrentNetwork(Network):
         num_weights, = weights.shape  # weight array should be one-dimensional
 
         # outputs in each sequence step is stored
-        outputs = np.empty((num_weights, num_samples, sample_length, self.n_out))
+        outputs = np.empty((num_weights, num_samples, sample_length, self.n_out), dtype=float)
 
         # activation is only stored for current iteration
         act_vec = np.empty((num_weights, num_samples, self.n_nodes), dtype=float)
@@ -216,8 +217,6 @@ class RecurrentNetwork(Network):
 
                 recurrent_sum =  np.matmul(act_vec, M)
 
-                assert not np.any(np.isnan(recurrent_sum))
-                assert np.all(np.isfinite(recurrent_sum))
             else:
                 recurrent_sum = None
 
