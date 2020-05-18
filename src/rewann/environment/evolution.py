@@ -44,7 +44,7 @@ def apply_networks(params, x):
     return network.apply(x=x, weights=weights, func='raw')
 
 
-def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
+def evaluate_inds(env, pop, n_samples=-1, record_raw=False,
                   use_test_samples=False):
 
     x, y_true = env.task.get_data(test=use_test_samples, samples=n_samples)
@@ -64,10 +64,10 @@ def evaluate_inds(env, pop, n_samples=-1, reduce_values=True,
     #logging.debug('recording metrics')
 
     for y_raw, ind in zip(results, pop):
-        ind.record_metrics(
+        ind.record_measurements(
             weights=weights,
             y_true=y_true, y_raw=y_raw,
-            reduce_values=reduce_values)
+            record_raw=record_raw)
 
 def express_inds(env, pop):
     inds_to_express = list(filter(lambda i: i.network is None, pop))
@@ -177,7 +177,7 @@ def update_hof(env, pop):
     eval_size = env['sampling', 'num_weight_samples_per_iteration']
 
     required_evaluations = [
-        max(0, n_evals - int(ind.metrics('n_evaluations') / eval_size))
+        max(0, n_evals - int(ind.measurements('n_evaluations') / eval_size))
         for ind in elite
     ]
 
@@ -197,7 +197,7 @@ def update_hof(env, pop):
 
     else:
         # sort candidates
-        scores = np.array([metric_sign * ind.metrics(metric) for ind in candidates])
+        scores = np.array([metric_sign * ind.measurements(metric) for ind in candidates])
 
         env.hall_of_fame = [
             candidates[i] for i in np.argsort(-scores)[:hof_size]

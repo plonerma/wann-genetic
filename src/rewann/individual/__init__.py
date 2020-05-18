@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from .metrics import apply_metrics, num_used_activation_functions
+from .measures import apply_measures, num_used_activation_functions
 
 import logging
 
@@ -23,9 +23,9 @@ class Individual:
     from .genetic_operations import mutation
 
     # can be changed via selection.recorded_metrics
-    recorded_metrics = 'accuracy', 'kappa', 'log_loss'
+    recorded_measures = 'accuracy', 'kappa', 'log_loss'
 
-    def __init__(self, genes=None, network=None, metric_values=None, id=None, birth=None, parent=None, mutations=0):
+    def __init__(self, genes=None, network=None, measurements=None, id=None, birth=None, parent=None, mutations=0):
         self.genes = genes
         self.network = network
         self.id = id
@@ -33,11 +33,7 @@ class Individual:
         self.parent = parent
         self.front = -1
         self.mutations = mutations
-        if metric_values is None:
-            self._metric_values = dict()
-            self._metric_values['n_evaluations'] = 0
-        else:
-            self._metric_values = metric_values
+        self._measurements = measurements
 
     # Translations
 
@@ -51,63 +47,61 @@ class Individual:
     def apply(self, *args, **kwargs):
         return self.network.apply(*args, **kwargs)
 
-    @expressed
-    def evaluate(self, weights, x, y_true):
-        if not isinstance(weights, np.ndarray):
-            weights = np.array([weights])
-
-        y_raw = self.apply(x, func='raw', weights=weights)
-
-        self.record_metrics(weights, y_true, y_raw)
-
-
-    def record_metrics(self, *, weights, y_true, y_raw, reduce_values=True):
+    def record_measurements(self, *, weights, y_true, y_raw, record_raw=False):
         assert len(y_raw.shape) == 3 # weights, samples, nodes
 
-        mv = self._metric_values
+        if record_raw:
+            self._measurements = {
+                'weight': weights,
+                'y_true': [y_true] * len(weights),
+                'y_raw': y_raw,
+                'n_evaluations': len(weights)
+            }
 
-        for y_raw, weight in zip(y_raw, weights):
+        else:
+            if self._measurements is None or 'n_evaluations' not in self._measurements:
+                self._measurements = dict(n_evaluations=0)
 
-            values = dict(
-                y_true=y_true,
-                y_raw=y_raw
-            )
-            metrics = apply_metrics(values, self.recorded_metrics)
+            try:
+                ms_new = apply_measures({
+                    'weight': weights,
+                    'y_true': [y_true] * len(weights),
+                    'y_raw': y_raw
+                }, self.recorded_measures)
+            except Exception as e:
+                logging.warning(weights)
+                logging.warning(y_true)
+                logging.warning(y_raw)
+                raise e
 
-            for r in self.recorded_metrics:
+            ms = self._measurements
 
-                if reduce_values:
-                    k_max, k_min, k_mean = f'{r}.max', f'{r}.min', f'{r}.mean'
+            for m in self.recorded_measures:
 
-                    if mv['n_evaluations'] < 1:
-                        mv[k_max] = metrics[r]
-                        mv[k_min] = metrics[r]
-                        mv[k_mean] = metrics[r]
-                    else:
-                        mv[k_max] = max(metrics[r], mv[k_max])
-                        mv[k_min] = min(metrics[r], mv[k_min])
-                        mv[k_mean] = (
-                            (metrics[r] + mv[k_mean] * mv['n_evaluations'])
-                            / (mv['n_evaluations'] + 1))
+                k_max, k_min, k_mean = f'{m}.max', f'{m}.min', f'{m}.mean'
+
+                if ms['n_evaluations'] < 1:
+                    ms[k_max ] = np.max(ms_new[m])
+                    ms[k_min ] = np.min(ms_new[m])
+                    ms[k_mean] = np.mean(ms_new[m])
                 else:
-                    if r not in mv:
-                        mv[r] = list()
-                    mv[r].append(metrics[r])
+                    ms[k_max] = max(np.max(ms_new[m]), ms[k_max])
+                    ms[k_min] = min(np.min(ms_new[m]), ms[k_min])
+                    ms[k_mean] = ((
+                            np.sum(ms_new[m])
+                            + ms[k_mean] * ms['n_evaluations']
+                        ) / (ms['n_evaluations'] + len(weights)))
 
-            if not reduce_values:
-                if 'weight' not in mv:
-                    mv['weight'] = list()
-                mv['weight'].append(weight)
+            ms['n_evaluations'] += len(weights)
 
-            mv['n_evaluations'] += 1
 
     @expressed
-    def metrics(self, *metric_names, current_gen=None, as_list=False, as_dict=False):
-        if not metric_names:
-            metric_names = ('kappa.max', 'kappa.mean', 'kappa.min',
+    def measurements(self, *measures, current_gen=None, as_list=False, as_dict=False):
+        if not measures:
+            measures = ('kappa.max', 'kappa.mean', 'kappa.min',
                             'n_hidden', 'n_edges')
 
-        metric_values = dict(
+        values = dict(
             n_hidden=self.network.n_hidden,
             n_layers=self.network.n_layers,
             id = self.id,
@@ -120,29 +114,57 @@ class Individual:
             age=None if current_gen is None else (current_gen - self.birth)
         )
 
-        metric_values.update(
+        values.update(
             num_used_activation_functions(
                 self.genes.nodes, self.network.available_act_functions))
 
-        metric_values.update(self._metric_values)
+        values.update(self._measurements)
 
-        if len(metric_names) == 1 and not as_dict and not as_list:
-            try:
-                return metric_values[metric_names[0]]
-            except KeyError as e:
-                logging.warning(str(list(metric_values.keys())))
-                raise e
-        elif as_list and not as_dict:
-            return [metric_values[k] for k in metric_names]
-        elif not as_list:
-            return {k: metric_values[k] for k in metric_names}
-        else:
-            raise RuntimeWarning("as_list and as_dict are mutually exclusive")
+        if 'y_raw' in values:
+            post_funcs = {
+                'min': np.min,
+                'max': np.max,
+                'mean': np.mean
+            }
+
+            base_measures = set()
+            post = dict()
+            for m in measures:
+                if m in values:
+                    continue
+                if '.' in m:
+                    base, p = m.split('.')
+                    base_measures.add(base)
+                    post[m] = lambda values: post_funcs[p](values[base])
+                else:
+                    base_measures.add(m)
+            values = apply_measures(values, base_measures)
+            values.update({
+                k: v(values) for k, v in post.items()
+            })
 
 
-    @property
-    def metric_values(self):
-        return pd.DataFrame(data=self._metric_values).sort_values(by=['weight'])
+        try:
+            if len(measures) == 1 and not as_dict and not as_list:
+                return values[measures[0]]
+            elif as_list and not as_dict:
+                return [values[k] for k in measures]
+            elif not as_list:
+                return {k: values[k] for k in measures}
+            else:
+                raise RuntimeWarning("as_list and as_dict are mutually exclusive")
+        except KeyError as e:
+            logging.warning(str(list(values.keys())))
+            logging.warning(str(list(self._measurements.keys())))
+            raise e
+
+    def measurements_df(self, *measures):
+        values = self._measurements
+        values = apply_measures(values, measures)
+        if 'weight' not in measures:
+            measures = measures +  ('weight',)
+        values = {k:v for k,v in values.items() if k in measures}
+        return pd.DataFrame(data=values).sort_values(by=['weight'])
 
     @classmethod
     def empty_initial(cls, *args, **kwargs):
@@ -157,7 +179,7 @@ class RecurrentIndividual(Individual):
     from .genes import RecurrentGenotype as Genotype
     from .network import RecurrentNetwork as Network
 
-    def record_metrics(self, *, y_true, y_raw, **kwargs):
+    def record_measurements(self, *, y_true, y_raw, **kwargs):
         assert len(y_raw.shape) == 4 # weights, samples, sequence elements, nodes
         #w, s, e, n = y_raw.shape
 
@@ -168,7 +190,7 @@ class RecurrentIndividual(Individual):
         #assert len(y_raw.shape) == 4
 
         #y_raw = np.reshape(y_raw, (w, -1, n))
-        super().record_metrics(
+        super().record_measurements(
             y_raw=y_raw,
             y_true=y_true,
             **kwargs)

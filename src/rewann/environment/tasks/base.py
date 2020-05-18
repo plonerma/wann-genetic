@@ -2,11 +2,14 @@ import logging
 
 class Task:
     is_recurrent = False
-    
+
     def load_training(self):
-        pass
+        self.load()
 
     def load_test(self):
+        self.load(test=True)
+
+    def load(self, test=False):
         pass
 
     def get_data(self):
@@ -16,24 +19,38 @@ class RecurrentTask(Task):
     is_recurrent = True
 
 class ClassificationTask(Task):
-    x, y, test_x, test_y = None, None, None, None
+    x, y, test_x, test_y, _y_labels = None, None, None, None, None
 
-    def __init__(self, n_in, n_out, train_loader, test_loader=None):
+    def __init__(self, n_in, n_out, load_func):
         self.n_in = n_in
         self.n_out = n_out
 
-        self.train_loader = train_loader
-        self.test_loader = train_loader if test_loader is None else test_loader
+        self.load_func = load_func
 
-    def load_training(self):
-        if self.x is None:
-            self.x, self.y = self.train_loader()
-            logging.debug(f"Loaded {len(self.y)} samples.")
+    @property
+    def y_labels(self):
+        if self._y_labels is None:
+            return list(range(self.n_out))
+        else:
+            return self._y_labels
 
-    def load_test(self):
-        if self.test_x is None:
-            self.test_x, self.test_y = self.test_loader()
-            logging.debug(f"Loaded {len(self.test_y)} samples.")
+    def load(self, test=False):
+        if (not test and self.x is None) or (test and self.test_x is None):
+            d = self.load_func(test=test)
+
+            if len(d) == 2:
+                (x, y), y_labels = d, None
+            else:
+                x, y, y_labels = d
+
+            logging.debug(f"Loaded {len(y)} samples.")
+
+            if test:
+                self.test_x, self.test_y = x, y
+                self._y_lables = y_labels
+            else:
+                self.x, self.y = x, y
+                self._y_lables = y_labels
 
     def get_data(self, samples, test=False):
         if test:

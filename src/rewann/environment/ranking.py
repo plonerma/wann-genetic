@@ -5,14 +5,18 @@ import logging
 def get_objective_values(ind, objectives):
     metric_names, signs = objectives
 
-    metric_values = ind.metrics(*metric_names, as_list=True)
+    measurements = ind.measurements(*metric_names, as_list=True)
 
-    return [s*v for v,s in zip(metric_values, signs)]
+    return [s*v for v,s in zip(measurements, signs)]
 
 def rank_individuals(population, objectives, return_order=False, return_fronts=False):
-    objectives = np.array([
-        get_objective_values(ind, objectives) for ind in population
-    ])
+    try:
+        values = [get_objective_values(ind, objectives) for ind in population]
+        objectives = np.array(values, dtype=float)
+    except Exception as e:
+        logging.warning(values)
+        logging.warning(population[0]._measurements)
+        raise e
 
 
     # compute fronts

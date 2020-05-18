@@ -22,8 +22,9 @@ from rewann.postopt import Report
 class Environment(ParamTree):
     from .util import (default_params, setup_params, open_data,
                        store_gen, store_gen_metrics, load_pop, load_gen_metrics,
-                       stored_populations, stored_indiv_metrics, store_hof, load_hof,
-                       load_indiv_metrics,
+                       stored_populations, stored_indiv_measurements,
+                       store_hof, load_hof,
+                       load_indiv_measurements,
                        env_path)
 
     def __init__(self, params):
@@ -48,7 +49,7 @@ class Environment(ParamTree):
         else:
             self.ind_class = Individual
 
-        self.ind_class.recorded_metrics = self['selection', 'recorded_metrics']
+        self.ind_class.recorded_measures = self['selection', 'recorded_metrics']
 
         # only use enabeld activations functions
         funcs = self.ind_class.Network.available_act_functions
@@ -214,7 +215,7 @@ class Environment(ParamTree):
 
     def store_data(self, gen, pop):
         gen_metrics = self.population_metrics(gen=gen, population=pop)
-        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_metrics=True)
+        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True)
 
         metric, metric_sign = self.hof_metric
         p = ("MAX" if metric_sign > 0 else "MIN")
@@ -232,7 +233,7 @@ class Environment(ParamTree):
         if (commit_freq > 0 and gen % commit_freq == 0):
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
-    def population_metrics(self, population, gen=None, return_indiv_metrics=False, reduced_values=True):
+    def population_metrics(self, population, gen=None, return_indiv_measurements=False, reduced_values=True):
         if gen is None:
             gen = self['population', 'num_generations']
 
@@ -240,34 +241,18 @@ class Environment(ParamTree):
                        'n_evaluations', 'age', 'front', 'n_layers', 'n_mutations']
 
 
-        prefixed_metrics = self.ind_class.recorded_metrics
+        prefixed_measures = self.ind_class.recorded_measures
 
 
         prefixes = {'max': np.max, 'mean': np.mean, 'min': np.min}
 
-        if reduced_values:
-            metric_names = base_metrix + [
-                f'{m}.{p}' for p in prefixes for m in prefixed_metrics
-            ]
-            individual_metrics = pd.DataFrame(data=[
-                ind.metrics(*metric_names, current_gen=gen) for ind in population
-            ])
+        measures = base_metrix + [
+            f'{m}.{p}' for p in prefixes for m in prefixed_measures
+        ]
 
-        else:
-            metric_names = base_metrix + prefixed_metrics
-            individual_metrics = [
-                ind.metrics(*metric_names, current_gen=gen) for ind in population
-            ]
-            for im in individual_metrics:
-                im.update({
-                    f'{pm}.{pf}': pfunc(im[pm])
-                    for pm in prefixed_metrics
-                    for pf, pfunc in prefixes.items()
-                })
-                for pm in prefixed_metrics:
-                    del im[pm]
-
-            individual_metrics = pd.DataFrame(data=individual_metrics)
+        indiv_measurements = pd.DataFrame(data=[
+            ind.measurements(*measures, current_gen=gen) for ind in population
+        ])
 
 
         metrics = dict(
@@ -276,16 +261,16 @@ class Environment(ParamTree):
             num_individuals=len(population),
 
             # number of inds without edges
-            num_no_edge_inds=np.sum(individual_metrics['n_enabled_edges'] == 0),
+            num_no_edge_inds=np.sum(indiv_measurements['n_enabled_edges'] == 0),
 
             # number of inds without hidden nodes
-            num_no_hidden_inds=np.sum(individual_metrics['n_hidden'] == 0),
+            num_no_hidden_inds=np.sum(indiv_measurements['n_hidden'] == 0),
 
             # individual with the most occurences
             biggest_ind=max([population.count(i) for i in set(population)]),
         )
 
-        for name, values in individual_metrics.items():
+        for name, values in indiv_measurements.items():
             metrics[f'Q_0:{name}'] = metrics[f'MIN:{name}'] = values.min()
             metrics[f'Q_1:{name}'] = np.quantile(values, .25)
             metrics[f'Q_2:{name}'] = metrics[f'MEDIAN:{name}'] = values.median()
@@ -295,7 +280,7 @@ class Environment(ParamTree):
             metrics[f'MEAN:{name}'] = values.mean()
             metrics[f'STD:{name}'] = values.std()
 
-        if return_indiv_metrics:
-            return metrics, individual_metrics
+        if return_indiv_measurements:
+            return metrics, indiv_measurements
         else:
             return metrics

@@ -122,7 +122,7 @@ def gen_key(env, i):
 
 gens_group_key = 'generations'
 
-def store_gen(env, gen, population=None, indiv_metrics=None):
+def store_gen(env, gen, population=None, indiv_measurements=None):
     if gens_group_key in env.data_file:
         gens_group = env.data_file[gens_group_key]
     else:
@@ -134,10 +134,10 @@ def store_gen(env, gen, population=None, indiv_metrics=None):
 
     if population is not None:
         store_pop(env, gen_data, population)
-    if indiv_metrics is not None:
-        df = indiv_metrics
+    if indiv_measurements is not None:
+        df = indiv_measurements
         # https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
-        dataset = gen_data.create_dataset('indiv_metrics', data=df.values)
+        dataset = gen_data.create_dataset('indiv_measurements', data=df.values)
         dataset.attrs['index'] = np.array(df.index.tolist(), dtype='S')
         dataset.attrs['columns'] = np.array(df.columns.tolist(), dtype='S')
 
@@ -187,12 +187,12 @@ def load_hof(env):
     return env.hall_of_fame
 
 
-def load_indiv_metrics(env, gen):
+def load_indiv_measurements(env, gen):
     gen = load_gen(env, gen)
-    if not 'indiv_metrics' in gen:
+    if not 'indiv_measurements' in gen:
         return None
     # https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
-    dataset = gen['indiv_metrics']
+    dataset = gen['indiv_measurements']
     index = make_index(dataset.attrs['index'])
     columns = make_index(dataset.attrs['columns'])
     df = pd.DataFrame(data=dataset[...], index=index, columns=columns)
@@ -208,11 +208,11 @@ def stored_populations(env):
         gen for gen in stored_generations(env)
         if 'individuals' in gens_group[gen]]
 
-def stored_indiv_metrics(env):
+def stored_indiv_measurements(env):
     gens_group = env.data_file[gens_group_key]
     return [
         gen for gen in stored_generations(env)
-        if 'indiv_metrics' in gens_group[gen]]
+        if 'indiv_measurements' in gens_group[gen]]
 
 def store_gen_metrics(env, metrics):
     metrics.to_json(env_path(env, 'metrics.json'))

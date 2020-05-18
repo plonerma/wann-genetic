@@ -8,6 +8,8 @@ tabulate = partial(tabulate, tablefmt='pipe')
 
 from matplotlib import pyplot as plt
 
+from sklearn.metrics import ConfusionMatrixDisplay
+
 import numpy as np
 
 import logging
@@ -17,6 +19,7 @@ import json
 from .vis import draw_graph
 from rewann.environment.util import load_ind, load_hof
 from rewann.environment.evolution import evaluate_inds, express_inds
+from rewann.environment.tasks import ClassificationTask
 
 class Report:
     def __init__(self, env, report_name='report'):
@@ -54,7 +57,7 @@ class Report:
         metrics = self.env.load_gen_metrics()
         metrics.index.names = ['generation']
 
-        for bm in [f'{m}.mean' for m in self.env.ind_class.recorded_metrics]:
+        for bm in [f'{m}.mean' for m in self.env.ind_class.recorded_measures]:
             mean = metrics[f'MEAN:{bm}']
             median = metrics[f'MEDIAN:{bm}']
             min = metrics[f'MIN:{bm}']
@@ -80,11 +83,11 @@ class Report:
 
     def add_ind_info(self, ind):
         self.add(f"### Individual {ind.id}\n")
-        metrics = ind.metric_values
+        measurements = ind.measurements_df(*ind.recorded_measures)
 
         self.add(tabulate([
-            (f'mean {m}:', metrics[m].mean())
-            for m in ind.recorded_metrics
+            (f'mean {m}:', measurements[m].mean())
+            for m in ind.recorded_measures
         ] +
         [
             ('number of edges', len(ind.genes.edges)),
@@ -95,12 +98,19 @@ class Report:
         ], ['key', 'value']))
 
         # plot graphs
-        for m in ind.recorded_metrics:
-            plt.plot(metrics['weight'], metrics[m])
+        for m in ind.recorded_measures:
+            plt.plot(measurements['weight'], measurements[m])
             caption = f'Metric {m}'
             plt.xlabel('weight')
             plt.ylabel(m)
             self.add_fig(f'metric_{m}_{ind.id}', caption)
+
+        if isinstance(self.env.task, ClassificationTask):
+            self.add('#### Confusion matrix')
+
+            cmd = ConfusionMatrixDisplay(np.mean(ind.measurements('cm'), axis=0), display_labels=self.env.task.y_labels)
+            cmd.plot(ax=plt.gca())
+            self.add_fig(f'confusion_matrix_{ind.id}')
 
         self.add('#### Network')
 
@@ -114,12 +124,13 @@ class Report:
         plt.clf()
 
     def compile_stats(self):
-        stat_funcs = [('mean', np.mean), ('max', np.max)]
-        hof_metrics = [ind.metric_values for ind in self.env.hall_of_fame]
+        measures = self.env.ind_class.recorded_measures
+        stat_funcs = [('mean', np.mean), ('max', np.max), ('min', np.min)]
+        hof_metrics = [ind.measurements(*measures, as_dict=True) for ind in self.env.hall_of_fame]
 
         stats = list()
 
-        for measure in self.env.ind_class.recorded_metrics:
+        for measure in measures:
             for func_name, func in stat_funcs:
                 descr = f'{func_name} {measure}'
                 measures = [func(m[measure]) for m in hof_metrics]
@@ -162,7 +173,7 @@ class Report:
 
         evaluate_inds(self.env, self.env.hall_of_fame,
                       n_samples=num_samples,
-                      reduce_values=False,
+                      record_raw=True,
                       use_test_samples=True)
 
         metric, metric_sign = self.env.hof_metric
@@ -176,7 +187,7 @@ class Report:
         ).get(m_func, np.mean)
 
         self.env.hall_of_fame = sorted(self.env.hall_of_fame,
-            key=lambda ind: -metric_sign*m_func(ind.metrics(metric))
+            key=lambda ind: -metric_sign*m_func(ind.measurements(metric))
         )
 
         return self
