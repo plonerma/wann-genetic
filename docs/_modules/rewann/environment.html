@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>rewann.environment &#8212; ReWann  documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ReWann  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for rewann.environment</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">toml</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+
+
+<span class="kn">from</span> <span class="nn">rewann.individual</span> <span class="kn">import</span> <span class="n">Individual</span><span class="p">,</span> <span class="n">RecurrentIndividual</span>
+
+<span class="kn">from</span> <span class="nn">.tasks</span> <span class="kn">import</span> <span class="n">select_task</span>
+<span class="kn">from</span> <span class="nn">.evolution</span> <span class="kn">import</span> <span class="n">evolution</span><span class="p">,</span> <span class="n">update_hof</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">get_version</span><span class="p">,</span> <span class="n">TimeStore</span>
+<span class="kn">from</span> <span class="nn">.params</span> <span class="kn">import</span> <span class="n">ParamTree</span>
+
+<span class="kn">from</span> <span class="nn">rewann.postopt</span> <span class="kn">import</span> <span class="n">Report</span>
+
+<div class="viewcode-block" id="Environment"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment">[docs]</a><span class="k">class</span> <span class="nc">Environment</span><span class="p">(</span><span class="n">ParamTree</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">default_params</span><span class="p">,</span> <span class="n">setup_params</span><span class="p">,</span> <span class="n">open_data</span><span class="p">,</span>
+                       <span class="n">store_gen</span><span class="p">,</span> <span class="n">store_gen_metrics</span><span class="p">,</span> <span class="n">load_pop</span><span class="p">,</span> <span class="n">load_gen_metrics</span><span class="p">,</span>
+                       <span class="n">stored_populations</span><span class="p">,</span> <span class="n">stored_indiv_measurements</span><span class="p">,</span>
+                       <span class="n">store_hof</span><span class="p">,</span> <span class="n">load_hof</span><span class="p">,</span>
+                       <span class="n">load_indiv_measurements</span><span class="p">,</span>
+                       <span class="n">env_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">hall_of_fame</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="n">use_test_samples</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># choose task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">select_task</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="c1"># choose adequate type of individuals</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">is_recurrent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">RecurrentIndividual</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">Individual</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">recorded_measures</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;recorded_metrics&#39;</span><span class="p">]</span>
+
+        <span class="c1"># only use enabeld activations functions</span>
+        <span class="n">funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Network</span><span class="o">.</span><span class="n">available_act_functions</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_functions&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Network</span><span class="o">.</span><span class="n">available_act_functions</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_functions&#39;</span><span class="p">]</span>
+            <span class="p">]</span>
+
+<div class="viewcode-block" id="Environment.seed"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">])</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">elite_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;elite_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="Environment.sample_weights"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.sample_weights">[docs]</a>    <span class="k">def</span> <span class="nf">sample_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">][</span><span class="s1">&#39;num_weight_samples_per_iteration&#39;</span><span class="p">]</span>
+
+        <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;one&#39;</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;lower_bound&#39;</span><span class="p">]</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;upper_bound&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;lognormal&#39;</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">lognormal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Distribution </span><span class="si">{</span><span class="n">dist</span><span class="si">}</span><span class="s1"> not implemented.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;current_weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+        <span class="k">return</span> <span class="n">w</span></div>
+
+<div class="viewcode-block" id="Environment.setup_pool"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.setup_pool">[docs]</a>    <span class="k">def</span> <span class="nf">setup_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;num_workers&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.pool_map"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.pool_map">[docs]</a>    <span class="k">def</span> <span class="nf">pool_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Environment.setup_optimization"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.setup_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">setup_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;log_filename&#39;</span><span class="p">])</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check log (&#39;</span><span class="si">{</span><span class="n">log_path</span><span class="si">}</span><span class="s2">&#39;) for details.&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+        <span class="n">fh</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_path</span><span class="p">)</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Package version </span><span class="si">{</span><span class="n">get_version</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;experiment_path&#39;</span><span class="p">])</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving data at </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading training dataset&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">load_training</span><span class="p">()</span>
+
+        <span class="c1"># log used parameters</span>
+        <span class="n">params_toml</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running experiments with the following parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">params_toml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">(</span><span class="s1">&#39;params.toml&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;is_report&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># mark stored params as part of a report</span>
+            <span class="n">toml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Environment.run"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># set up logging, write params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_optimization</span><span class="p">()</span>
+
+        <span class="c1"># set up pool of workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_pool</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_data</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">):</span>
+            <span class="c1"># run optimization</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;run_postopt&#39;</span><span class="p">]:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_data</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+                <span class="c1"># evaluate individuals in hall of fame</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">post_optimization</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Closing pool&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Environment.optimize"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">generations</span> <span class="o">=</span> <span class="n">evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting evolutionary algorithm&quot;</span><span class="p">)</span>
+
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">TimeStore</span><span class="p">()</span>
+
+        <span class="n">ts</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]):</span>
+
+            <span class="n">ts</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_weights</span><span class="p">()</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Sampled weight </span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="n">gen</span><span class="p">,</span> <span class="n">pop</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">generations</span><span class="p">)</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Updating hall of fame&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hall_of_fame</span> <span class="o">=</span> <span class="n">update_hof</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+
+            <span class="n">ts</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+            <span class="n">avg</span> <span class="o">=</span> <span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">total</span> <span class="o">/</span> <span class="n">gen</span><span class="p">)</span>
+            <span class="n">expected_time</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">gen</span><span class="p">)</span> <span class="o">*</span> <span class="n">avg</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Completed generation </span><span class="si">{</span><span class="n">gen</span><span class="si">}</span><span class="s1">; </span><span class="si">{</span><span class="n">ts</span><span class="o">.</span><span class="n">dt</span><span class="si">:</span><span class="s1">.02</span><span class="si">}</span><span class="s1">s elapsed, </span><span class="si">{</span><span class="n">avg</span><span class="si">:</span><span class="s1">.02</span><span class="si">}</span><span class="s1">s avg, </span><span class="si">{</span><span class="n">ts</span><span class="o">.</span><span class="n">total</span><span class="si">:</span><span class="s1">.02</span><span class="si">}</span><span class="s1">s total. &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;Expected time remaining: </span><span class="si">{</span><span class="n">expected_time</span><span class="si">:</span><span class="s1">.02</span><span class="si">}</span><span class="s1">s&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_population</span> <span class="o">=</span> <span class="n">pop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_hof</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Environment.post_optimization"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.post_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">post_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run_evaluations</span><span class="p">(</span> <span class="c1"># run evaluations on test data</span>
+            <span class="n">num_weights</span><span class="o">=</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;num_weights&#39;</span><span class="p">],</span>
+            <span class="n">num_samples</span><span class="o">=</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;num_samples&#39;</span><span class="p">]</span> <span class="c1"># all</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;compile_report&#39;</span><span class="p">]:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span> <span class="c1"># plot metrics, derive stats</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">compile_stats</span><span class="p">()</span> <span class="c1"># at least derive and store stats</span></div>
+
+<div class="viewcode-block" id="Environment.store_data"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.store_data">[docs]</a>    <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
+        <span class="n">gen_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_metrics</span><span class="p">(</span><span class="n">gen</span><span class="o">=</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span>
+        <span class="n">gen_metrics</span><span class="p">,</span> <span class="n">indiv_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_metrics</span><span class="p">(</span><span class="n">gen</span><span class="o">=</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">,</span> <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">metric</span><span class="p">,</span> <span class="n">metric_sign</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hof_metric</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;MAX&quot;</span> <span class="k">if</span> <span class="n">metric_sign</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;MIN&quot;</span><span class="p">)</span>
+        <span class="n">metric_value</span> <span class="o">=</span> <span class="n">gen_metrics</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">gen</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">metric_value</span><span class="si">:</span><span class="s2">.2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gen_metrics</span><span class="p">)</span>
+
+        <span class="n">commit_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;commit_elite_freq&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">commit_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gen</span> <span class="o">%</span> <span class="n">commit_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_gen</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">elite_size</span><span class="p">],</span> <span class="n">indiv_metrics</span><span class="o">=</span><span class="n">indiv_metrics</span><span class="p">)</span>
+
+        <span class="n">commit_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;commit_metrics_freq&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">commit_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gen</span> <span class="o">%</span> <span class="n">commit_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_gen_metrics</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Environment.population_metrics"><a class="viewcode-back" href="../../rewann.environment.html#rewann.environment.Environment.population_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">population_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">gen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reduced_values</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">gen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]</span>
+
+        <span class="n">base_metrix</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;n_hidden&#39;</span><span class="p">,</span> <span class="s1">&#39;n_enabled_edges&#39;</span><span class="p">,</span> <span class="s1">&#39;n_total_edges&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;n_evaluations&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;front&#39;</span><span class="p">,</span> <span class="s1">&#39;n_layers&#39;</span><span class="p">,</span> <span class="s1">&#39;n_mutations&#39;</span><span class="p">]</span>
+
+
+        <span class="n">prefixed_measures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">recorded_measures</span>
+
+
+        <span class="n">prefixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">}</span>
+
+        <span class="n">measures</span> <span class="o">=</span> <span class="n">base_metrix</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prefixes</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">prefixed_measures</span>
+        <span class="p">]</span>
+
+        <span class="n">indiv_measurements</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">ind</span><span class="o">.</span><span class="n">measurements</span><span class="p">(</span><span class="o">*</span><span class="n">measures</span><span class="p">,</span> <span class="n">current_gen</span><span class="o">=</span><span class="n">gen</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">population</span>
+        <span class="p">])</span>
+
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">num_unique_individuals</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">population</span><span class="p">)),</span>
+
+            <span class="n">num_individuals</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">),</span>
+
+            <span class="c1"># number of inds without edges</span>
+            <span class="n">num_no_edge_inds</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indiv_measurements</span><span class="p">[</span><span class="s1">&#39;n_enabled_edges&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
+
+            <span class="c1"># number of inds without hidden nodes</span>
+            <span class="n">num_no_hidden_inds</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">indiv_measurements</span><span class="p">[</span><span class="s1">&#39;n_hidden&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span>
+
+            <span class="c1"># individual with the most occurences</span>
+            <span class="n">biggest_ind</span><span class="o">=</span><span class="nb">max</span><span class="p">([</span><span class="n">population</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">population</span><span class="p">)]),</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">indiv_measurements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q_0:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;MIN:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q_1:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">.</span><span class="mi">25</span><span class="p">)</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q_2:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;MEDIAN:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q_3:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">.</span><span class="mi">75</span><span class="p">)</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Q_4:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;MAX:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;MEAN:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;STD:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">return_indiv_measurements</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">indiv_measurements</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">metrics</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ReWann  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

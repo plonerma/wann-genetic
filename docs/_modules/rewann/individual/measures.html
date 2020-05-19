@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>rewann.individual.measures &#8212; ReWann  documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../individual.html" accesskey="U">rewann.individual</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for rewann.individual.measures</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span>
+
+<span class="kn">from</span> <span class="nn">.expression</span> <span class="kn">import</span> <span class="n">softmax</span>
+
+<span class="n">available_measures</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="n">available_prefixes</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="new_measure"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.new_measure">[docs]</a><span class="k">def</span> <span class="nf">new_measure</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="n">available_measures</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span></div>
+
+<div class="viewcode-block" id="apply_measures"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.apply_measures">[docs]</a><span class="k">def</span> <span class="nf">apply_measures</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">pending</span><span class="o">=</span><span class="nb">set</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Update existing dictionary of measurements.</span>
+
+<span class="sd">    Calculates value for measure and all values the measures depends on.</span>
+<span class="sd">    Edits values in place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">measure_name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">measure_name</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">measure_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_measures</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Measure </span><span class="si">{</span><span class="n">measure_name</span><span class="si">}</span><span class="s2"> was not defined.&quot;</span><span class="p">)</span>
+
+        <span class="n">func</span><span class="p">,</span> <span class="n">deps</span> <span class="o">=</span> <span class="n">available_measures</span><span class="p">[</span><span class="n">measure_name</span><span class="p">]</span>
+
+        <span class="c1"># figure out which values need to be calculated first</span>
+        <span class="n">unresolved_deps</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deps</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unresolved_deps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">unresolved_deps</span><span class="o">.</span><span class="n">isdisjoint</span><span class="p">(</span><span class="n">pending</span><span class="p">):</span>
+                <span class="n">intersection</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unresolved_deps</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">pending</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Circular dependencies in measures (</span><span class="si">{intersection}</span><span class="s2"> depends on and is required by measure </span><span class="si">{measure_name}</span><span class="s2">).&quot;</span><span class="p">)</span>
+
+            <span class="c1"># calculate unresolved values first</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">apply_measures</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unresolved_deps</span><span class="p">,</span> <span class="n">pending</span><span class="o">=</span><span class="n">pending</span><span class="o">.</span><span class="n">union</span><span class="p">({</span><span class="n">measure_name</span><span class="p">}))</span>
+
+        <span class="k">if</span> <span class="s1">&#39;weight&#39;</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])):</span>
+                <span class="c1"># grab all the values the measure depends on from values</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span><span class="p">:</span> <span class="n">values</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">}</span>
+
+                <span class="c1"># calculate the actual measure</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># grab all the values the measure depends on from values</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span><span class="p">:</span> <span class="n">values</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">}</span>
+
+            <span class="c1"># calculate the actual measurement</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="n">values</span><span class="p">[</span><span class="n">measure_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">return</span> <span class="n">values</span> <span class="c1"># not really necessary since dict is edited in place</span></div>
+
+<div class="viewcode-block" id="y_pred"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.y_pred">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">y_pred</span><span class="p">(</span><span class="n">y_raw</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="y_prob"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.y_prob">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">y_prob</span><span class="p">(</span><span class="n">y_raw</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">softmax</span><span class="p">(</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="mean_squared_error"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.mean_squared_error">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_raw</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_raw</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="cm"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.cm">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">cm</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="log_loss"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.log_loss">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_prob</span><span class="p">):</span>
+    <span class="c1"># nan is same as maximally falsely predicted</span>
+    <span class="n">y_prob</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_prob</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_prob</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="true_positives"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.true_positives">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">true_positives</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
+    <span class="c1"># axis 0 : true class axis</span>
+    <span class="c1"># axis 1 : predicted class axis</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">cm</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis2</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="accuracy"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.accuracy">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">accuracy</span><span class="p">(</span><span class="n">true_positives</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="true_class_sum"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.true_class_sum">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">true_class_sum</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="pred_class_sum"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.pred_class_sum">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">pred_class_sum</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="false_positives"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.false_positives">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">false_positives</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">pred_class_sum</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pred_class_sum</span> <span class="o">-</span> <span class="n">true_positives</span></div>
+
+<div class="viewcode-block" id="false_negatives"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.false_negatives">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">false_negatives</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">true_class_sum</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">true_class_sum</span> <span class="o">-</span> <span class="n">true_positives</span></div>
+
+<div class="viewcode-block" id="accuracy_per_class"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.accuracy_per_class">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">accuracy_per_class</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">false_positives</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_positives</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="recall_per_class"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.recall_per_class">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">recall_per_class</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">false_negatives</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_negatives</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="f1_per_class"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.f1_per_class">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">f1_per_class</span><span class="p">(</span><span class="n">precision_per_class</span><span class="p">,</span> <span class="n">recall_per_class</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">precision_per_class</span> <span class="o">*</span> <span class="n">recall_per_class</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision_per_class</span> <span class="o">+</span> <span class="n">recall_per_class</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="kappa"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.kappa">[docs]</a><span class="nd">@new_measure</span>
+<span class="k">def</span> <span class="nf">kappa</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">true_class_sum</span><span class="p">,</span> <span class="n">pred_class_sum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cohens Kappa&quot;&quot;&quot;</span>
+    <span class="n">expected_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">true_class_sum</span> <span class="o">*</span> <span class="n">pred_class_sum</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">accuracy</span> <span class="o">-</span> <span class="n">expected_acc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">expected_acc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="num_used_activation_functions"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.num_used_activation_functions">[docs]</a><span class="k">def</span> <span class="nf">num_used_activation_functions</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">available_funcs</span><span class="p">):</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;n_nodes_with_act_func_&#39;</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">available_funcs</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">func</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">unique</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">func_id</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">available_funcs</span><span class="p">[</span><span class="n">func_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span>
+
+    <span class="k">return</span> <span class="n">values</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../individual.html" >rewann.individual</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>
