@@ -1,4 +1,4 @@
-import sys
+import argparse
 import numpy as np
 import logging
 
@@ -6,20 +6,17 @@ from rewann import Environment
 
 
 def run_experiment():
-    args = sys.argv[1:]
+    parser = argparse.ArgumentParser(description='Post Optimization')
+    
+    parser.add_argument('path', type=str, help='path to experiment specification')
 
-    if len(args) == 1:
-        path, = args
-        comment = None
-    elif len(args) == 2:
-        path, comment = args
-    else:
-        print ("usage: run_experiment 'path'")
-        return
+    parser.add_argument('--comment', type=str, help='add comment field to params.', default=None)
 
-    exp = Environment(params=path)
-    if comment is not None:
-        exp['comment'] = comment
-    exp.run()
+    args = parser.parse_args()
+    env = Environment(args.path)
+
+    if args.comment is not None:
+        env['comment'] = args.comment
+    env.run()
 
     logging.info(f'Completed excution.')
