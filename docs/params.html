@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Parameters &#8212; ReWann  documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating Series of Experiments" href="experiment_series.html" />
+    <link rel="prev" title="rewann.tools package" href="rewann.tools.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="experiment_series.html" title="Generating Series of Experiments"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rewann.tools.html" title="rewann.tools package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
+<p>All configuration of the evolutionary process is stored in the experiment specification file using the <a class="reference external" href="https://github.com/toml-lang/toml">TOML</a> format.</p>
+<p>If a parameter has not been defined in the experiment specification file, the algorithm will fall back to parameters found in <code class="file docutils literal notranslate"><span class="pre">rewann/environment/default.toml</span></code>.</p>
+<p>Using a base and a series spec file, series of experiments with varying hyper parameters can be generated (refer to <a class="reference internal" href="experiment_series.html"><span class="doc">Generating Series of Experiments</span></a>).</p>
+<p>The following sections give an overview over the available configuration fields (this is subject to change):</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">experiment_name</span></code></p></td>
+<td><p>‘&lt;task_name&gt;_run’</p></td>
+<td><p>Name of the execution (in series of experiments the name is a combination of the selected variants)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="task">
+<h2>task<a class="headerlink" href="#task" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>‘iris’</p></td>
+<td><p>Task to train on (available tasks are defined in <code class="docutils literal notranslate"><span class="pre">rewann.environment.tasks</span></code>).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sampling">
+<h2>sampling<a class="headerlink" href="#sampling" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seed</span></code></p></td>
+<td><p>0</p></td>
+<td><p>Initial seed for random number generator</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">post_init_seed</span></code></p></td>
+<td><p>false</p></td>
+<td><p>If not false, set seed after initial population was generated (used to determine how much influence the initial pop has).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distribution</span></code></p></td>
+<td><p>‘uniform’</p></td>
+<td><p>Distribution to use for weight sampling.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lower_bound</span></code></p></td>
+<td><p>-2</p></td>
+<td><p>Lower bound of uniform distribution (if any other distribution is used, this param is ignored).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">upper_bound</span></code></p></td>
+<td><p>2</p></td>
+<td><p>Upper bound of uniform distribution</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mean</span></code></p></td>
+<td><p>0</p></td>
+<td><p>Mean used for the normal and log normal distribution (ignored if an uniform distribution is used).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sigma</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Sigma used for the normal and log normal distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_weight_samples_per_iteration</span></code></p></td>
+<td><p>1</p></td>
+<td><p>Number of weights to use for evaluation within one iteratiion (or generation).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_training_samples_per_iteration</span></code></p></td>
+<td><p>-1</p></td>
+<td><p>Number of training samples to use for one evaluation (a random subset is generated) - if a negative number is provided, all training samples are used (this is not a valid option when training on tasks that generate samples).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hof_evaluation_iterations</span></code></p></td>
+<td><p>20</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="population">
+<h2>population<a class="headerlink" href="#population" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_generations</span></code></p></td>
+<td><p>20</p></td>
+<td><p>Number of iterations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">size</span></code></p></td>
+<td><p>64</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_enabled_edge_probability</span></code></p></td>
+<td><p>0.05</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_genes</span></code></p></td>
+<td><p>‘full’</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_size</span></code></p></td>
+<td><p>10</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enable_edge_signs</span></code></p></td>
+<td><p>false</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enabled_activation_functions</span></code></p></td>
+<td><p>‘all’</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="selection">
+<h2>selection<a class="headerlink" href="#selection" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_tournaments</span></code></p></td>
+<td><p>true</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">elite_ratio</span></code></p></td>
+<td><p>0.1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">culling_ratio</span></code></p></td>
+<td><p>0.2</p></td>
+<td><p>Don’t use the worst 20% of the population for further variations</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tournament_size</span></code></p></td>
+<td><p>5</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">objectives</span></code></p></td>
+<td><p>[‘-log_loss.min’, ‘-log_loss.mean’, ‘-n_hidden’]</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recorded_metrics</span></code></p></td>
+<td><p>[‘accuracy’, ‘kappa’, ‘log_loss’]</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_metric</span></code></p></td>
+<td><p>‘accuracy.mean’</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation">
+<h2>mutation<a class="headerlink" href="#mutation" title="Permalink to this headline">¶</a></h2>
+<p>The following sections define the types of mutations that are possible and how frequently they occur.
+The probability of all enabled mutation types will be normalized to a sum of one.</p>
+<div class="section" id="mutation-new-edge">
+<h3>mutation.new_edge<a class="headerlink" href="#mutation-new-edge" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.20</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strategy</span></code></p></td>
+<td><p>‘layer_agnostic’</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation-new-node">
+<h3>mutation.new_node<a class="headerlink" href="#mutation-new-node" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.25</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation-reenable-edge">
+<h3>mutation.reenable_edge<a class="headerlink" href="#mutation-reenable-edge" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.05</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation-change-activation">
+<h3>mutation.change_activation<a class="headerlink" href="#mutation-change-activation" title="Permalink to this headline">¶</a></h3>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.5</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation-change-edge-sign">
+<h3>mutation.change_edge_sign<a class="headerlink" href="#mutation-change-edge-sign" title="Permalink to this headline">¶</a></h3>
+<p>This mutation type will be ignored if edges signs are disabled.</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.2</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="mutation-add-recurrent-edge">
+<h3>mutation.add_recurrent_edge<a class="headerlink" href="#mutation-add-recurrent-edge" title="Permalink to this headline">¶</a></h3>
+<p>This mutation type will be ignored if task does not require recurrence</p>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<td><p>0.3</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="postopt">
+<h2>postopt<a class="headerlink" href="#postopt" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">run_postopt</span></code></p></td>
+<td><p>true</p></td>
+<td><p>Do post optimization evaluation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compile_report</span></code></p></td>
+<td><p>true</p></td>
+<td><p>Compile a report with statistical data and figures.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_weights</span></code></p></td>
+<td><p>100</p></td>
+<td><p>Number of weights to use during post optimization evaluation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_samples</span></code></p></td>
+<td><p>1000</p></td>
+<td><p>Number of samples to use during post optimization evaluation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="config">
+<h2>config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_worker</span></code></p></td>
+<td><p>true</p></td>
+<td><p>Number of parallel processes to use.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">debug</span></code></p></td>
+<td><p>true</p></td>
+<td><p>Set log level to debug.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="storage">
+<h2>storage<a class="headerlink" href="#storage" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-given docutils align-default" style="width: 100%">
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 20%" />
+<col style="width: 45%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data_base_path</span></code></p></td>
+<td><p>‘data’</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_filename</span></code></p></td>
+<td><p>‘execution.log’</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">include_prediction_records</span></code></p></td>
+<td><p>false</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">commit_elite_freq</span></code></p></td>
+<td><p>-1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">commit_metrics_freq</span></code></p></td>
+<td><p>10</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rewann.tools.html"
+                        title="previous chapter">rewann.tools package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="experiment_series.html"
+                        title="next chapter">Generating Series of Experiments</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="experiment_series.html" title="Generating Series of Experiments"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rewann.tools.html" title="rewann.tools package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>
