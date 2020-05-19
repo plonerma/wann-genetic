@@ -127,7 +127,7 @@ class Environment(ParamTree):
         fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
         logger.addHandler(fh)
 
-        if self['debug']:
+        if self['config', 'debug']:
             logger.setLevel(logging.DEBUG)
         else:
             logger.setLevel(logging.INFO)
