@@ -5,7 +5,7 @@ ReWann
    :maxdepth: 2
 
    getting_started
-   installation
+   cli
    rewann
-   hyper_params
+   params
    experiment_series

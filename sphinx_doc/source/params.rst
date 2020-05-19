@@ -1,13 +1,24 @@
-Hyperparamaters
+Parameters
 ===============
 
-All configuration of the evolutionary process is stored in the experiment specification file usign the `TOML <https://github.com/toml-lang/toml>`_ format.
+All configuration of the evolutionary process is stored in the experiment specification file using the `TOML <https://github.com/toml-lang/toml>`_ format.
 
-If a parameter has not been defined in the experiment specification file, the algorithm will fall back to parameters found in *rewann/environment/default.toml*.
+If a parameter has not been defined in the experiment specification file, the algorithm will fall back to parameters found in :file:`rewann/environment/default.toml`.
 
 Using a base and a series spec file, series of experiments with varying hyper parameters can be generated (refer to :doc:`experiment_series`).
 
 The following sections give an overview over the available configuration fields (this is subject to change):
+
+.. table::
+  :widths: 35 20 45
+  :width: 100%
+
+  ========================================  ===================  ======================
+  Parameter                                 Default              Description
+  ========================================  ===================  ======================
+  ``experiment_name``                       '<task_name>_run'    Name of the execution (in series of experiments the name is a combination of the selected variants)
+  ========================================  ===================  ======================
+
 
 task
 ----
