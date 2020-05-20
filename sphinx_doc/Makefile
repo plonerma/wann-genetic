@@ -20,7 +20,7 @@ github:
 	@cp -a "$(BUILDDIR)"/html/* ../docs
 
 livehtml:
-	$(SPHINXAUTOBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	$(SPHINXAUTOBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" --watch ../src $(SPHINXOPTS) $(O)
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
