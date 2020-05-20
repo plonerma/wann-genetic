@@ -6,7 +6,7 @@ from typing import Tuple, NamedTuple
 GeneEncoding = Tuple[Tuple[str, np.dtype], ...]
 
 
-class Genotype:
+class Genes:
     """Genetic encoding of Feed Forward Networks."""
     # data
     edges : np.array
@@ -140,7 +140,7 @@ class Genotype:
         )
 
 
-class RecurrentGenotype(Genotype):
+class RecurrentGenes(Genes):
     """Genetic encoding of Recurrent Networks."""
     edge_encoding : GeneEncoding = (
         # innovation number

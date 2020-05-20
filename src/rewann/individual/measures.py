@@ -11,6 +11,20 @@ available_prefixes = dict()
 
 
 def new_measure(func, name=None):
+    """Register a new measure.
+
+    Registered measures can be used as objectives and be stored after post
+    training evaluations. Can bes used as a decorator (`@new_measure` - the
+    measure will have the same name as the decorated function) or as a regular
+    func (then `name` parameter can be set)
+
+    Parameters
+    ----------
+    func : Callable
+        wrapped function
+    name : str, optional
+        name of the measure
+    """
     name = func.__name__ if name is None else name
     dependencies = inspect.signature(func).parameters.keys()
     available_measures[name] = func, set(dependencies)
@@ -21,6 +35,15 @@ def apply_measures(values, names, pending=set()):
 
     Calculates value for measure and all values the measures depends on.
     Edits values in place.
+
+    Parameters
+    ----------
+    values : dict
+        values that have already been calculated (or are ground data)
+    names : list
+        list of measures (given by their names) to calculate
+    pending : set, optional
+        used to detect circular dependencies
     """
 
     for measure_name in names:

@@ -12,6 +12,7 @@ class NetworkCyclicException(Exception):
 
 
 def build_weight_matrix(n_nodes, edges):
+    """Build weight matrix for provided edges."""
     m = np.zeros((n_nodes, n_nodes), dtype=float)
 
     # get values from edges
@@ -22,6 +23,7 @@ def build_weight_matrix(n_nodes, edges):
     return m
 
 def rearrange_matrix(m, indices):
+    """Rearrange matrix `m` according to provided indices."""
     # rearrange
     i_rows, i_cols = indices
     m = m[i_rows, :]
@@ -36,7 +38,8 @@ def get_array_field(array : np.ndarray, key : str, default=None):
 def remap_node_ids(genes):
     """Map node ids to continous node indices.
 
-    Returns:
+    Returns
+    -------
         np.array - copy of gene edges with src and dest replaced by indeces
     """
 

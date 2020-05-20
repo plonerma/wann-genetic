@@ -10,6 +10,7 @@ def get_objective_values(ind, objectives):
     return [s*v for v,s in zip(measurements, signs)]
 
 def rank_individuals(population, objectives, return_order=False, return_fronts=False):
+    """Rank individuals by multiple objectives using NSGA-sort."""
     try:
         values = [get_objective_values(ind, objectives) for ind in population]
         objectives = np.array(values, dtype=float)
@@ -65,37 +66,39 @@ def rank_individuals(population, objectives, return_order=False, return_fronts=F
         return rank
 
 def dominates(objectives, i, j):
+    """`i` dominates `j` if it is just as good as `j` in all objective and at
+    least slightly better in one."""
     return np.all(objectives[i] >= objectives[j], axis=-1) & np.any(objectives[i] > objectives[j], axis=-1)
 
 def crowding_distances(front_objectives):
-  # Order by objective value
-  n_inds, n_objs = front_objectives.shape
+    """Calculate the crowding distance."""
+    # Order by objective value
+    n_inds, n_objs = front_objectives.shape
 
 
-  key = np.argsort(front_objectives, axis=0)
-  obj_key = np.arange(n_objs)
+    key = np.argsort(front_objectives, axis=0)
+    obj_key = np.arange(n_objs)
 
-  sorted_obj = np.empty((n_inds + 2, n_objs), dtype=float)
+    sorted_obj = np.empty((n_inds + 2, n_objs), dtype=float)
 
+    sorted_obj[[0, -1]] = np.inf  # set bounds to inf
+    sorted_obj[1:-1] = front_objectives[key, obj_key]
 
-  sorted_obj[[0, -1]] = np.inf  # set bounds to inf
-  sorted_obj[1:-1] = front_objectives[key, obj_key]
+    #warnings.filterwarnings("ignore", category=RuntimeWarning) # inf on purpose
 
-  #warnings.filterwarnings("ignore", category=RuntimeWarning) # inf on purpose
+    prevDist = np.abs(sorted_obj[1:-1]-sorted_obj[:-2])
+    nextDist = np.abs(sorted_obj[1:-1]-sorted_obj[2:])
 
-  prevDist = np.abs(sorted_obj[1:-1]-sorted_obj[:-2])
-  nextDist = np.abs(sorted_obj[1:-1]-sorted_obj[2:])
+    crowd = prevDist+nextDist
 
-  crowd = prevDist+nextDist
+    max, min = sorted_obj[-2], sorted_obj[1]
 
-  max, min = sorted_obj[-2], sorted_obj[1]
+    objs_to_normalize = (max != min)
 
-  objs_to_normalize = (max != min)
+    crowd[:, objs_to_normalize] = crowd[:, objs_to_normalize] / (max-min)[objs_to_normalize]
 
-  crowd[:, objs_to_normalize] = crowd[:, objs_to_normalize] / (max-min)[objs_to_normalize]
+    # Restore original order
+    dist = np.empty(front_objectives.shape)
+    dist[key, obj_key] = crowd[...]
 
-  # Restore original order
-  dist = np.empty(front_objectives.shape)
-  dist[key, obj_key] = crowd[...]
-
-  return dist
+    return dist

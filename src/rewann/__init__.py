@@ -1,2 +1,4 @@
-from .individual import Individual, RecurrentIndividual
+from .individual import (Individual, RecurrentIndividual,
+                         Genes, RecurrentGenes,
+                         Network, RecurrentNetwork)
 from .environment import Environment

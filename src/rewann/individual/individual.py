@@ -15,10 +15,25 @@ class Individual:
     """ Collection of representations of an individual.
 
     Will contain genes (genotype), network (phenotype), and performance statistics (fitness).
+
+    Parameters
+    --------------------
+    genes : rewann.Genes
+    network : rewann.Network, optional
+    id : int, optional
+    birth: int, optional
+        Index of the generation the individual was created
+    parent : int, optional
+        Id of the parent individual (self is result of a mutation on parent)
+    mutations : int, optional
+        Length of the chain of mutations that led to this individual
+    measurements : dict
+        Measurements that have already been made on the individual (might be overwritten)
+
     """
 
-    from .genes import Genotype
-    from .network import Network
+    from .genes import Genes as Genotype
+    from .network import Network as Phenotype
 
     from .genetic_operations import mutation
 
@@ -41,7 +56,7 @@ class Individual:
         """Translate genes to network."""
         if self.network is None:
             assert self.genes is not None
-            self.network = self.Network.from_genes(self.genes)
+            self.network = self.Phenotype.from_genes(self.genes)
 
     @expressed
     def apply(self, *args, **kwargs):
@@ -168,16 +183,18 @@ class Individual:
 
     @classmethod
     def empty_initial(cls, *args, **kwargs):
+        """Create an initial individual with no edges and no hidden nodes."""
         return cls(genes=cls.Genotype.empty_initial(*args, **kwargs), birth=0, id=0)
 
     @classmethod
     def full_initial(cls, *args, id=0, **kwargs):
+        """Create an initial individual with no hidden nodes and fully connected input and output nodes (some edges are randomly disabled)."""
         return cls(genes=cls.Genotype.full_initial(*args, **kwargs), birth=0, id=id)
 
 
 class RecurrentIndividual(Individual):
-    from .genes import RecurrentGenotype as Genotype
-    from .network import RecurrentNetwork as Network
+    from .genes import RecurrentGenes as Genotype
+    from .network import RecurrentNetwork as Phenotype
 
     def record_measurements(self, *, y_true, y_raw, **kwargs):
         assert len(y_raw.shape) == 4 # weights, samples, sequence elements, nodes

@@ -68,12 +68,12 @@ population
   Parameter                                 Default          Description
   ========================================  ===============  ======================
   ``num_generations``                       20               Number of iterations.
-  ``size``                                  64
-  ``initial_enabled_edge_probability``      0.05
-  ``initial_genes``                         'full'
-  ``hof_size``                              10
-  ``enable_edge_signs``                     false
-  ``enabled_activation_functions``          'all'
+  ``size``                                  64               Size of the population
+  ``initial_genes``                         'full'           'empty': individuals start without any edges; 'full': all input nodes are connected to all output nodes
+  ``initial_enabled_edge_probability``      0.05             If initial individuals are full: probability that any edge is enabled
+  ``hof_size``                              10               Size of the `hall of fame`
+  ``enable_edge_signs``                     false            Edges will have sign +1 or -1
+  ``enabled_activation_functions``          'all'            Which activation functions to use: either 'all' or list of activation function indices
   ========================================  ===============  ======================
 
 selection
@@ -86,13 +86,13 @@ selection
   =====================  =================================================  ===============================================================
   Parameter              Default                                            Description
   =====================  =================================================  ===============================================================
-  ``use_tournaments``    true
-  ``elite_ratio``        0.1
+  ``use_tournaments``    true                                               Whether to use tournament selection (alternative is to just do ranking: in this case every individual can only have one offspring)
+  ``elite_ratio``        0.1                                                Ratio of the population to treat as elite (will survive the generation)
   ``culling_ratio``      0.2                                                Don't use the worst 20% of the population for further variations
-  ``tournament_size``    5
-  ``objectives``         ['-log_loss.min', '-log_loss.mean', '-n_hidden']
-  ``recorded_metrics``   ['accuracy', 'kappa', 'log_loss']
-  ``hof_metric``         'accuracy.mean'
+  ``tournament_size``    5                                                  Size of the tournaments in tournament selection
+  ``objectives``         ['-log_loss.min', '-log_loss.mean', '-n_hidden']   Objectives to optimize for (is treated as maximization problem - if you want to minimize an objective, add prefix '-'')
+  ``recorded_metrics``   ['accuracy', 'kappa', 'log_loss']                  Names of the measures stored for each individual during training and later reported on
+  ``hof_metric``         'accuracy.mean'                                    Measure that controls the entry into the hall of fame
   =====================  =================================================  ===============================================================
 
 
@@ -113,7 +113,7 @@ mutation.new_edge
   Parameter        Default           Description
   ===============  ================  ===========
   ``probability``  0.20
-  ``strategy``     'layer_agnostic'
+  ``strategy``     'layer_agnostic'  Either 'layer_agnostic' or 'layer_based'
   ===============  ================  ===========
 
 mutation.new_node
@@ -227,9 +227,8 @@ storage
   ========================================  ===============  ==============================================
   Parameter                                 Default          Description
   ========================================  ===============  ==============================================
-  ``data_base_path``                        'data'
-  ``log_filename``                          'execution.log'
-  ``include_prediction_records``            false
-  ``commit_elite_freq``                     -1
-  ``commit_metrics_freq``                   10
+  ``data_base_path``                        'data'           Directory that should hold produced data for multiple experiments
+  ``log_filename``                          'execution.log'  Filename of log output
+  ``commit_elite_freq``                     -1               Frequency of writing the elite to the data.hdf5 file - if -1 only the hall of fame will be recorded
+  ``commit_metrics_freq``                   10               Frequency of storing generation metrics
   ========================================  ===============  ==============================================

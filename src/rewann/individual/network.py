@@ -9,7 +9,10 @@ from .expression import (
 
 
 class Network:
-    """Representation for all kinds of NNs (wann, ffnn, rnn, rewann)."""
+    """Feed Forward Neural Network
+
+    For an explanation of how propagation works, see :doc:`network_propagation`.
+    """
 
     ### Definition of the activations functions
     available_act_functions = [
@@ -48,17 +51,21 @@ class Network:
 
     @property
     def n_hidden(self):
+        """Number of hidden nodes the network contains."""
         return len(self.nodes) - self.n_out
 
     @property
     def n_nodes(self):
+        """Total number of nodes the network contains."""
         return self.offset + len(self.nodes)
 
     @property
     def n_act_funcs(self):
+        """Number of enabled activations functions."""
         return len(self.available_act_functions)
 
     def index_to_gene_id(self, i):
+        """Return gene node id from network node index."""
         return i if (i < self.offset) else self.nodes[i - self.offset]['id']
 
     @classmethod
@@ -103,6 +110,16 @@ class Network:
         )
 
     def layers(self, including_input=False):
+        """Get layers of nodes (a hierachical sorting).
+
+        Nodes in layer :math:`i` will not have any incoming edges from nodes in
+        layers :math:`\ge i`.
+
+        Parameters
+        ----------
+        including_input : bool, default=False
+            yield input layer as first layer
+        """
         o = self.offset
         if including_input:
             yield np.arange(0, o)
@@ -118,10 +135,11 @@ class Network:
 
     @property
     def n_layers(self):
+        """Number of hidden layers in the network."""
         return len(self.propagation_steps)
 
     def node_layers(self):
-        """Return layer index for each node"""
+        """Return layer index of each node"""
         layers = np.full(self.n_nodes, np.nan)
         for i, l in enumerate(self.layers(including_input=True)):
             layers[l] = i
@@ -180,6 +198,7 @@ class Network:
 
 
 class RecurrentNetwork(Network):
+    """Recurrrent Neural Network"""
     def __init__(self, *args, recurrent_weight_matrix=None, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -4,6 +4,7 @@ import logging
 from .expression import get_array_field
 
 def add_node(ind, env, innov):
+    """Split an existing edge and add a node in the middle."""
     # Choose an enabled edge
 
     enabled = get_array_field(ind.genes.edges, 'enabled', True)
@@ -160,12 +161,14 @@ def add_edge_layer_agnostic(ind, env, innov):
     )
 
 def add_edge(ind, env, innov):
+    """Add a new edge based on the strategy selected in experiment parameters."""
     return {
         'layer_based': add_edge_layer_based,
         'layer_agnostic': add_edge_layer_agnostic
     }[env['mutation', 'new_edge', 'strategy']](ind, env, innov)
 
 def reenable_edge(ind, env, innov):
+    """Reenable one currently disabled edge."""
     edges = np.copy(ind.genes.edges)
 
     # Choose an disabled edge
@@ -182,6 +185,7 @@ def reenable_edge(ind, env, innov):
     )
 
 def change_activation(ind, env, innov):
+    """Change the activation of one node."""
     if not ind.network.n_act_funcs > 1:
         return  # There is nothing we can change
 
@@ -201,6 +205,7 @@ def change_activation(ind, env, innov):
     )
 
 def change_edge_sign(ind, env, innov):
+    """Change the sign of one edge (can be disabled in params; see :doc:`params`)."""
     edges = np.copy(ind.genes.edges)
     # Choose an enabled edge
     options, = np.where(ind.genes.edges['sign'].astype(bool))
@@ -216,6 +221,7 @@ def change_edge_sign(ind, env, innov):
     )
 
 def add_recurrent_edge(ind, env, innov):
+    """Add a recurrent edge to the genes (only enabled on recurrent tasks)."""
     network = ind.network
     src_options, dest_options = np.where(network.recurrent_weight_matrix == 0)
 
@@ -245,6 +251,7 @@ def add_recurrent_edge(ind, env, innov):
 
 # Genetic Operations
 def mutation(ind, env, innov):
+    """Randomly select one mutation method, apply the mutation and return a new individual."""
     supported_mutation_types = np.array([
         ('new_edge', add_edge),
         ('new_node', add_node),
@@ -293,23 +300,3 @@ def mutation(ind, env, innov):
 
     logging.warning("No mutation possible.")
     raise RuntimeError("No mutation possible.")
-
-def path_exists(network, src, dest):
-    # if a disabled connections exists, there is also another path
-    # src, dest are indices for nodes in the network
-
-    if src > dest: # no path possible (otherwise ordering would have to be different)
-        return False
-
-    visited = np.zeros(network.n_nodes, dtype=int)
-    visited[src] = True
-    conn_mat = network.weight_matrix != 0
-
-    n_visited = 0
-    while n_visited < sum(visited):
-        n_visited = sum(visited)
-
-        visited = np.any(conn_mat[visited], axis=1)
-        if visited[dest]:
-            return True
-    return False

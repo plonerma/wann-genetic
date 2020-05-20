@@ -1,5 +1,4 @@
-""" Reimplementation of population stuff -> don't use seperate class, but build
-    iterator (iterating over the generations)."""
+"""Implementation of an evolutionary algorithm"""
 
 import numpy as np
 from itertools import count
@@ -9,6 +8,10 @@ import logging
 from .ranking import rank_individuals
 
 class InnovationRecord(set):
+    """Keeps track of edge and node counts.
+
+    Edge ids need to be tracked if crossover should ever be implemented.
+    """
     @classmethod
     def empty(cls, start_id):
         """Initialize empty innovation record.
@@ -46,6 +49,24 @@ def apply_networks(params, x):
 
 def evaluate_inds(env, pop, n_samples=-1, record_raw=False,
                   use_test_samples=False):
+    """Use the process pool to evaluate a list of individuals.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+        environment to use for process pool, weight sampling, and task data
+    pop : list
+        list of individuals to evaluate
+    n_samples : int
+        number of samples to use (-1 for all -> should not be used with
+        synthetic tasks)
+    record_raw : bool
+        use the record_raw parameter in Individual class (if true, stores all
+        predictions instead of calculating recoreded measures online)
+    use_test_samples : bool
+        use samples dedicated for testing (option is passed to tasks `get_data`
+        function)
+    """
 
     x, y_true = env.task.get_data(test=use_test_samples, samples=n_samples)
 
@@ -70,13 +91,29 @@ def evaluate_inds(env, pop, n_samples=-1, record_raw=False,
             record_raw=record_raw)
 
 def express_inds(env, pop):
+    """Express inds that have not been expressed yet.
+
+    Convert genes into neural network for all new individuals.
+
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    pop : list
+    """
     inds_to_express = list(filter(lambda i: i.network is None, pop))
 
-    networks = env.pool_map(env.ind_class.Network.from_genes, (i.genes for i in inds_to_express))
+    networks = env.pool_map(env.ind_class.Phenotype.from_genes, (i.genes for i in inds_to_express))
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
 def create_initial_population(env):
+    """Create initial population based on parameters in `env`.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    """
     initial = env['population', 'initial_genes']
 
     if initial == 'empty':
@@ -102,6 +139,12 @@ def create_initial_population(env):
         raise RuntimeError(f'Unknown initial genes type {initial}')
 
 def evolution(env):
+    """Main function for evolutionary algorithm.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    """
     pop = create_initial_population(env)
 
     if env['sampling', 'post_init_seed'] is not False:
@@ -127,6 +170,14 @@ def evolution(env):
         yield innov.generation, pop
 
 def evolve_population(env, pop, innov):
+    """Rank population, apply tournaments if enabled, and mutate surivers.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    innov: InnovationRecord
+        used for tracking ids etc.
+    """
     pop_size = env['population', 'size']
     culling_size = int(np.floor(env['selection', 'culling_ratio'] * pop_size))
 
@@ -159,6 +210,13 @@ def evolve_population(env, pop, innov):
     return new_pop
 
 def update_hof(env, pop):
+    """Update the hall of fame.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    pop : iterable
+    """
     # best inds excluding indivs alread in hall of fame
     elite = list()
     inds = iter(pop)

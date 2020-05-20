@@ -21,6 +21,11 @@ from rewann.postopt import Report
 
 
 class Environment(ParamTree):
+    """Environment for executing training and post training evaluations.
+
+    Takes care of process pool, reporting, and experiment parameters.
+    """
+
     from .util import (default_params, setup_params, open_data,
                        store_gen, store_gen_metrics, load_pop, load_gen_metrics,
                        stored_populations, stored_indiv_measurements,
@@ -61,13 +66,20 @@ class Environment(ParamTree):
         self.ind_class.recorded_measures = self['selection', 'recorded_metrics']
 
         # only use enabeld activations functions
-        funcs = self.ind_class.Network.available_act_functions
+        funcs = self.ind_class.Phenotype.available_act_functions
         if self['population', 'enabled_activation_functions'] != 'all':
-            self.ind_class.Network.available_act_functions = [
+            self.ind_class.Phenotype.available_act_functions = [
                 funcs[i] for i in self['population', 'enabled_activation_functions']
             ]
 
     def seed(self, seed=None):
+        """Set seed to `seed` or from parameters.
+
+        Parameters
+        ----------
+        seed : int, optional
+            Seed to set. If none, seed in sampling/seed will be used.
+        """
         if seed is not None:
             np.random.seed(seed)
         else:
@@ -75,6 +87,7 @@ class Environment(ParamTree):
 
     @property
     def elite_size(self):
+        """Size of the elite (:math:`population\ size * elite\ ratio`)."""
         return int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
 
     def sample_weights(self, n=None):
