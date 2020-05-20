@@ -78,7 +78,7 @@ def assemble_dataframe(spec_path, dir_path, params_map=dict()):
 
     if len(df) == 0:
         logging.error("No data loaded.")
-    elif len(data) < len(exp):
+    elif len(data) < len(experiments):
         logging.warning(f'Only {len(data)} out of {len(exp)} experiments found.')
 
     return df
