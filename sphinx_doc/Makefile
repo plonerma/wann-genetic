@@ -17,7 +17,7 @@ help:
 
 github:
 	@make html
-	@cp -a "$(BUILDDIR)"/html ../docs
+	@cp -a "$(BUILDDIR)"/html/* ../docs
 
 livehtml:
 	$(SPHINXAUTOBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

@@ -14,7 +14,6 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Parameters" href="params.html" />
     <link rel="prev" title="rewann.postopt.vis package" href="rewann.postopt.vis.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -26,9 +25,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="params.html" title="Parameters"
-             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
              accesskey="P">previous</a> |</li>
@@ -51,12 +47,12 @@
 <span id="rewann-tools-compare-experiments-module"></span><h2>rewann.tools.compare_experiments module<a class="headerlink" href="#module-rewann.tools.compare_experiments" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="rewann.tools.compare_experiments.assemble_dataframe">
-<code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">assemble_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_path</span></em>, <em class="sig-param"><span class="n">dir_path</span></em>, <em class="sig-param"><span class="n">map_from_params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#assemble_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.assemble_dataframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">assemble_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_path</span></em>, <em class="sig-param"><span class="n">dir_path</span></em>, <em class="sig-param"><span class="n">params_map</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#assemble_dataframe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.assemble_dataframe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="rewann.tools.compare_experiments.load_experiment_series">
-<code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">load_experiment_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">params_map</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#load_experiment_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.load_experiment_series" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">load_experiment_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_path</span></em>, <em class="sig-param"><span class="n">params_map</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">data_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#load_experiment_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.load_experiment_series" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -83,7 +79,12 @@ specification and base parameters for multivariate testing.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt id="rewann.tools.multi_spec.Specification.generate_experiments">
-<code class="sig-name descname">generate_experiments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">var_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">names_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/multi_spec.html#Specification.generate_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.multi_spec.Specification.generate_experiments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_experiments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">var_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">flat</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/multi_spec.html#Specification.generate_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.multi_spec.Specification.generate_experiments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.tools.multi_spec.Specification.generate_flat_values">
+<code class="sig-name descname">generate_flat_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/multi_spec.html#Specification.generate_flat_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.multi_spec.Specification.generate_flat_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -103,7 +104,7 @@ specification and base parameters for multivariate testing.</p>
 
 <dl class="py method">
 <dt id="rewann.tools.multi_spec.Specification.update_params">
-<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">var_index</span></em>, <em class="sig-param"><span class="n">v</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/multi_spec.html#Specification.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.multi_spec.Specification.update_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">var_index</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">flat</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/multi_spec.html#Specification.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.multi_spec.Specification.update_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -123,9 +124,6 @@ specification and base parameters for multivariate testing.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="rewann.postopt.vis.html"
                         title="previous chapter">rewann.postopt.vis package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="params.html"
-                        title="next chapter">Parameters</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -149,9 +147,6 @@ specification and base parameters for multivariate testing.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="params.html" title="Parameters"
-             >next</a> |</li>
         <li class="right" >
           <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
              >previous</a> |</li>

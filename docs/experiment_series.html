@@ -14,6 +14,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Command Line Interfaces" href="cli.html" />
     <link rel="prev" title="Parameters" href="params.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -25,6 +26,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interfaces"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="params.html" title="Parameters"
              accesskey="P">previous</a> |</li>
@@ -39,6 +43,102 @@
             
   <div class="section" id="generating-series-of-experiments">
 <h1>Generating Series of Experiments<a class="headerlink" href="#generating-series-of-experiments" title="Permalink to this headline">¶</a></h1>
+<p>In order to compare the impact of the various hyper parameters, it is necessary to compare multiple runs of the experiment with slightly changing parameters.
+The <code class="docutils literal notranslate"><span class="pre">generate_experiment_series</span></code> command can be used to generate a list of experiments from a <cite>base</cite> and a <cite>specification</cite> file. The <cite>base</cite> file is used to define parameters that are shared within a series of experiments (eg. you might want to run multiple parameters on the same task - the task name must then be placed in the <cite>base</cite> file).</p>
+<p>The <cite>specification</cite> file defines a the parameters that will be changed between the experiment and the values they will take on. Every variable/value combination (cross product) will then be created. The command line tool will output a list of files that can then be used to run these experiments (eg. using a simple for loop):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">build_dir</span><span class="o">=</span><span class="s1">&#39;build&#39;</span>
+
+<span class="c1"># iterate through all files</span>
+<span class="k">for</span> experiment in <span class="k">$(</span><span class="nb">echo</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">build_dir</span><span class="si">}</span><span class="s2">/*&quot;</span><span class="k">)</span>
+<span class="k">do</span>
+
+  <span class="c1"># if you are executing experiments on a shared machine, you might want to prefix this command</span>
+  <span class="c1"># with &#39;nice -19&#39;</span>
+
+  run_experiment <span class="s2">&quot;</span><span class="si">${</span><span class="nv">experiment</span><span class="si">}</span><span class="s2">&quot;</span>
+
+  <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -ne <span class="m">0</span> <span class="o">]</span>
+  <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Something went wrong during </span><span class="nv">$experiment</span><span class="s2">&quot;</span>
+    <span class="nb">exit</span> <span class="m">1</span>
+  <span class="k">fi</span>
+
+  <span class="nb">echo</span> <span class="s2">&quot;Completed execution of experiment </span><span class="nv">$experiment</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<div class="section" id="experiment-series-specification">
+<h2>Experiment Series Specification<a class="headerlink" href="#experiment-series-specification" title="Permalink to this headline">¶</a></h2>
+<p>While the <cite>base</cite> file will look like any other experiment specification file (all parameters that are variable will be overwritten), the specification of the experiment series looks different.</p>
+<p>To explain the usage of the experiment series specification consider the example of comparing different random distributions for sampling the base weighs for the neural network.</p>
+<p>One of the variables is the uniform distribution (including the parameters that define it), the other is the random seed. If you just want to compare one experiment for each distribution, the seed would not need to be changed. In order to get more samples and to draw more certain statistical conclusions, changing the seed is a useful tool.</p>
+<p>A variable is defined by adding a section to the spec file:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[seed]</span>
+  <span class="n">values</span><span class="o">=</span><span class="k">[0,1,2,3,4]</span>
+  <span class="n">key</span><span class="o">=</span><span class="k">[&#39;sampling&#39;, &#39;seed&#39;]</span>
+</pre></div>
+</div>
+<p>The name of the section ‘seed’ defines the variable. The <cite>values</cite> fields specifies the values the parameter take on. The <cite>key</cite> field determine which field in the experiment specification file will be overwritten (in this case the field <cite>seed</cite> in the section <cite>sampling</cite>).</p>
+<p>To define the distribution a single value is not sufficient (we also need the parameters).</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[distribution]</span>
+  <span class="n">fmt</span><span class="o">=</span><span class="s">&quot;uniform {lower_bound},{upper_bound}&quot;</span>
+  <span class="n">key</span><span class="o">=</span><span class="k">[&#39;sampling&#39;]</span>
+  <span class="n">values</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span><span class="mi">-2</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">}</span>
+  <span class="p">]</span>
+</pre></div>
+</div>
+<p>If the values are dictionaries (maps), the target parameters (determined by key) are not entirely overwritten, instead only the field present in the dictionary are.</p>
+<p>The <cite>fmt</cite> field determines how the name part for this variable (it is processed via  the python function <code class="docutils literal notranslate"><span class="pre">fmt.format</span></code>). If not <cite>fmt</cite> string is defined the python <code class="docutils literal notranslate"><span class="pre">str</span></code> function is applied to the value.
+All the name part for all the variable are then combined to determine the name of the experiment. This can be controlled via the <cite>experiment_name</cite> field (top level / not in any section) - <cite>experiment_name</cite> acts as a template:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">experiment_name</span><span class="o">=</span><span class="s">&quot;Iris edge signs {distribution} {seed}&quot;</span>
+</pre></div>
+</div>
+<p>Lastly, a field is required for referencing the base parameters:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">base_params</span><span class="o">=</span><span class="s">&quot;base.toml&quot;</span>
+</pre></div>
+</div>
+<p>Keeping series of experiments each in their own subdirectory, calling the base params file ‘base.toml’ and the specification file ‘spec.toml’ is recommended as it makes analysis much faster with the provided tools (see <a class="reference internal" href="#series-analysis"><span class="std std-ref">Analysis of Experiment Series</span></a>).</p>
+<p>If dictionary values with different field are used, a <cite>fmt</cite> string can can also be define for each dictionary. Consider the example of comparing different types of probability distributions:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[distribution]</span>
+  <span class="n">key</span><span class="o">=</span><span class="k">[&#39;sampling&#39;]</span>
+  <span class="n">values</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span><span class="mi">-2</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;uniform {lower_bound},{upper_bound}&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;uniform {lower_bound},{upper_bound}&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">mean</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;lognormal&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;lognormal {mean},{sigma}&quot;</span><span class="p">}</span>
+  <span class="p">]</span>
+</pre></div>
+</div>
+<p>A final spec file might look like this:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">experiment_name</span><span class="o">=</span><span class="s">&quot;Iris edge signs {distribution} {seed}&quot;</span>
+<span class="n">base_params</span><span class="o">=</span><span class="s">&quot;base.toml&quot;</span>
+
+<span class="k">[distribution]</span>
+  <span class="n">key</span><span class="o">=</span><span class="k">[&#39;sampling&#39;]</span>
+  <span class="n">values</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span><span class="mi">-2</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;uniform {lower_bound},{upper_bound}&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;uniform {lower_bound},{upper_bound}&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="n">mean</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;lognormal&quot;</span><span class="p">,</span> <span class="n">_fmt</span><span class="o">=</span><span class="s">&quot;lognormal {mean},{sigma}&quot;</span><span class="p">}</span>
+  <span class="p">]</span>
+
+<span class="k">[seed]</span>
+  <span class="n">values</span><span class="o">=</span><span class="k">[0,1,2,3,4]</span>
+  <span class="n">key</span><span class="o">=</span><span class="k">[&#39;sampling&#39;, &#39;seed&#39;]</span>
+</pre></div>
+</div>
+<p>This specification file would produce a series of 15 experiments (5 seeds * 3 distribution values).</p>
+</div>
+<div class="section" id="analysis-of-experiment-series">
+<span id="series-analysis"></span><h2>Analysis of Experiment Series<a class="headerlink" href="#analysis-of-experiment-series" title="Permalink to this headline">¶</a></h2>
+<p>In order to easily compare the results of the series, use the <code class="docutils literal notranslate"><span class="pre">load_experiment_series</span></code> function:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">from</span> <span class="n">rewann</span><span class="p">.</span><span class="n">tools</span><span class="p">.</span><span class="n">compare_experiments</span> <span class="n">import</span> <span class="n">load_experiment_series</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_experiment_series</span><span class="p">(</span><span class="s">&quot;path_to_series_spec&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pass the path to a copy of the series spec file to the function. It expects the experiment data to be in a directory ‘data’ in the same directory. Use the <cite>data_path</cite> argument to specify another location if necessary. If you want to read in additional values from the params files, use the params_map argument (containing a mapping of <cite>column</cite>: list of keys determining the field in the parameters).</p>
+</div>
 </div>
 
 
@@ -50,6 +150,9 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="params.html"
                         title="previous chapter">Parameters</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cli.html"
+                        title="next chapter">Command Line Interfaces</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -73,6 +176,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interfaces"
+             >next</a> |</li>
         <li class="right" >
           <a href="params.html" title="Parameters"
              >previous</a> |</li>

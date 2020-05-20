@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Command Line Interface &#8212; ReWann  documentation</title>
+    <title>Command Line Interfaces &#8212; ReWann  documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="rewann package" href="rewann.html" />
-    <link rel="prev" title="Getting Started" href="getting_started.html" /> 
+    <link rel="prev" title="Generating Series of Experiments" href="experiment_series.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -30,7 +30,7 @@
           <a href="rewann.html" title="rewann package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting Started"
+          <a href="experiment_series.html" title="Generating Series of Experiments"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
       </ul>
@@ -41,8 +41,84 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="command-line-interface">
-<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="command-line-interfaces">
+<h1>Command Line Interfaces<a class="headerlink" href="#command-line-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>On installation, rewann registers these CLI entry points (using the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option displays usage):</p>
+<p><code class="docutils literal notranslate"><span class="pre">run_experiment</span> <span class="pre">[-h]</span> <span class="pre">[--comment</span> <span class="pre">COMMENT]</span> <span class="pre">PATH</span></code></p>
+<blockquote>
+<div><p>Used for executing a single experiment (placed at <code class="docutils literal notranslate"><span class="pre">PATH</span></code>) (see <a class="reference internal" href="getting_started.html"><span class="doc">Getting Started</span></a>).</p>
+<p>Optional:</p>
+<blockquote>
+<div><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show help message</p>
+</dd>
+<dt><kbd><span class="option">--comment <var>COMMENT</var></span></kbd></dt>
+<dd><p>add comment field to params</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">compile_report</span> <span class="pre">[-h]</span> <span class="pre">[--path</span> <span class="pre">PATH]</span> <span class="pre">[--weights</span> <span class="pre">WEIGHTS]</span> <span class="pre">[--samples</span> <span class="pre">SAMPLES]</span></code></p>
+<blockquote>
+<div><p>Run evaluations on best individuals (stored in hall of fame) and compile a report.</p>
+<p>Optional:</p>
+<blockquote>
+<div><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show help message</p>
+</dd>
+<dt><kbd><span class="option">--path <var>PATH</var></span></kbd></dt>
+<dd><p>path to experiment (defaults to current working directory)</p>
+</dd>
+<dt><kbd><span class="option">--weights <var>WEIGHTS</var></span>, <span class="option">-w</span></kbd></dt>
+<dd><p>number of weights to use during evaluation</p>
+</dd>
+<dt><kbd><span class="option">--samples <var>SAMPLES</var></span>, <span class="option">-s</span></kbd></dt>
+<dd><p>number of samples to use</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">draw_network</span> <span class="pre">[-h]</span> <span class="pre">[--path</span> <span class="pre">PATH]</span> <span class="pre">[--function_names]</span> <span class="pre">[--function_plots]</span> <span class="pre">[--names]</span> <span class="pre">ID</span></code></p>
+<blockquote>
+<div><p>Draw network plot for individual with given id.</p>
+<p>Optional:</p>
+<blockquote>
+<div><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">--path <var>PATH</var></span>, <span class="option">-p <var>PATH</var></span></kbd></dt>
+<dd><p>path to experiment (defaults to current working directory)</p>
+</dd>
+<dt><kbd><span class="option">--function_names</span>, <span class="option">-l</span></kbd></dt>
+<dd><p>use names of activation as node labels</p>
+</dd>
+<dt><kbd><span class="option">--function_plots</span>, <span class="option">-g</span></kbd></dt>
+<dd><p>use plot functions on nodes</p>
+</dd>
+<dt><kbd><span class="option">--names</span>, <span class="option">-n</span></kbd></dt>
+<dd><p>use names of nodes as labels</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">generate_experiment_series</span> <span class="pre">[-h]</span> <span class="pre">[--build_dir</span> <span class="pre">BUILD_DIR]</span> <span class="pre">SERIES_SPEC_FILE</span></code></p>
+<blockquote>
+<div><p>Simple templating tool to generate a series of experiments from a series specification file (see <a class="reference internal" href="experiment_series.html"><span class="doc">Generating Series of Experiments</span></a> for details).</p>
+<p>Optional:</p>
+<blockquote>
+<div><dl class="option-list">
+<dt><kbd><span class="option">-h</span>, <span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">--build_dir <var>BUILD_DIR</var></span>, <span class="option">-o</span></kbd></dt>
+<dd><p>output directory for experiment specification files (defaults to ‘build’)</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
 </div>
 
 
@@ -52,8 +128,8 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="getting_started.html"
-                        title="previous chapter">Getting Started</a></p>
+  <p class="topless"><a href="experiment_series.html"
+                        title="previous chapter">Generating Series of Experiments</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="rewann.html"
                         title="next chapter">rewann package</a></p>
@@ -84,7 +160,7 @@
           <a href="rewann.html" title="rewann package"
              >next</a> |</li>
         <li class="right" >
-          <a href="getting_started.html" title="Getting Started"
+          <a href="experiment_series.html" title="Generating Series of Experiments"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
       </ul>
