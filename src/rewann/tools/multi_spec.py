@@ -65,6 +65,7 @@ class Specification:
                     params[f"{name}/{k}"] = v
             else:
                 params[name] = value
+            params[f"{name}/_name"] = self.name_parts[name]
         else:
             if isinstance(key, list):
                 for k in key[:-1]:
