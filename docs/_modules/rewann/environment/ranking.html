@@ -12,6 +12,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -47,6 +48,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">s</span><span class="o">*</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">measurements</span><span class="p">,</span> <span class="n">signs</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="rank_individuals"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.ranking.rank_individuals">[docs]</a><span class="k">def</span> <span class="nf">rank_individuals</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">objectives</span><span class="p">,</span> <span class="n">return_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_fronts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rank individuals by multiple objectives using NSGA-sort.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_objective_values</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">objectives</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">population</span><span class="p">]</span>
         <span class="n">objectives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -102,40 +104,42 @@
         <span class="k">return</span> <span class="n">rank</span></div>
 
 <div class="viewcode-block" id="dominates"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.ranking.dominates">[docs]</a><span class="k">def</span> <span class="nf">dominates</span><span class="p">(</span><span class="n">objectives</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;`i` dominates `j` if it is just as good as `j` in all objective and at</span>
+<span class="sd">    least slightly better in one.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">objectives</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">objectives</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">objectives</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">objectives</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="crowding_distances"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.ranking.crowding_distances">[docs]</a><span class="k">def</span> <span class="nf">crowding_distances</span><span class="p">(</span><span class="n">front_objectives</span><span class="p">):</span>
-  <span class="c1"># Order by objective value</span>
-  <span class="n">n_inds</span><span class="p">,</span> <span class="n">n_objs</span> <span class="o">=</span> <span class="n">front_objectives</span><span class="o">.</span><span class="n">shape</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the crowding distance.&quot;&quot;&quot;</span>
+    <span class="c1"># Order by objective value</span>
+    <span class="n">n_inds</span><span class="p">,</span> <span class="n">n_objs</span> <span class="o">=</span> <span class="n">front_objectives</span><span class="o">.</span><span class="n">shape</span>
 
 
-  <span class="n">key</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">front_objectives</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-  <span class="n">obj_key</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_objs</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">front_objectives</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">obj_key</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_objs</span><span class="p">)</span>
 
-  <span class="n">sorted_obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_inds</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_objs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sorted_obj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_inds</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_objs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
+    <span class="n">sorted_obj</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># set bounds to inf</span>
+    <span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">front_objectives</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_key</span><span class="p">]</span>
 
-  <span class="n">sorted_obj</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># set bounds to inf</span>
-  <span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">front_objectives</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_key</span><span class="p">]</span>
+    <span class="c1">#warnings.filterwarnings(&quot;ignore&quot;, category=RuntimeWarning) # inf on purpose</span>
 
-  <span class="c1">#warnings.filterwarnings(&quot;ignore&quot;, category=RuntimeWarning) # inf on purpose</span>
+    <span class="n">prevDist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">sorted_obj</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">nextDist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
 
-  <span class="n">prevDist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">sorted_obj</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-  <span class="n">nextDist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">sorted_obj</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="n">crowd</span> <span class="o">=</span> <span class="n">prevDist</span><span class="o">+</span><span class="n">nextDist</span>
 
-  <span class="n">crowd</span> <span class="o">=</span> <span class="n">prevDist</span><span class="o">+</span><span class="n">nextDist</span>
+    <span class="nb">max</span><span class="p">,</span> <span class="nb">min</span> <span class="o">=</span> <span class="n">sorted_obj</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-  <span class="nb">max</span><span class="p">,</span> <span class="nb">min</span> <span class="o">=</span> <span class="n">sorted_obj</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">sorted_obj</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">objs_to_normalize</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span> <span class="o">!=</span> <span class="nb">min</span><span class="p">)</span>
 
-  <span class="n">objs_to_normalize</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span> <span class="o">!=</span> <span class="nb">min</span><span class="p">)</span>
+    <span class="n">crowd</span><span class="p">[:,</span> <span class="n">objs_to_normalize</span><span class="p">]</span> <span class="o">=</span> <span class="n">crowd</span><span class="p">[:,</span> <span class="n">objs_to_normalize</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="nb">max</span><span class="o">-</span><span class="nb">min</span><span class="p">)[</span><span class="n">objs_to_normalize</span><span class="p">]</span>
 
-  <span class="n">crowd</span><span class="p">[:,</span> <span class="n">objs_to_normalize</span><span class="p">]</span> <span class="o">=</span> <span class="n">crowd</span><span class="p">[:,</span> <span class="n">objs_to_normalize</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="nb">max</span><span class="o">-</span><span class="nb">min</span><span class="p">)[</span><span class="n">objs_to_normalize</span><span class="p">]</span>
+    <span class="c1"># Restore original order</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">front_objectives</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">dist</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">crowd</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
 
-  <span class="c1"># Restore original order</span>
-  <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">front_objectives</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-  <span class="n">dist</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">obj_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">crowd</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
-
-  <span class="k">return</span> <span class="n">dist</span></div>
+    <span class="k">return</span> <span class="n">dist</span></div>
 </pre></div>
 
           </div>

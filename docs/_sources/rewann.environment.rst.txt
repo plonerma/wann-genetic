@@ -1,61 +1,70 @@
-rewann\.environment package
-===========================
+rewann.environment package
+==========================
 
 Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
-    rewann.environment.tasks
+   rewann.environment.tasks
 
 Submodules
 ----------
 
-rewann\.environment\.evolution module
+rewann.environment.environment module
 -------------------------------------
 
-.. automodule:: rewann.environment.evolution
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodule:: rewann.environment.environment
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-rewann\.environment\.params module
-----------------------------------
-
-.. automodule:: rewann.environment.params
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-rewann\.environment\.ranking module
+rewann.environment.evolution module
 -----------------------------------
 
-.. automodule:: rewann.environment.ranking
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. automodule:: rewann.environment.evolution
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-rewann\.environment\.run module
--------------------------------
-
-.. automodule:: rewann.environment.run
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-rewann\.environment\.util module
+rewann.environment.params module
 --------------------------------
 
+.. automodule:: rewann.environment.params
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rewann.environment.ranking module
+---------------------------------
+
+.. automodule:: rewann.environment.ranking
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rewann.environment.run module
+-----------------------------
+
+.. automodule:: rewann.environment.run
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rewann.environment.util module
+------------------------------
+
 .. automodule:: rewann.environment.util
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 
 Module contents
 ---------------
 
 .. automodule:: rewann.environment
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

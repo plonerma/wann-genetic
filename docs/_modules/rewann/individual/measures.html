@@ -12,6 +12,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -48,6 +49,20 @@
 
 
 <div class="viewcode-block" id="new_measure"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.measures.new_measure">[docs]</a><span class="k">def</span> <span class="nf">new_measure</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register a new measure.</span>
+
+<span class="sd">    Registered measures can be used as objectives and be stored after post</span>
+<span class="sd">    training evaluations. Can bes used as a decorator (`@new_measure` - the</span>
+<span class="sd">    measure will have the same name as the decorated function) or as a regular</span>
+<span class="sd">    func (then `name` parameter can be set)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : Callable</span>
+<span class="sd">        wrapped function</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        name of the measure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
     <span class="n">dependencies</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
     <span class="n">available_measures</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">,</span> <span class="nb">set</span><span class="p">(</span><span class="n">dependencies</span><span class="p">)</span>
@@ -58,6 +73,15 @@
 
 <span class="sd">    Calculates value for measure and all values the measures depends on.</span>
 <span class="sd">    Edits values in place.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    values : dict</span>
+<span class="sd">        values that have already been calculated (or are ground data)</span>
+<span class="sd">    names : list</span>
+<span class="sd">        list of measures (given by their names) to calculate</span>
+<span class="sd">    pending : set, optional</span>
+<span class="sd">        used to detect circular dependencies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">for</span> <span class="n">measure_name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>

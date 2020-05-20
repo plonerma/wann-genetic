@@ -12,6 +12,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -35,8 +36,7 @@
           <div class="body" role="main">
             
   <h1>Source code for rewann.environment.evolution</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Reimplementation of population stuff -&gt; don&#39;t use seperate class, but build</span>
-<span class="sd">    iterator (iterating over the generations).&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;Implementation of an evolutionary algorithm&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
@@ -46,6 +46,10 @@
 <span class="kn">from</span> <span class="nn">.ranking</span> <span class="kn">import</span> <span class="n">rank_individuals</span>
 
 <div class="viewcode-block" id="InnovationRecord"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.InnovationRecord">[docs]</a><span class="k">class</span> <span class="nc">InnovationRecord</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Keeps track of edge and node counts.</span>
+
+<span class="sd">    Edge ids need to be tracked if crossover should ever be implemented.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="InnovationRecord.empty"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.InnovationRecord.empty">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">start_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize empty innovation record.</span>
@@ -83,6 +87,24 @@
 
 <div class="viewcode-block" id="evaluate_inds"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.evaluate_inds">[docs]</a><span class="k">def</span> <span class="nf">evaluate_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">record_raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">use_test_samples</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Use the process pool to evaluate a list of individuals.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">        environment to use for process pool, weight sampling, and task data</span>
+<span class="sd">    pop : list</span>
+<span class="sd">        list of individuals to evaluate</span>
+<span class="sd">    n_samples : int</span>
+<span class="sd">        number of samples to use (-1 for all -&gt; should not be used with</span>
+<span class="sd">        synthetic tasks)</span>
+<span class="sd">    record_raw : bool</span>
+<span class="sd">        use the record_raw parameter in Individual class (if true, stores all</span>
+<span class="sd">        predictions instead of calculating recoreded measures online)</span>
+<span class="sd">    use_test_samples : bool</span>
+<span class="sd">        use samples dedicated for testing (option is passed to tasks `get_data`</span>
+<span class="sd">        function)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">x</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">test</span><span class="o">=</span><span class="n">use_test_samples</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
 
@@ -107,13 +129,29 @@
             <span class="n">record_raw</span><span class="o">=</span><span class="n">record_raw</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="express_inds"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.express_inds">[docs]</a><span class="k">def</span> <span class="nf">express_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Express inds that have not been expressed yet.</span>
+
+<span class="sd">    Convert genes into neural network for all new individuals.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">    pop : list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">inds_to_express</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">network</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pop</span><span class="p">))</span>
 
-    <span class="n">networks</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">pool_map</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Network</span><span class="o">.</span><span class="n">from_genes</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">genes</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inds_to_express</span><span class="p">))</span>
+    <span class="n">networks</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">pool_map</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Phenotype</span><span class="o">.</span><span class="n">from_genes</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">genes</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inds_to_express</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds_to_express</span><span class="p">,</span> <span class="n">networks</span><span class="p">):</span>
         <span class="n">ind</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">net</span></div>
 
 <div class="viewcode-block" id="create_initial_population"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.create_initial_population">[docs]</a><span class="k">def</span> <span class="nf">create_initial_population</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create initial population based on parameters in `env`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_genes&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;empty&#39;</span><span class="p">:</span>
@@ -139,6 +177,12 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial genes type </span><span class="si">{</span><span class="n">initial</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="evolution"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.evolution">[docs]</a><span class="k">def</span> <span class="nf">evolution</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function for evolutionary algorithm.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pop</span> <span class="o">=</span> <span class="n">create_initial_population</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;post_init_seed&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
@@ -164,6 +208,14 @@
         <span class="k">yield</span> <span class="n">innov</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span> <span class="n">pop</span></div>
 
 <div class="viewcode-block" id="evolve_population"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.evolve_population">[docs]</a><span class="k">def</span> <span class="nf">evolve_population</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rank population, apply tournaments if enabled, and mutate surivers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">    innov: InnovationRecord</span>
+<span class="sd">        used for tracking ids etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pop_size</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]</span>
     <span class="n">culling_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;culling_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pop_size</span><span class="p">))</span>
 
@@ -196,6 +248,13 @@
     <span class="k">return</span> <span class="n">new_pop</span></div>
 
 <div class="viewcode-block" id="update_hof"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.update_hof">[docs]</a><span class="k">def</span> <span class="nf">update_hof</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the hall of fame.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    env : rewann.Environment</span>
+<span class="sd">    pop : iterable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># best inds excluding indivs alread in hall of fame</span>
     <span class="n">elite</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">inds</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>

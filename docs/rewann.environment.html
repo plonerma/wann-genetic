@@ -12,6 +12,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="rewann.environment.tasks package" href="rewann.environment.tasks.html" />
@@ -62,14 +63,152 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-rewann.environment.environment">
+<span id="rewann-environment-environment-module"></span><h2>rewann.environment.environment module<a class="headerlink" href="#module-rewann.environment.environment" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="rewann.environment.environment.Environment">
+<em class="property">class </em><code class="sig-prename descclassname">rewann.environment.environment.</code><code class="sig-name descname">Environment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rewann.environment.params.ParamTree" title="rewann.environment.params.ParamTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.environment.params.ParamTree</span></code></a></p>
+<p>Environment for executing training and post training evaluations.</p>
+<p>Takes care of process pool, reporting, and experiment parameters.</p>
+<dl class="py attribute">
+<dt id="rewann.environment.environment.Environment.default_params">
+<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'debug': True, 'num_workers': 1}, 'mutation': {'add_recurrent_edge': {'probability': 0.3}, 'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_functions': 'all', 'hof_size': 10, 'initial_enabled_edge_probability': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_training_samples_per_iteration': -1, 'num_weight_samples_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'include_prediction_records': False, 'log_filename': 'execution.log'}, 'task': {'name': 'iris'}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.elite_size">
+<em class="property">property </em><code class="sig-name descname">elite_size</code><a class="headerlink" href="#rewann.environment.environment.Environment.elite_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of the elite (<span class="math notranslate nohighlight">\(population\ size * elite\ ratio\)</span>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.env_path">
+<code class="sig-name descname">env_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">parts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.env_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.load_gen_metrics">
+<code class="sig-name descname">load_gen_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.load_hof">
+<code class="sig-name descname">load_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_hof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.load_indiv_measurements">
+<code class="sig-name descname">load_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.load_pop">
+<code class="sig-name descname">load_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">ids_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.open_data">
+<code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.open_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.optimize">
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.optimize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.pool_map">
+<code class="sig-name descname">pool_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">iter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.pool_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.pool_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.population_metrics">
+<code class="sig-name descname">population_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">gen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_indiv_measurements</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">reduced_values</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.population_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.population_metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.post_optimization">
+<code class="sig-name descname">post_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.post_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.post_optimization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.sample_weights">
+<code class="sig-name descname">sample_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.sample_weights" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set seed to <cite>seed</cite> or from parameters.</p>
+<dl class="simple">
+<dt>seed<span class="classifier">int, optional</span></dt><dd><p>Seed to set. If none, seed in sampling/seed will be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.setup_optimization">
+<code class="sig-name descname">setup_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.setup_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.setup_optimization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.setup_params">
+<code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.setup_params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.setup_pool">
+<code class="sig-name descname">setup_pool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.setup_pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.setup_pool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.store_data">
+<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.store_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.store_gen">
+<code class="sig-name descname">store_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">population</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indiv_measurements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_gen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.store_gen_metrics">
+<code class="sig-name descname">store_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metrics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.store_hof">
+<code class="sig-name descname">store_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_hof" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.stored_indiv_measurements">
+<code class="sig-name descname">stored_indiv_measurements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.stored_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.environment.environment.Environment.stored_populations">
+<code class="sig-name descname">stored_populations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.stored_populations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-rewann.environment.evolution">
 <span id="rewann-environment-evolution-module"></span><h2>rewann.environment.evolution module<a class="headerlink" href="#module-rewann.environment.evolution" title="Permalink to this headline">¶</a></h2>
-<p>Reimplementation of population stuff -&gt; don’t use seperate class, but build
-iterator (iterating over the generations).</p>
+<p>Implementation of an evolutionary algorithm</p>
 <dl class="py class">
 <dt id="rewann.environment.evolution.InnovationRecord">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">InnovationRecord</code><a class="reference internal" href="_modules/rewann/environment/evolution.html#InnovationRecord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.InnovationRecord" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></p>
+<p>Keeps track of edge and node counts.</p>
+<p>Edge ids need to be tracked if crossover should ever be implemented.</p>
 <dl class="py method">
 <dt id="rewann.environment.evolution.InnovationRecord.add_edge">
 <code class="sig-name descname">add_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">dest</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#InnovationRecord.add_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.InnovationRecord.add_edge" title="Permalink to this definition">¶</a></dt>
@@ -112,32 +251,65 @@ iterator (iterating over the generations).</p>
 <dl class="py function">
 <dt id="rewann.environment.evolution.create_initial_population">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">create_initial_population</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#create_initial_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.create_initial_population" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create initial population based on parameters in <cite>env</cite>.</p>
+<p>env : rewann.Environment</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.evolution.evaluate_inds">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">evaluate_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">n_samples</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">record_raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_test_samples</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#evaluate_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.evaluate_inds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Use the process pool to evaluate a list of individuals.</p>
+<dl class="simple">
+<dt>env<span class="classifier">rewann.Environment</span></dt><dd><p>environment to use for process pool, weight sampling, and task data</p>
+</dd>
+<dt>pop<span class="classifier">list</span></dt><dd><p>list of individuals to evaluate</p>
+</dd>
+<dt>n_samples<span class="classifier">int</span></dt><dd><p>number of samples to use (-1 for all -&gt; should not be used with
+synthetic tasks)</p>
+</dd>
+<dt>record_raw<span class="classifier">bool</span></dt><dd><p>use the record_raw parameter in Individual class (if true, stores all
+predictions instead of calculating recoreded measures online)</p>
+</dd>
+<dt>use_test_samples<span class="classifier">bool</span></dt><dd><p>use samples dedicated for testing (option is passed to tasks <cite>get_data</cite>
+function)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.evolution.evolution">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">evolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#evolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.evolution" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Main function for evolutionary algorithm.</p>
+<p>env : rewann.Environment</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.evolution.evolve_population">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">evolve_population</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">innov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#evolve_population"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.evolve_population" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Rank population, apply tournaments if enabled, and mutate surivers.</p>
+<p>env : rewann.Environment
+innov: InnovationRecord</p>
+<blockquote>
+<div><p>used for tracking ids etc.</p>
+</div></blockquote>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.evolution.express_inds">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">express_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#express_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.express_inds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Express inds that have not been expressed yet.</p>
+<p>Convert genes into neural network for all new individuals.</p>
+<p>env : rewann.Environment
+pop : list</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.evolution.update_hof">
 <code class="sig-prename descclassname">rewann.environment.evolution.</code><code class="sig-name descname">update_hof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#update_hof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.update_hof" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Update the hall of fame.</p>
+<p>env : rewann.Environment
+pop : iterable</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-rewann.environment.params">
@@ -168,12 +340,15 @@ iterator (iterating over the generations).</p>
 <dl class="py function">
 <dt id="rewann.environment.ranking.crowding_distances">
 <code class="sig-prename descclassname">rewann.environment.ranking.</code><code class="sig-name descname">crowding_distances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">front_objectives</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/ranking.html#crowding_distances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.ranking.crowding_distances" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate the crowding distance.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.ranking.dominates">
 <code class="sig-prename descclassname">rewann.environment.ranking.</code><code class="sig-name descname">dominates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">objectives</span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/ranking.html#dominates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.ranking.dominates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p><cite>i</cite> dominates <cite>j</cite> if it is just as good as <cite>j</cite> in all objective and at
+least slightly better in one.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt id="rewann.environment.ranking.get_objective_values">
@@ -183,7 +358,8 @@ iterator (iterating over the generations).</p>
 <dl class="py function">
 <dt id="rewann.environment.ranking.rank_individuals">
 <code class="sig-prename descclassname">rewann.environment.ranking.</code><code class="sig-name descname">rank_individuals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">objectives</span></em>, <em class="sig-param"><span class="n">return_order</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_fronts</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/ranking.html#rank_individuals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.ranking.rank_individuals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Rank individuals by multiple objectives using NSGA-sort.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-rewann.environment.run">
@@ -191,7 +367,8 @@ iterator (iterating over the generations).</p>
 <dl class="py function">
 <dt id="rewann.environment.run.run_experiment">
 <code class="sig-prename descclassname">rewann.environment.run.</code><code class="sig-name descname">run_experiment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/run.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.run.run_experiment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Execute an experiment (see <a class="reference internal" href="cli.html"><span class="doc">Command Line Interfaces</span></a>).</p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-rewann.environment.util">

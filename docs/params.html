@@ -12,6 +12,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Generating Series of Experiments" href="experiment_series.html" />
@@ -167,27 +168,27 @@
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">size</span></code></p></td>
 <td><p>64</p></td>
-<td></td>
+<td><p>Size of the population</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_enabled_edge_probability</span></code></p></td>
-<td><p>0.05</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_genes</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_genes</span></code></p></td>
 <td><p>‘full’</p></td>
-<td></td>
+<td><p>‘empty’: individuals start without any edges; ‘full’: all input nodes are connected to all output nodes</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_enabled_edge_probability</span></code></p></td>
+<td><p>0.05</p></td>
+<td><p>If initial individuals are full: probability that any edge is enabled</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_size</span></code></p></td>
 <td><p>10</p></td>
-<td></td>
+<td><p>Size of the <cite>hall of fame</cite></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enable_edge_signs</span></code></p></td>
 <td><p>false</p></td>
-<td></td>
+<td><p>Edges will have sign +1 or -1</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enabled_activation_functions</span></code></p></td>
 <td><p>‘all’</p></td>
-<td></td>
+<td><p>Which activation functions to use: either ‘all’ or list of activation function indices</p></td>
 </tr>
 </tbody>
 </table>
@@ -209,11 +210,11 @@
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_tournaments</span></code></p></td>
 <td><p>true</p></td>
-<td></td>
+<td><p>Whether to use tournament selection (alternative is to just do ranking: in this case every individual can only have one offspring)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">elite_ratio</span></code></p></td>
 <td><p>0.1</p></td>
-<td></td>
+<td><p>Ratio of the population to treat as elite (will survive the generation)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">culling_ratio</span></code></p></td>
 <td><p>0.2</p></td>
@@ -221,19 +222,19 @@
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tournament_size</span></code></p></td>
 <td><p>5</p></td>
-<td></td>
+<td><p>Size of the tournaments in tournament selection</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">objectives</span></code></p></td>
 <td><p>[‘-log_loss.min’, ‘-log_loss.mean’, ‘-n_hidden’]</p></td>
-<td></td>
+<td><p>Objectives to optimize for (is treated as maximization problem - if you want to minimize an objective, add prefix ‘-‘’)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recorded_metrics</span></code></p></td>
 <td><p>[‘accuracy’, ‘kappa’, ‘log_loss’]</p></td>
-<td></td>
+<td><p>Names of the measures stored for each individual during training and later reported on</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_metric</span></code></p></td>
 <td><p>‘accuracy.mean’</p></td>
-<td></td>
+<td><p>Measure that controls the entry into the hall of fame</p></td>
 </tr>
 </tbody>
 </table>
@@ -263,7 +264,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strategy</span></code></p></td>
 <td><p>‘layer_agnostic’</p></td>
-<td></td>
+<td><p>Either ‘layer_agnostic’ or ‘layer_based’</p></td>
 </tr>
 </tbody>
 </table>
@@ -458,23 +459,19 @@ The probability of all enabled mutation types will be normalized to a sum of one
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data_base_path</span></code></p></td>
 <td><p>‘data’</p></td>
-<td></td>
+<td><p>Directory that should hold produced data for multiple experiments</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_filename</span></code></p></td>
 <td><p>‘execution.log’</p></td>
-<td></td>
+<td><p>Filename of log output</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">include_prediction_records</span></code></p></td>
-<td><p>false</p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">commit_elite_freq</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">commit_elite_freq</span></code></p></td>
 <td><p>-1</p></td>
-<td></td>
+<td><p>Frequency of writing the elite to the data.hdf5 file - if -1 only the hall of fame will be recorded</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">commit_metrics_freq</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">commit_metrics_freq</span></code></p></td>
 <td><p>10</p></td>
-<td></td>
+<td><p>Frequency of storing generation metrics</p></td>
 </tr>
 </tbody>
 </table>

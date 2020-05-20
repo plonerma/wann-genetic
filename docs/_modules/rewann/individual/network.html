@@ -12,6 +12,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -45,8 +46,11 @@
 
 
 
-<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Representation for all kinds of NNs (wann, ffnn, rnn, rewann).&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Feed Forward Neural Network</span>
+
+<span class="sd">    For an explanation of how propagation works, see :doc:`network_propagation`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">### Definition of the activations functions</span>
     <span class="n">available_act_functions</span> <span class="o">=</span> <span class="p">[</span>
@@ -85,20 +89,24 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of hidden nodes the network contains.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Total number of nodes the network contains.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_act_funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of enabled activations functions.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">available_act_functions</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Network.index_to_gene_id"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.index_to_gene_id">[docs]</a>    <span class="k">def</span> <span class="nf">index_to_gene_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.index_to_gene_id"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.index_to_gene_id">[docs]</a>    <span class="k">def</span> <span class="nf">index_to_gene_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return gene node id from network node index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">i</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Network.from_genes"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.from_genes">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Network.from_genes"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.from_genes">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_genes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert genes to weight matrix and activation vector.&quot;&quot;&quot;</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="n">remap_node_ids</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span>
@@ -139,7 +147,17 @@
             <span class="n">propagation_steps</span><span class="o">=</span><span class="n">prop_steps</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Network.layers"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.layers">[docs]</a>    <span class="k">def</span> <span class="nf">layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">including_input</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.layers"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.layers">[docs]</a>    <span class="k">def</span> <span class="nf">layers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">including_input</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get layers of nodes (a hierachical sorting).</span>
+
+<span class="sd">        Nodes in layer :math:`i` will not have any incoming edges from nodes in</span>
+<span class="sd">        layers :math:`\ge i`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        including_input : bool, default=False</span>
+<span class="sd">            yield input layer as first layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
         <span class="k">if</span> <span class="n">including_input</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
@@ -155,17 +173,18 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">n_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of hidden layers in the network.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">propagation_steps</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Network.node_layers"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.node_layers">[docs]</a>    <span class="k">def</span> <span class="nf">node_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return layer index for each node&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Network.node_layers"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.node_layers">[docs]</a>    <span class="k">def</span> <span class="nf">node_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return layer index of each node&quot;&quot;&quot;</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">including_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
             <span class="n">layers</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
 
         <span class="k">return</span> <span class="n">layers</span></div>
 
-<div class="viewcode-block" id="Network.apply"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.apply"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="c1"># multiple one dimensional input arrays</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
 
@@ -191,11 +210,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">y</span></div>
 
-<div class="viewcode-block" id="Network.activation_functions"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.activation_functions">[docs]</a>    <span class="k">def</span> <span class="nf">activation_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.activation_functions"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.activation_functions">[docs]</a>    <span class="k">def</span> <span class="nf">activation_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">][</span><span class="n">nodes</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">apply_act_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">available_act_functions</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Network.calc_act"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.Network.calc_act">[docs]</a>    <span class="k">def</span> <span class="nf">calc_act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">active_nodes</span><span class="p">,</span> <span class="n">base_weights</span><span class="p">,</span> <span class="n">add_to_sum</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Network.calc_act"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Network.calc_act">[docs]</a>    <span class="k">def</span> <span class="nf">calc_act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">active_nodes</span><span class="p">,</span> <span class="n">base_weights</span><span class="p">,</span> <span class="n">add_to_sum</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Apply updates for active nodes (active nodes can&#39;t share edges).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -216,14 +235,15 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation_functions</span><span class="p">(</span><span class="n">active_nodes</span><span class="p">,</span> <span class="n">act_sums</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RecurrentNetwork"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.RecurrentNetwork">[docs]</a><span class="k">class</span> <span class="nc">RecurrentNetwork</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
+<div class="viewcode-block" id="RecurrentNetwork"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.RecurrentNetwork">[docs]</a><span class="k">class</span> <span class="nc">RecurrentNetwork</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Recurrrent Neural Network&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">recurrent_weight_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">recurrent_weight_matrix</span> <span class="o">=</span> <span class="n">recurrent_weight_matrix</span>
 
 
-<div class="viewcode-block" id="RecurrentNetwork.apply"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.RecurrentNetwork.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="RecurrentNetwork.apply"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.RecurrentNetwork.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
         <span class="n">num_samples</span><span class="p">,</span> <span class="n">sample_length</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
@@ -279,7 +299,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">outputs</span></div>
 
-<div class="viewcode-block" id="RecurrentNetwork.from_genes"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.network.RecurrentNetwork.from_genes">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="RecurrentNetwork.from_genes"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.RecurrentNetwork.from_genes">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_genes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">genes</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert genes to weight matrix and activation vector.&quot;&quot;&quot;</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="n">remap_node_ids</span><span class="p">(</span><span class="n">genes</span><span class="p">)</span>

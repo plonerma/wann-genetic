@@ -13,6 +13,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
@@ -88,10 +89,10 @@
 </li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.add_image">add_image() (rewann.postopt.report.Report method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.add_ind_info">add_ind_info() (rewann.postopt.report.Report method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.add_network">add_network() (rewann.postopt.report.Report method)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.genetic_operations.add_node">add_node() (in module rewann.individual.genetic_operations)</a>
@@ -100,9 +101,11 @@
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.rnn.AddingTask">AddingTask (class in rewann.environment.tasks.rnn)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.network.Network.apply">apply() (rewann.individual.network.Network method)</a>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.apply">apply() (rewann.individual.individual.Individual method)</a>
 
       <ul>
+        <li><a href="rewann.individual.html#rewann.individual.network.Network.apply">(rewann.individual.network.Network method)</a>
+</li>
         <li><a href="rewann.individual.html#rewann.individual.network.RecurrentNetwork.apply">(rewann.individual.network.RecurrentNetwork method)</a>
 </li>
       </ul></li>
@@ -148,7 +151,7 @@
 </li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.compile_stats">compile_stats() (rewann.postopt.report.Report method)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.copy">copy() (rewann.individual.genes.Genotype method)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.copy">copy() (rewann.individual.genes.Genes method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.create_initial_population">create_initial_population() (in module rewann.environment.evolution)</a>
 </li>
@@ -160,16 +163,18 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.default_params">default_params (rewann.environment.environment.Environment attribute)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.util.derive_path">derive_path() (in module rewann.environment.util)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.deskew">deskew() (in module rewann.environment.tasks.image)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.digit_raw">digit_raw() (in module rewann.environment.tasks.image)</a>
 </li>
-      <li><a href="rewann.environment.html#rewann.environment.ranking.dominates">dominates() (in module rewann.environment.ranking)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.environment.html#rewann.environment.ranking.dominates">dominates() (in module rewann.environment.ranking)</a>
+</li>
       <li><a href="rewann.postopt.vis.html#rewann.postopt.vis.vis_network.draw_graph">draw_graph() (in module rewann.postopt.vis.vis_network)</a>
 </li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.draw_network">draw_network() (in module rewann.postopt.report)</a>
@@ -186,31 +191,51 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.rnn.EchoTask">EchoTask (class in rewann.environment.tasks.rnn)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.edge_encoding">edge_encoding (rewann.individual.genes.Genotype attribute)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.edge_encoding">edge_encoding (rewann.individual.genes.Genes attribute)</a>
 
       <ul>
-        <li><a href="rewann.individual.html#rewann.individual.genes.RecurrentGenotype.edge_encoding">(rewann.individual.genes.RecurrentGenotype attribute)</a>
+        <li><a href="rewann.individual.html#rewann.individual.genes.RecurrentGenes.edge_encoding">(rewann.individual.genes.RecurrentGenes attribute)</a>
 </li>
       </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.InnovationRecord.edge_exists">edge_exists() (rewann.environment.evolution.InnovationRecord method)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.edges">edges (rewann.individual.genes.Genotype attribute)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.edges">edges (rewann.individual.genes.Genes attribute)</a>
+</li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.elite_size">elite_size() (rewann.environment.environment.Environment property)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.InnovationRecord.empty">empty() (rewann.environment.evolution.InnovationRecord class method)</a>
 </li>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.empty_initial">empty_initial() (rewann.individual.genes.Genes class method)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.Individual.empty_initial">(rewann.individual.individual.Individual class method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.empty_initial">empty_initial() (rewann.individual.genes.Genotype class method)</a>
-</li>
       <li><a href="rewann.environment.html#rewann.environment.util.env_path">env_path() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.env_path">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
+      <li><a href="rewann.html#rewann.Environment">Environment (class in rewann)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment">(class in rewann.environment.environment)</a>
+</li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.evaluate_inds">evaluate_inds() (in module rewann.environment.evolution)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.evolution">evolution() (in module rewann.environment.evolution)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.evolve_population">evolve_population() (in module rewann.environment.evolution)</a>
 </li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.express">express() (rewann.individual.individual.Individual method)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.express_inds">express_inds() (in module rewann.environment.evolution)</a>
+</li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.expressed">expressed() (in module rewann.individual.individual)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -232,8 +257,12 @@
         <li><a href="rewann.individual.html#rewann.individual.network.RecurrentNetwork.from_genes">(rewann.individual.network.RecurrentNetwork class method)</a>
 </li>
       </ul></li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.full_initial">full_initial() (rewann.individual.genes.Genotype class method)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.full_initial">full_initial() (rewann.individual.genes.Genes class method)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.Individual.full_initial">(rewann.individual.individual.Individual class method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -250,12 +279,18 @@
       </ul></li>
       <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.generate_flat_values">generate_flat_values() (rewann.tools.multi_spec.Specification method)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype">Genotype (class in rewann.individual.genes)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes">Genes (class in rewann.individual.genes)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.expression.get_array_field">get_array_field() (in module rewann.individual.expression)</a>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.Genotype">Genotype (rewann.individual.individual.Individual attribute)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.RecurrentIndividual.Genotype">(rewann.individual.individual.RecurrentIndividual attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.individual.html#rewann.individual.expression.get_array_field">get_array_field() (in module rewann.individual.expression)</a>
+</li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.ClassificationTask.get_data">get_data() (rewann.environment.tasks.base.ClassificationTask method)</a>
 
       <ul>
@@ -284,6 +319,12 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.index_to_gene_id">index_to_gene_id() (rewann.individual.network.Network method)</a>
 </li>
+      <li><a href="rewann.html#rewann.Individual">Individual (class in rewann)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.Individual">(class in rewann.individual.individual)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.evolution.InnovationRecord">InnovationRecord (class in rewann.environment.evolution)</a>
@@ -321,19 +362,35 @@
       <li><a href="rewann.environment.html#rewann.environment.util.load_gen">load_gen() (in module rewann.environment.util)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.load_gen_metrics">load_gen_metrics() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.load_gen_metrics">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.load_hof">load_hof() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.load_hof">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.util.load_ind">load_ind() (in module rewann.environment.util)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.load_indiv_measurements">load_indiv_measurements() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.load_indiv_measurements">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.load_iris">load_iris() (in module rewann.environment.tasks)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.load_pop">load_pop() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.load_pop">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.Task.load_test">load_test() (rewann.environment.tasks.base.Task method)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.Task.load_training">load_training() (rewann.environment.tasks.base.Task method)</a>
@@ -352,6 +409,10 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.measures.mean_squared_error">mean_squared_error() (in module rewann.individual.measures)</a>
 </li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.measurements">measurements() (rewann.individual.individual.Individual method)</a>
+</li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.measurements_df">measurements_df() (rewann.individual.individual.Individual method)</a>
+</li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.mnist_256">mnist_256() (in module rewann.environment.tasks.image)</a>
 </li>
       <li>
@@ -361,6 +422,8 @@
         <li><a href="rewann.html#module-rewann">rewann</a>
 </li>
         <li><a href="rewann.environment.html#module-rewann.environment">rewann.environment</a>
+</li>
+        <li><a href="rewann.environment.html#module-rewann.environment.environment">rewann.environment.environment</a>
 </li>
         <li><a href="rewann.environment.html#module-rewann.environment.evolution">rewann.environment.evolution</a>
 </li>
@@ -388,6 +451,8 @@
 </li>
         <li><a href="rewann.individual.html#module-rewann.individual.genetic_operations">rewann.individual.genetic_operations</a>
 </li>
+        <li><a href="rewann.individual.html#module-rewann.individual.individual">rewann.individual.individual</a>
+</li>
         <li><a href="rewann.individual.html#module-rewann.individual.measures">rewann.individual.measures</a>
 </li>
         <li><a href="rewann.individual.html#module-rewann.individual.network">rewann.individual.network</a>
@@ -412,7 +477,11 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.individual.html#rewann.individual.genetic_operations.mutation">mutation() (in module rewann.individual.genetic_operations)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.Individual.mutation">(rewann.individual.individual.Individual method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -426,7 +495,7 @@
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.rnn.AddingTask.n_in">n_in (rewann.environment.tasks.rnn.AddingTask attribute)</a>
 
       <ul>
-        <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.n_in">(rewann.individual.genes.Genotype attribute)</a>
+        <li><a href="rewann.individual.html#rewann.individual.genes.Genes.n_in">(rewann.individual.genes.Genes attribute)</a>
 </li>
       </ul></li>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.n_layers">n_layers() (rewann.individual.network.Network property)</a>
@@ -436,17 +505,21 @@
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.rnn.AddingTask.n_out">n_out (rewann.environment.tasks.rnn.AddingTask attribute)</a>
 
       <ul>
-        <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.n_out">(rewann.individual.genes.Genotype attribute)</a>
+        <li><a href="rewann.individual.html#rewann.individual.genes.Genes.n_out">(rewann.individual.genes.Genes attribute)</a>
 </li>
       </ul></li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.n_static">n_static() (rewann.individual.genes.Genotype property)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.n_static">n_static() (rewann.individual.genes.Genes property)</a>
 </li>
       <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.name_parts">name_parts (rewann.tools.multi_spec.Specification attribute)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.params.nested_update">nested_update() (in module rewann.environment.params)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.network.Network">Network (class in rewann.individual.network)</a>
+      <li><a href="rewann.html#rewann.Network">Network (class in rewann)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.network.Network">(class in rewann.individual.network)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.individual.html#rewann.individual.expression.NetworkCyclicException">NetworkCyclicException</a>
@@ -461,15 +534,15 @@
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.InnovationRecord.next_node_id">next_node_id() (rewann.environment.evolution.InnovationRecord method)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.node_encoding">node_encoding (rewann.individual.genes.Genotype attribute)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.node_encoding">node_encoding (rewann.individual.genes.Genes attribute)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.node_layers">node_layers() (rewann.individual.network.Network method)</a>
 </li>
       <li><a href="rewann.postopt.vis.html#rewann.postopt.vis.vis_network.node_names">node_names() (in module rewann.postopt.vis.vis_network)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.node_out_factory">node_out_factory() (rewann.individual.genes.Genotype method)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.node_out_factory">node_out_factory() (rewann.individual.genes.Genes method)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genotype.nodes">nodes (rewann.individual.genes.Genotype attribute)</a>
+      <li><a href="rewann.individual.html#rewann.individual.genes.Genes.nodes">nodes (rewann.individual.genes.Genes attribute)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.measures.num_used_activation_functions">num_used_activation_functions() (in module rewann.individual.measures)</a>
 </li>
@@ -481,9 +554,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.offset">offset() (rewann.individual.network.Network property)</a>
 </li>
+      <li><a href="rewann.environment.html#rewann.environment.util.open_data">open_data() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.open_data">(rewann.environment.environment.Environment method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rewann.environment.html#rewann.environment.util.open_data">open_data() (in module rewann.environment.util)</a>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.optimize">optimize() (rewann.environment.environment.Environment method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -493,10 +572,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.params.ParamTree">ParamTree (class in rewann.environment.params)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genetic_operations.path_exists">path_exists() (in module rewann.individual.genetic_operations)</a>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.Phenotype">Phenotype (rewann.individual.individual.Individual attribute)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.RecurrentIndividual.Phenotype">(rewann.individual.individual.RecurrentIndividual attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.pool_map">pool_map() (rewann.environment.environment.Environment method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.population_metrics">population_metrics() (rewann.environment.environment.Environment method)</a>
+</li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.post_optimization">post_optimization() (rewann.environment.environment.Environment method)</a>
+</li>
       <li><a href="rewann.individual.html#rewann.individual.measures.pred_class_sum">pred_class_sum() (in module rewann.individual.measures)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.preprocess">preprocess() (in module rewann.environment.tasks.image)</a>
@@ -513,7 +602,17 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.measures.recall_per_class">recall_per_class() (in module rewann.individual.measures)</a>
 </li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.RecurrentGenotype">RecurrentGenotype (class in rewann.individual.genes)</a>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.record_measurements">record_measurements() (rewann.individual.individual.Individual method)</a>
+
+      <ul>
+        <li><a href="rewann.individual.html#rewann.individual.individual.RecurrentIndividual.record_measurements">(rewann.individual.individual.RecurrentIndividual method)</a>
+</li>
+      </ul></li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.Individual.recorded_measures">recorded_measures (rewann.individual.individual.Individual attribute)</a>
+</li>
+      <li><a href="rewann.individual.html#rewann.individual.genes.RecurrentGenes">RecurrentGenes (class in rewann.individual.genes)</a>
+</li>
+      <li><a href="rewann.individual.html#rewann.individual.individual.RecurrentIndividual">RecurrentIndividual (class in rewann.individual.individual)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.network.RecurrentNetwork">RecurrentNetwork (class in rewann.individual.network)</a>
 </li>
@@ -539,6 +638,13 @@
 
       <ul>
         <li><a href="rewann.environment.html#module-rewann.environment">module</a>
+</li>
+      </ul></li>
+      <li>
+    rewann.environment.environment
+
+      <ul>
+        <li><a href="rewann.environment.html#module-rewann.environment.environment">module</a>
 </li>
       </ul></li>
       <li>
@@ -597,6 +703,8 @@
         <li><a href="rewann.environment.tasks.html#module-rewann.environment.tasks.rnn">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.environment.util
 
@@ -604,8 +712,6 @@
         <li><a href="rewann.environment.html#module-rewann.environment.util">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.individual
 
@@ -632,6 +738,13 @@
 
       <ul>
         <li><a href="rewann.individual.html#module-rewann.individual.genetic_operations">module</a>
+</li>
+      </ul></li>
+      <li>
+    rewann.individual.individual
+
+      <ul>
+        <li><a href="rewann.individual.html#module-rewann.individual.individual">module</a>
 </li>
       </ul></li>
       <li>
@@ -704,6 +817,8 @@
         <li><a href="rewann.tools.html#module-rewann.tools.multi_spec">module</a>
 </li>
       </ul></li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.run">run() (rewann.environment.environment.Environment method)</a>
+</li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.run_evaluations">run_evaluations() (rewann.postopt.report.Report method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.run.run_experiment">run_experiment() (in module rewann.environment.run)</a>
@@ -714,9 +829,21 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.sample_weights">sample_weights() (rewann.environment.environment.Environment method)</a>
+</li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.seed">seed() (rewann.environment.environment.Environment method)</a>
+</li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.select_task">select_task() (in module rewann.environment.tasks)</a>
 </li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.setup_optimization">setup_optimization() (rewann.environment.environment.Environment method)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.util.setup_params">setup_params() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.setup_params">(rewann.environment.environment.Environment method)</a>
+</li>
+      </ul></li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.setup_pool">setup_pool() (rewann.environment.environment.Environment method)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.expression.softmax">softmax() (in module rewann.individual.expression)</a>
 </li>
@@ -728,14 +855,28 @@
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.TimeStore.stop">stop() (rewann.environment.util.TimeStore method)</a>
 </li>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_data">store_data() (rewann.environment.environment.Environment method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.util.store_gen">store_gen() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_gen">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.store_gen_metrics">store_gen_metrics() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_gen_metrics">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.store_hof">store_hof() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_hof">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.store_ind">store_ind() (in module rewann.environment.util)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.store_pop">store_pop() (in module rewann.environment.util)</a>
@@ -743,9 +884,17 @@
       <li><a href="rewann.environment.html#rewann.environment.util.stored_generations">stored_generations() (in module rewann.environment.util)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.stored_indiv_measurements">stored_indiv_measurements() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.stored_indiv_measurements">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.stored_populations">stored_populations() (in module rewann.environment.util)</a>
+
+      <ul>
+        <li><a href="rewann.environment.html#rewann.environment.environment.Environment.stored_populations">(rewann.environment.environment.Environment method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

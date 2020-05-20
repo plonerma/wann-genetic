@@ -12,6 +12,7 @@
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
@@ -40,7 +41,8 @@
 
 <span class="kn">from</span> <span class="nn">.expression</span> <span class="kn">import</span> <span class="n">get_array_field</span>
 
-<div class="viewcode-block" id="add_node"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.add_node">[docs]</a><span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="add_node"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.add_node">[docs]</a><span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split an existing edge and add a node in the middle.&quot;&quot;&quot;</span>
     <span class="c1"># Choose an enabled edge</span>
 
     <span class="n">enabled</span> <span class="o">=</span> <span class="n">get_array_field</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -86,7 +88,7 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="new_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.new_edge">[docs]</a><span class="k">def</span> <span class="nf">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">recurrent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="new_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.new_edge">[docs]</a><span class="k">def</span> <span class="nf">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">recurrent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span>
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dest</span>
@@ -102,7 +104,7 @@
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">innov</span><span class="o">.</span><span class="n">next_edge_id</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">e</span></div>
 
-<div class="viewcode-block" id="add_edge_layer_based"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.add_edge_layer_based">[docs]</a><span class="k">def</span> <span class="nf">add_edge_layer_based</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="add_edge_layer_based"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.add_edge_layer_based">[docs]</a><span class="k">def</span> <span class="nf">add_edge_layer_based</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Layer-based edge introduction strategy.</span>
 
 <span class="sd">    The implementation of this method is equivalent to strategy used in the</span>
@@ -147,7 +149,7 @@
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_edge_layer_agnostic"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.add_edge_layer_agnostic">[docs]</a><span class="k">def</span> <span class="nf">add_edge_layer_agnostic</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="add_edge_layer_agnostic"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.add_edge_layer_agnostic">[docs]</a><span class="k">def</span> <span class="nf">add_edge_layer_agnostic</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Introduce edges regardless of node layers.</span>
 
 <span class="sd">    See discussion for details: https://github.com/google/brain-tokyo-workshop/issues/18</span>
@@ -196,13 +198,15 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="add_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.add_edge">[docs]</a><span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="add_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.add_edge">[docs]</a><span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a new edge based on the strategy selected in experiment parameters.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s1">&#39;layer_based&#39;</span><span class="p">:</span> <span class="n">add_edge_layer_based</span><span class="p">,</span>
         <span class="s1">&#39;layer_agnostic&#39;</span><span class="p">:</span> <span class="n">add_edge_layer_agnostic</span>
     <span class="p">}[</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;mutation&#39;</span><span class="p">,</span> <span class="s1">&#39;new_edge&#39;</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">]](</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="reenable_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.reenable_edge">[docs]</a><span class="k">def</span> <span class="nf">reenable_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="reenable_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.reenable_edge">[docs]</a><span class="k">def</span> <span class="nf">reenable_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reenable one currently disabled edge.&quot;&quot;&quot;</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
 
     <span class="c1"># Choose an disabled edge</span>
@@ -218,7 +222,11 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="change_activation"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.change_activation">[docs]</a><span class="k">def</span> <span class="nf">change_activation</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="change_activation"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.change_activation">[docs]</a><span class="k">def</span> <span class="nf">change_activation</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change the activation of one node.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">n_act_funcs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span>  <span class="c1"># There is nothing we can change</span>
+
     <span class="n">nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="n">selected_node</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span>
@@ -234,7 +242,8 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="change_edge_sign"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.change_edge_sign">[docs]</a><span class="k">def</span> <span class="nf">change_edge_sign</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="change_edge_sign"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.change_edge_sign">[docs]</a><span class="k">def</span> <span class="nf">change_edge_sign</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change the sign of one edge (can be disabled in params; see :doc:`params`).&quot;&quot;&quot;</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
     <span class="c1"># Choose an enabled edge</span>
     <span class="n">options</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
@@ -249,7 +258,8 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="add_recurrent_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.add_recurrent_edge">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="add_recurrent_edge"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.add_recurrent_edge">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a recurrent edge to the genes (only enabled on recurrent tasks).&quot;&quot;&quot;</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span>
     <span class="n">src_options</span><span class="p">,</span> <span class="n">dest_options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">recurrent_weight_matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -278,7 +288,8 @@
 
 
 <span class="c1"># Genetic Operations</span>
-<div class="viewcode-block" id="mutation"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.mutation">[docs]</a><span class="k">def</span> <span class="nf">mutation</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+<div class="viewcode-block" id="mutation"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.individual.mutation">[docs]</a><span class="k">def</span> <span class="nf">mutation</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Randomly select one mutation method, apply the mutation and return a new individual.&quot;&quot;&quot;</span>
     <span class="n">supported_mutation_types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
         <span class="p">(</span><span class="s1">&#39;new_edge&#39;</span><span class="p">,</span> <span class="n">add_edge</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;new_node&#39;</span><span class="p">,</span> <span class="n">add_node</span><span class="p">),</span>
@@ -327,26 +338,6 @@
 
     <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No mutation possible.&quot;</span><span class="p">)</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No mutation possible.&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="path_exists"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.individual.genetic_operations.path_exists">[docs]</a><span class="k">def</span> <span class="nf">path_exists</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
-    <span class="c1"># if a disabled connections exists, there is also another path</span>
-    <span class="c1"># src, dest are indices for nodes in the network</span>
-
-    <span class="k">if</span> <span class="n">src</span> <span class="o">&gt;</span> <span class="n">dest</span><span class="p">:</span> <span class="c1"># no path possible (otherwise ordering would have to be different)</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="n">visited</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">visited</span><span class="p">[</span><span class="n">src</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">conn_mat</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">weight_matrix</span> <span class="o">!=</span> <span class="mi">0</span>
-
-    <span class="n">n_visited</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="n">n_visited</span> <span class="o">&lt;</span> <span class="nb">sum</span><span class="p">(</span><span class="n">visited</span><span class="p">):</span>
-        <span class="n">n_visited</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">visited</span><span class="p">)</span>
-
-        <span class="n">visited</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">[</span><span class="n">visited</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">visited</span><span class="p">[</span><span class="n">dest</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
 </pre></div>
 
           </div>
