@@ -6,7 +6,7 @@ import numpy as np
 
 import cv2
 
-def digit_raw(load_test=False):
+def digit_raw(test=False):
     '''
     Converts 8x8 scikit digits to
     [samples x pixels]  ([N X 64])
@@ -20,13 +20,13 @@ def digit_raw(load_test=False):
     return z, digits['target']
 
 
-def mnist_256(load_test=False):
+def mnist_256(test=False):
     '''
     Converts 28x28 mnist digits to [16x16]
     [samples x pixels]  ([N X 256])
     '''
     import mnist
-    if not load_test:
+    if not test:
         x = mnist.train_images()
         y_true = mnist.train_labels()
     else:
