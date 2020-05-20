@@ -10,18 +10,18 @@ import logging
 
 from .multi_spec import Specification
 
-def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
+def assemble_dataframe(spec_path, dir_path, params_map=dict()):
     assert os.path.isdir(dir_path)
     _, potential_results, _ = next(os.walk(dir_path))
 
     spec = Specification(spec_path)
 
-    exp = dict()
+    experiments = dict()
 
-    for name in spec.generate_experiments(names_only=True):
-        name = name.lower()
-        exp[name] = dict(_loaded=False)
-        exp[name].update(spec.name_parts)
+    for exp in spec.generate_flat_values():
+        name = exp['experiment_name'].lower()
+        experiments[name] = exp
+        experiments[name]['_loaded'] = False
 
     for dir in potential_results:
         dir = os.path.join(dir_path, dir)
@@ -38,19 +38,19 @@ def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
 
         exp_name = params['experiment_name'].lower()
 
-        if exp_name not in exp:
+        if exp_name not in experiments:
             logging.info(f'Found non-matching experiment: {exp_name}')
             continue
 
-        if exp[exp_name]['_loaded']:
+        if experiments[exp_name]['_loaded']:
             logging.warning(f'Duplicate experiment {exp_name}. Skipping.')
 
         with open(stats_path, 'r') as f:
             stats = json.load(f)
 
-        exp[exp_name].update(stats)
+        experiments[exp_name].update(stats)
 
-        for target, source in map_from_params.items():
+        for target, source in params_map.items():
             try:
                 if isinstance(source, str):
                     v = params[source]
@@ -58,16 +58,16 @@ def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
                     v = params
                     for k in source:
                         v = v[k]
-                exp[exp_name][target] = v
+                experiments[exp_name][target] = v
             except KeyError:
-                exp[exp_name][target] = np.nan
+                experiments[exp_name][target] = np.nan
 
-        exp[exp_name]['_loaded'] = True
+        experiments[exp_name]['_loaded'] = True
 
 
     # ensure expected experiments were loaded
     data = list()
-    for k, v in exp.items():
+    for k, v in experiments.items():
         if not v.pop('_loaded'):
             logging.info(f'Experiment {k} was not found')
         else:
@@ -85,10 +85,15 @@ def assemble_dataframe(spec_path, dir_path, map_from_params=dict()):
 
 
 
-def load_experiment_series(path, params_map=dict(), sort_by=False):
-    spec_path = os.path.join(path, 'spec.toml')
-    data_path = os.path.join(path, 'data')
-    df = assemble_dataframe(spec_path, data_path, map_from_params=params_map)
+def load_experiment_series(spec_path, params_map=dict(), sort_by=False, data_path=None):
+    if os.path.isdir(spec_path):
+        spec_path = os.path.join(spec_path, 'spec.toml')
+
+    if data_path is None:
+        dir_path = os.path.dirname(os.path.realpath(spec_path))
+        data_path = os.path.join(dir_path, 'data')
+
+    df = assemble_dataframe(spec_path, data_path, params_map=params_map)
 
     if sort_by is not False:
         df = df.sort_values(by=sort_by)

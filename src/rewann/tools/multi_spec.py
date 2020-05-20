@@ -54,32 +54,50 @@ class Specification:
     def get_exp_name(self):
         return self.name_fstr.format(**self.name_parts)
 
-    def update_params(self, params, var_index, v):
-        _, key, _, _ = self.variations[var_index]
+    def update_params(self, params, var_index, value, flat=False):
+        name, key, _, _ = self.variations[var_index]
         params = copy.deepcopy(params)
         target = params
 
-        if isinstance(key, list):
-            for k in key[:-1]:
-                target = target[k]
-
-            last_key = key[-1]
+        if flat:
+            if isinstance(value, dict):
+                for k, v in value.items():
+                    params[f"{name}/{k}"] = v
+            else:
+                params[name] = value
         else:
-            last_key = key
+            if isinstance(key, list):
+                for k in key[:-1]:
+                    try:
+                        target = target[k]
+                    except KeyError:
+                        target[k] = dict()
+                        target = target[k]
 
-        # modify params
-        if isinstance(v, dict) and isinstance(target[last_key], dict):
-            target[last_key].update(v)
-        else:
-            target[last_key] = v
+                last_key = key[-1]
+            else:
+                last_key = key
+
+            # modify params
+            if (isinstance(value, dict)
+                and last_key in target
+                and isinstance(target[last_key], dict)):
+
+                target[last_key].update(value)
+            else:
+                target[last_key] = value
 
         return params
 
-    def generate_experiments(self, params=None, var_index=0, names_only=False):
+    def generate_flat_values(self):
+        yield from self.generate_experiments(params=dict(), flat=True)
+
+
+    def generate_experiments(self, params=None, var_index=0, flat=False):
         if var_index == 0:
             self.name_parts = dict()
 
-            if params is None and not names_only:
+            if params is None:
                 params = self.base_params
 
         # apply variation
@@ -89,18 +107,12 @@ class Specification:
             self.update_name_parts(var_index, v)
 
 
-            if not names_only:
-                p_next = self.update_params(params, var_index, v)
-            else:
-                p_next = None
+            p_next = self.update_params(params, var_index, v, flat)
 
 
             if len(self.variations) - 1 == var_index:  # last variation
-                if names_only:
-                    yield self.get_exp_name()
-                else:
-                    p_next['experiment_name'] = self.get_exp_name()
-                    yield p_next
+                p_next['experiment_name'] = self.get_exp_name()
+                yield p_next
             else:
                 # traverse to next variation
-                yield from self.generate_experiments(p_next, var_index+1, names_only=names_only)
+                yield from self.generate_experiments(p_next, var_index+1, flat=flat)
