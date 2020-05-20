@@ -26,6 +26,7 @@ def experiment_test(params_path, tmp_path):
     logging.info(f'Max kappa score: {max_kappa}')
     assert mean_kappa > 0 and max_kappa > 0.4
 
+@pytest.mark.slow
 def test_layer_agnostic(tmp_path):
     experiment_test('tests/test_layer_agnostic.toml', tmp_path)
 
