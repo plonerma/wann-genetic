@@ -182,6 +182,9 @@ def reenable_edge(ind, env, innov):
     )
 
 def change_activation(ind, env, innov):
+    if not ind.network.n_act_funcs > 1:
+        return  # There is nothing we can change
+
     nodes = np.copy(ind.genes.nodes)
 
     selected_node = np.random.randint(len(nodes))
