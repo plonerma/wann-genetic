@@ -20,7 +20,7 @@ setup(
             'draw_network = rewann.postopt.report:draw_network',
 
             # multivariate experiment series generation
-            'generate_experiment_series = rewann.tools.generate_experiments:generate_experiments',
+            'generate_experiment_series = rewann.tools.cli:generate_experiments',
         ],
     },
     package_data={'rewann': ['environment/default.toml']},
