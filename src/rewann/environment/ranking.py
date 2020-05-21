@@ -32,7 +32,7 @@ def rank_individuals(population, objectives, return_order=False):
 
     Parameters
     ----------
-    population : List[Individual]
+    population : List[rewann.Individual]
         List of individuals to rank.
     objectives : tuple
         Tuple (metric_names, sign) that specifies the objectives.
