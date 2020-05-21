@@ -12,24 +12,9 @@ def expressed(func):
     return exp_func
 
 class Individual:
-    """ Collection of representations of an individual.
+    """Collection of representations of an individual.
 
     Will contain genes (genotype), network (phenotype), and performance statistics (fitness).
-
-    Parameters
-    --------------------
-    genes : rewann.Genes
-    network : rewann.Network, optional
-    id : int, optional
-    birth: int, optional
-        Index of the generation the individual was created
-    parent : int, optional
-        Id of the parent individual (self is result of a mutation on parent)
-    mutations : int, optional
-        Length of the chain of mutations that led to this individual
-    measurements : dict
-        Measurements that have already been made on the individual (might be overwritten)
-
     """
 
     from .genes import Genes as Genotype
@@ -41,6 +26,23 @@ class Individual:
     recorded_measures = 'accuracy', 'kappa', 'log_loss'
 
     def __init__(self, genes=None, network=None, measurements=None, id=None, birth=None, parent=None, mutations=0):
+        """Initialize individual.
+
+        Parameters
+        ----------
+        genes : rewann.Genes
+        network : rewann.Network, optional
+        id : int, optional
+        birth: int, optional
+            Index of the generation the individual was created
+        parent : int, optional
+            Id of the parent individual (self is result of a mutation on parent)
+        mutations : int, optional
+            Length of the chain of mutations that led to this individual
+        measurements : dict
+            Measurements that have already been made on the individual (might be overwritten)
+
+        """
         self.genes = genes
         self.network = network
         self.id = id

@@ -175,6 +175,9 @@ def evolve_population(env, pop, innov):
     Parameters
     ----------
     env : rewann.Environment
+        Environment to use for params
+    pop : list
+        current population
     innov: InnovationRecord
         used for tracking ids etc.
     """

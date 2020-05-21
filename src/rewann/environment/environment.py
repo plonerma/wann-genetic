@@ -36,8 +36,8 @@ class Environment(ParamTree):
     def __init__(self, params):
         """Initialize an environment for training or post training analysis.
 
-        Paramerters
-        -----------
+        Parameters
+        ----------
         params : dict or str
             Dictionary containing the parameters or a path to a parameters spec file.
 
