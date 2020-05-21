@@ -9,4 +9,4 @@ ReWann
    experiment_series
    cli
    network_propagation
-   rewann
+   modules

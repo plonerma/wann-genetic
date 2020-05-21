@@ -50,24 +50,9 @@
     <span class="k">return</span> <span class="n">exp_func</span></div>
 
 <div class="viewcode-block" id="Individual"><a class="viewcode-back" href="../../../rewann.individual.html#rewann.Individual">[docs]</a><span class="k">class</span> <span class="nc">Individual</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Collection of representations of an individual.</span>
+    <span class="sd">&quot;&quot;&quot;Collection of representations of an individual.</span>
 
 <span class="sd">    Will contain genes (genotype), network (phenotype), and performance statistics (fitness).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    --------------------</span>
-<span class="sd">    genes : rewann.Genes</span>
-<span class="sd">    network : rewann.Network, optional</span>
-<span class="sd">    id : int, optional</span>
-<span class="sd">    birth: int, optional</span>
-<span class="sd">        Index of the generation the individual was created</span>
-<span class="sd">    parent : int, optional</span>
-<span class="sd">        Id of the parent individual (self is result of a mutation on parent)</span>
-<span class="sd">    mutations : int, optional</span>
-<span class="sd">        Length of the chain of mutations that led to this individual</span>
-<span class="sd">    measurements : dict</span>
-<span class="sd">        Measurements that have already been made on the individual (might be overwritten)</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">.genes</span> <span class="kn">import</span> <span class="n">Genes</span> <span class="k">as</span> <span class="n">Genotype</span>
@@ -79,6 +64,23 @@
     <span class="n">recorded_measures</span> <span class="o">=</span> <span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;kappa&#39;</span><span class="p">,</span> <span class="s1">&#39;log_loss&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">network</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">measurements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">birth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mutations</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize individual.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        genes : rewann.Genes</span>
+<span class="sd">        network : rewann.Network, optional</span>
+<span class="sd">        id : int, optional</span>
+<span class="sd">        birth: int, optional</span>
+<span class="sd">            Index of the generation the individual was created</span>
+<span class="sd">        parent : int, optional</span>
+<span class="sd">            Id of the parent individual (self is result of a mutation on parent)</span>
+<span class="sd">        mutations : int, optional</span>
+<span class="sd">            Length of the chain of mutations that led to this individual</span>
+<span class="sd">        measurements : dict</span>
+<span class="sd">            Measurements that have already been made on the individual (might be overwritten)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">genes</span> <span class="o">=</span> <span class="n">genes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">network</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>

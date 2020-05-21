@@ -53,8 +53,8 @@
 <span class="kn">from</span> <span class="nn">.tasks</span> <span class="kn">import</span> <span class="n">select_task</span>
 <span class="kn">from</span> <span class="nn">.evolution</span> <span class="kn">import</span> <span class="n">evolution</span><span class="p">,</span> <span class="n">update_hof</span>
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">get_version</span><span class="p">,</span> <span class="n">TimeStore</span>
-<span class="kn">from</span> <span class="nn">.params</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 
+<span class="kn">from</span> <span class="nn">rewann.util</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 <span class="kn">from</span> <span class="nn">rewann.postopt</span> <span class="kn">import</span> <span class="n">Report</span>
 
 
@@ -62,6 +62,11 @@
     <span class="sd">&quot;&quot;&quot;Environment for executing training and post training evaluations.</span>
 
 <span class="sd">    Takes care of process pool, reporting, and experiment parameters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    params : dict or str</span>
+<span class="sd">        Dictionary containing the parameters or a path to a parameters spec file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">default_params</span><span class="p">,</span> <span class="n">setup_params</span><span class="p">,</span> <span class="n">open_data</span><span class="p">,</span>
@@ -72,14 +77,7 @@
                        <span class="n">env_path</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize an environment for training or post training analysis.</span>
-
-<span class="sd">        Paramerters</span>
-<span class="sd">        -----------</span>
-<span class="sd">        params : dict or str</span>
-<span class="sd">            Dictionary containing the parameters or a path to a parameters spec file.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Initialize an environment for training or post training analysis.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
@@ -164,6 +162,7 @@
         <span class="k">return</span> <span class="n">w</span></div>
 
 <div class="viewcode-block" id="Environment.setup_pool"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.setup_pool">[docs]</a>    <span class="k">def</span> <span class="nf">setup_pool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Setup process pool.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;num_workers&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -178,6 +177,9 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.setup_optimization"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.setup_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">setup_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Setup everything that is required for training (eg. loading test</span>
+<span class="sd">        samples).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;log_filename&#39;</span><span class="p">])</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check log (&#39;</span><span class="si">{</span><span class="n">log_path</span><span class="si">}</span><span class="s2">&#39;) for details.&quot;</span><span class="p">)</span>
 
@@ -213,6 +215,7 @@
 
 
 <div class="viewcode-block" id="Environment.run"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run optization and post optimization (if enabled).&quot;&quot;&quot;</span>
         <span class="c1"># set up logging, write params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_optimization</span><span class="p">()</span>
 
@@ -293,7 +296,38 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">commit_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gen</span> <span class="o">%</span> <span class="n">commit_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">store_gen_metrics</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Environment.population_metrics"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.population_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">population_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">gen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reduced_values</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.population_metrics"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.population_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">population_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">gen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get available measurements for all individuals in the population and</span>
+<span class="sd">        calculate statistical key metrics.</span>
+
+<span class="sd">        The statistical key metrics include:</span>
+
+<span class="sd">        `Q_{0, 4}`</span>
+<span class="sd">            The quartiles :math:`\{1, 2, 3\}` as well as the minimum and</span>
+<span class="sd">            maximum :math:`(0,4)`.</span>
+<span class="sd">        `MEAN`, `STD`</span>
+<span class="sd">            Mean and standard deviation.</span>
+<span class="sd">        `MIN`, `MEDIAN`, `MAX`</span>
+<span class="sd">            Equal to `Q_0`, `Q_2`, `Q_3`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        population : [rewann.Individual]</span>
+<span class="sd">            List of individuals that constitute the population.</span>
+<span class="sd">        gen : int</span>
+<span class="sd">            Current generation index (required for caluclating the individuals</span>
+<span class="sd">            age).</span>
+<span class="sd">        return_indiv_measurements : bool, optional</span>
+<span class="sd">            Whether to return the individual measurements as well.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            Dictionary of the produced measurements (cross product of key</span>
+<span class="sd">            metrics and a list of individual measurements).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">gen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]</span>
 

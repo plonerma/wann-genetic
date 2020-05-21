@@ -133,9 +133,9 @@ All the name part for all the variable are then combined to determine the name o
 <div class="section" id="analysis-of-experiment-series">
 <span id="series-analysis"></span><h2>Analysis of Experiment Series<a class="headerlink" href="#analysis-of-experiment-series" title="Permalink to this headline">¶</a></h2>
 <p>In order to easily compare the results of the series, use the <code class="docutils literal notranslate"><span class="pre">load_experiment_series</span></code> function:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">from</span> <span class="n">rewann</span><span class="p">.</span><span class="n">tools</span><span class="p">.</span><span class="n">compare_experiments</span> <span class="n">import</span> <span class="n">load_experiment_series</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rewann.tools</span> <span class="kn">import</span> <span class="n">load_series_stats</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">load_experiment_series</span><span class="p">(</span><span class="s">&quot;path_to_series_spec&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_series_stats</span><span class="p">(</span><span class="s2">&quot;path_to_series_spec&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Pass the path to a copy of the series spec file to the function. It expects the experiment data to be in a directory ‘data’ in the same directory. Use the <cite>data_path</cite> argument to specify another location if necessary. If you want to read in additional values from the params files, use the params_map argument (containing a mapping of <cite>column</cite>: list of keys determining the field in the parameters).</p>

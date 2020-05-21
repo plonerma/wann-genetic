@@ -140,12 +140,12 @@ Analysis of Experiment Series
 
 In order to easily compare the results of the series, use the ``load_experiment_series`` function:
 
-.. highlight::python
+.. highlight:: python
 
 ::
 
-  from rewann.tools.compare_experiments import load_experiment_series
+  from rewann.tools import load_series_stats
 
-  df = load_experiment_series("path_to_series_spec")
+  df = load_series_stats("path_to_series_spec")
 
 Pass the path to a copy of the series spec file to the function. It expects the experiment data to be in a directory 'data' in the same directory. Use the `data_path` argument to specify another location if necessary. If you want to read in additional values from the params files, use the params_map argument (containing a mapping of `column`: list of keys determining the field in the parameters).

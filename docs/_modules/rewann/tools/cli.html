@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.tools.generate_experiments &#8212; ReWann  documentation</title>
+    <title>rewann.tools.cli &#8212; ReWann  documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -35,23 +35,20 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for rewann.tools.generate_experiments</h1><div class="highlight"><pre>
+  <h1>Source code for rewann.tools.cli</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Command Line Script for generating a series of experiments based on</span>
 <span class="sd">    specification and base parameters for multivariate testing. &quot;&quot;&quot;</span>
 
 
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
-<span class="kn">import</span> <span class="nn">toml</span>
-<span class="kn">import</span> <span class="nn">os</span>
+
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">.experiment_series</span> <span class="kn">import</span> <span class="n">ExperimentSeries</span>
 
 
-<span class="kn">from</span> <span class="nn">.multi_spec</span> <span class="kn">import</span> <span class="n">Specification</span>
 
-
-<div class="viewcode-block" id="generate_experiments"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.generate_experiments.generate_experiments">[docs]</a><span class="k">def</span> <span class="nf">generate_experiments</span><span class="p">():</span>
+<div class="viewcode-block" id="generate_experiments"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.cli.generate_experiments">[docs]</a><span class="k">def</span> <span class="nf">generate_experiments</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Generate a series of experiments &quot;</span>
                             <span class="s2">&quot;based on specification and base parameters for &quot;</span>
                             <span class="s2">&quot;multivariate testing.&quot;</span><span class="p">)</span>
@@ -64,25 +61,7 @@
 
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 
-    <span class="n">spec</span> <span class="o">=</span> <span class="n">Specification</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span>
-
-    <span class="c1"># ensure the build directory exists</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">generate_experiments</span><span class="p">()):</span>
-
-        <span class="n">slug</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;experiment_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">slug</span><span class="si">}</span><span class="s2">.toml&quot;</span><span class="p">)</span>
-
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">toml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Generated </span><span class="si">{</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1"> files.&#39;</span><span class="p">)</span></div>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">generate_experiments</span><span class="p">()</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span><span class="o">.</span><span class="n">create_experiment_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

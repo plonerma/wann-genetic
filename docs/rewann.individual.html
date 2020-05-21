@@ -53,24 +53,9 @@
 <dl class="py class">
 <dt id="rewann.individual.individual.Individual">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.individual.individual.</code><code class="sig-name descname">Individual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">measurements</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">birth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mutations</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/individual.html#Individual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.individual.Individual" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Collection of representations of an individual.</p>
 <p>Will contain genes (genotype), network (phenotype), and performance statistics (fitness).</p>
-<p>genes : rewann.Genes
-network : rewann.Network, optional
-id : int, optional
-birth: int, optional</p>
-<blockquote>
-<div><p>Index of the generation the individual was created</p>
-</div></blockquote>
-<dl class="simple">
-<dt>parent<span class="classifier">int, optional</span></dt><dd><p>Id of the parent individual (self is result of a mutation on parent)</p>
-</dd>
-<dt>mutations<span class="classifier">int, optional</span></dt><dd><p>Length of the chain of mutations that led to this individual</p>
-</dd>
-<dt>measurements<span class="classifier">dict</span></dt><dd><p>Measurements that have already been made on the individual (might be overwritten)</p>
-</dd>
-</dl>
 <dl class="py attribute">
 <dt id="rewann.individual.individual.Individual.Genotype">
 <code class="sig-name descname">Genotype</code><a class="headerlink" href="#rewann.individual.individual.Individual.Genotype" title="Permalink to this definition">¶</a></dt>
@@ -168,7 +153,7 @@ birth: int, optional</p>
 <dl class="py class">
 <dt id="rewann.individual.network.Network">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.individual.network.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_in</span></em>, <em class="sig-param"><span class="n">n_out</span></em>, <em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">weight_matrix</span></em>, <em class="sig-param"><span class="n">conn_mat</span></em>, <em class="sig-param"><span class="n">propagation_steps</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Feed Forward Neural Network</p>
 <p>For an explanation of how propagation works, see <a class="reference internal" href="network_propagation.html"><span class="doc">Implementation of Signal Propagation in Neural Networks</span></a>.</p>
 <dl class="py method">
@@ -210,8 +195,9 @@ birth: int, optional</p>
 <dd><p>Get layers of nodes (a hierachical sorting).</p>
 <p>Nodes in layer <span class="math notranslate nohighlight">\(i\)</span> will not have any incoming edges from nodes in
 layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
-<dl class="simple">
-<dt>including_input<span class="classifier">bool, default=False</span></dt><dd><p>yield input layer as first layer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>including_input</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>default=False</em>) – yield input layer as first layer</p>
 </dd>
 </dl>
 </dd></dl>
@@ -278,7 +264,7 @@ layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
 <dl class="py class">
 <dt id="rewann.individual.genes.Genes">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.individual.genes.</code><code class="sig-name descname">Genes</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">edges</span></em>, <em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">n_in</span></em>, <em class="sig-param"><span class="n">n_out</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/genes.html#Genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.genes.Genes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Genetic encoding of Feed Forward Networks.</p>
 <dl class="py method">
 <dt id="rewann.individual.genes.Genes.copy">
@@ -359,7 +345,7 @@ layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
 <dl class="py exception">
 <dt id="rewann.individual.expression.NetworkCyclicException">
 <em class="property">exception </em><code class="sig-prename descclassname">rewann.individual.expression.</code><code class="sig-name descname">NetworkCyclicException</code><a class="reference internal" href="_modules/rewann/individual/expression.html#NetworkCyclicException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.expression.NetworkCyclicException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Raised when encountering a gene which would lead to a cyclic network.</p>
 </dd></dl>
 
@@ -376,7 +362,7 @@ layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
 
 <dl class="py function">
 <dt id="rewann.individual.expression.get_array_field">
-<code class="sig-prename descclassname">rewann.individual.expression.</code><code class="sig-name descname">get_array_field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/expression.html#get_array_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.expression.get_array_field" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rewann.individual.expression.</code><code class="sig-name descname">get_array_field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/expression.html#get_array_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.expression.get_array_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return field if it exists else return default value.</p>
 </dd></dl>
 
@@ -390,17 +376,23 @@ layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
 <dt id="rewann.individual.expression.remap_node_ids">
 <code class="sig-prename descclassname">rewann.individual.expression.</code><code class="sig-name descname">remap_node_ids</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/expression.html#remap_node_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.expression.remap_node_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map node ids to continous node indices.</p>
-<blockquote>
-<div><p>np.array - copy of gene edges with src and dest replaced by indeces</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.array - copy of gene edges with src and dest replaced by indeces</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="rewann.individual.expression.softmax">
 <code class="sig-prename descclassname">rewann.individual.expression.</code><code class="sig-name descname">softmax</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/expression.html#softmax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.expression.softmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute softmax values for each sets of scores in x.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>softmax - softmax normalized in dim axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>softmax - softmax normalized in dim axis</p>
 </dd>
 </dl>
 </dd></dl>
@@ -495,12 +487,13 @@ original implementation.</p>
 <dd><p>Update existing dictionary of measurements.</p>
 <p>Calculates value for measure and all values the measures depends on.
 Edits values in place.</p>
-<dl class="simple">
-<dt>values<span class="classifier">dict</span></dt><dd><p>values that have already been calculated (or are ground data)</p>
-</dd>
-<dt>names<span class="classifier">list</span></dt><dd><p>list of measures (given by their names) to calculate</p>
-</dd>
-<dt>pending<span class="classifier">set, optional</span></dt><dd><p>used to detect circular dependencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – values that have already been calculated (or are ground data)</p></li>
+<li><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – list of measures (given by their names) to calculate</p></li>
+<li><p><strong>pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)"><em>set</em></a><em>, </em><em>optional</em>) – used to detect circular dependencies</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -549,10 +542,12 @@ Edits values in place.</p>
 training evaluations. Can bes used as a decorator (<cite>&#64;new_measure</cite> - the
 measure will have the same name as the decorated function) or as a regular
 func (then <cite>name</cite> parameter can be set)</p>
-<dl class="simple">
-<dt>func<span class="classifier">Callable</span></dt><dd><p>wrapped function</p>
-</dd>
-<dt>name<span class="classifier">str, optional</span></dt><dd><p>name of the measure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>Callable</em>) – wrapped function</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>optional</em>) – name of the measure</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

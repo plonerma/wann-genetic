@@ -57,6 +57,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
@@ -115,7 +116,7 @@
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.apply_networks">apply_networks() (in module rewann.environment.evolution)</a>
 </li>
-      <li><a href="rewann.tools.html#rewann.tools.compare_experiments.assemble_dataframe">assemble_dataframe() (in module rewann.tools.compare_experiments)</a>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.assemble_stats">assemble_stats() (rewann.tools.experiment_series.ExperimentSeries method)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.available_act_functions">available_act_functions (rewann.individual.network.Network attribute)</a>
 </li>
@@ -143,15 +144,23 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.measures.cm">cm() (in module rewann.individual.measures)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.compile">compile() (rewann.postopt.report.Report method)</a>
 </li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.compile_report">compile_report() (in module rewann.postopt.report)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.compile_stats">compile_stats() (rewann.postopt.report.Report method)</a>
 </li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.configuration_name">configuration_name() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.configuration_params">configuration_params() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.configurations">configurations() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
       <li><a href="rewann.individual.html#rewann.individual.genes.Genes.copy">copy() (rewann.individual.genes.Genes method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.create_experiment_files">create_experiment_files() (rewann.tools.experiment_series.ExperimentSeries method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.create_initial_population">create_initial_population() (in module rewann.environment.evolution)</a>
 </li>
@@ -170,6 +179,8 @@
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.deskew">deskew() (in module rewann.environment.tasks.image)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.image.digit_raw">digit_raw() (in module rewann.environment.tasks.image)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.discover_data_dir">discover_data_dir() (rewann.tools.experiment_series.ExperimentSeries method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -211,14 +222,14 @@
         <li><a href="rewann.individual.html#rewann.individual.individual.Individual.empty_initial">(rewann.individual.individual.Individual class method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.util.env_path">env_path() (in module rewann.environment.util)</a>
 
       <ul>
         <li><a href="rewann.environment.html#rewann.environment.environment.Environment.env_path">(rewann.environment.environment.Environment method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.html#rewann.Environment">Environment (class in rewann)</a>
 
       <ul>
@@ -231,6 +242,14 @@
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.evolve_population">evolve_population() (in module rewann.environment.evolution)</a>
 </li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.experiment_paths">experiment_paths (rewann.tools.experiment_series.ExperimentSeries attribute)</a>
+</li>
+      <li><a href="rewann.html#rewann.tools.ExperimentSeries">ExperimentSeries (class in rewann.tools)</a>
+
+      <ul>
+        <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries">(class in rewann.tools.experiment_series)</a>
+</li>
+      </ul></li>
       <li><a href="rewann.individual.html#rewann.individual.individual.Individual.express">express() (rewann.individual.individual.Individual method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.express_inds">express_inds() (in module rewann.environment.evolution)</a>
@@ -249,6 +268,10 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.measures.false_positives">false_positives() (in module rewann.individual.measures)</a>
 </li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.flat_values">flat_values() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.fmt">fmt (rewann.tools.experiment_series.Variable attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.individual.html#rewann.individual.network.Network.from_genes">from_genes() (rewann.individual.network.Network class method)</a>
@@ -257,6 +280,8 @@
         <li><a href="rewann.individual.html#rewann.individual.network.RecurrentNetwork.from_genes">(rewann.individual.network.RecurrentNetwork class method)</a>
 </li>
       </ul></li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.from_spec_file">from_spec_file() (rewann.tools.experiment_series.ExperimentSeries class method)</a>
+</li>
       <li><a href="rewann.individual.html#rewann.individual.genes.Genes.full_initial">full_initial() (rewann.individual.genes.Genes class method)</a>
 
       <ul>
@@ -271,16 +296,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.util.gen_key">gen_key() (in module rewann.environment.util)</a>
 </li>
-      <li><a href="rewann.tools.html#rewann.tools.generate_experiments.generate_experiments">generate_experiments() (in module rewann.tools.generate_experiments)</a>
+      <li><a href="rewann.tools.html#rewann.tools.cli.generate_experiments">generate_experiments() (in module rewann.tools.cli)</a>
+</li>
+      <li><a href="rewann.html#rewann.Genes">Genes (class in rewann)</a>
 
       <ul>
-        <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.generate_experiments">(rewann.tools.multi_spec.Specification method)</a>
+        <li><a href="rewann.individual.html#rewann.individual.genes.Genes">(class in rewann.individual.genes)</a>
 </li>
       </ul></li>
-      <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.generate_flat_values">generate_flat_values() (rewann.tools.multi_spec.Specification method)</a>
-</li>
-      <li><a href="rewann.individual.html#rewann.individual.genes.Genes">Genes (class in rewann.individual.genes)</a>
-</li>
       <li><a href="rewann.individual.html#rewann.individual.individual.Individual.Genotype">Genotype (rewann.individual.individual.Individual attribute)</a>
 
       <ul>
@@ -301,8 +324,6 @@
         <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.rnn.EchoTask.get_data">(rewann.environment.tasks.rnn.EchoTask method)</a>
 </li>
       </ul></li>
-      <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.get_exp_name">get_exp_name() (rewann.tools.multi_spec.Specification method)</a>
-</li>
       <li><a href="rewann.environment.html#rewann.environment.ranking.get_objective_values">get_objective_values() (in module rewann.environment.ranking)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.get_version">get_version() (in module rewann.environment.util)</a>
@@ -327,6 +348,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.init_variables">init_variables() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.evolution.InnovationRecord">InnovationRecord (class in rewann.environment.evolution)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.RecurrentTask.is_recurrent">is_recurrent (rewann.environment.tasks.base.RecurrentTask attribute)</a>
@@ -335,6 +358,8 @@
         <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.Task.is_recurrent">(rewann.environment.tasks.base.Task attribute)</a>
 </li>
       </ul></li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.iter_indices">iter_indices() (rewann.tools.experiment_series.Variable method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -342,6 +367,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.individual.html#rewann.individual.measures.kappa">kappa() (in module rewann.individual.measures)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.key">key (rewann.tools.experiment_series.Variable attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -391,6 +420,8 @@
         <li><a href="rewann.environment.html#rewann.environment.environment.Environment.load_pop">(rewann.environment.environment.Environment method)</a>
 </li>
       </ul></li>
+      <li><a href="rewann.tools.html#rewann.tools.compare_experiments.load_series_stats">load_series_stats() (in module rewann.tools.compare_experiments)</a>
+</li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.Task.load_test">load_test() (rewann.environment.tasks.base.Task method)</a>
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.base.Task.load_training">load_training() (rewann.environment.tasks.base.Task method)</a>
@@ -426,8 +457,6 @@
         <li><a href="rewann.environment.html#module-rewann.environment.environment">rewann.environment.environment</a>
 </li>
         <li><a href="rewann.environment.html#module-rewann.environment.evolution">rewann.environment.evolution</a>
-</li>
-        <li><a href="rewann.environment.html#module-rewann.environment.params">rewann.environment.params</a>
 </li>
         <li><a href="rewann.environment.html#module-rewann.environment.ranking">rewann.environment.ranking</a>
 </li>
@@ -467,11 +496,13 @@
 </li>
         <li><a href="rewann.tools.html#module-rewann.tools">rewann.tools</a>
 </li>
+        <li><a href="rewann.tools.html#module-rewann.tools.cli">rewann.tools.cli</a>
+</li>
         <li><a href="rewann.tools.html#module-rewann.tools.compare_experiments">rewann.tools.compare_experiments</a>
 </li>
-        <li><a href="rewann.tools.html#module-rewann.tools.generate_experiments">rewann.tools.generate_experiments</a>
+        <li><a href="rewann.tools.html#module-rewann.tools.experiment_series">rewann.tools.experiment_series</a>
 </li>
-        <li><a href="rewann.tools.html#module-rewann.tools.multi_spec">rewann.tools.multi_spec</a>
+        <li><a href="rewann.html#module-rewann.util">rewann.util</a>
 </li>
       </ul></li>
   </ul></td>
@@ -510,9 +541,7 @@
       </ul></li>
       <li><a href="rewann.individual.html#rewann.individual.genes.Genes.n_static">n_static() (rewann.individual.genes.Genes property)</a>
 </li>
-      <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.name_parts">name_parts (rewann.tools.multi_spec.Specification attribute)</a>
-</li>
-      <li><a href="rewann.environment.html#rewann.environment.params.nested_update">nested_update() (in module rewann.environment.params)</a>
+      <li><a href="rewann.html#rewann.util.nested_update">nested_update() (in module rewann.util)</a>
 </li>
       <li><a href="rewann.html#rewann.Network">Network (class in rewann)</a>
 
@@ -544,6 +573,8 @@
 </li>
       <li><a href="rewann.individual.html#rewann.individual.genes.Genes.nodes">nodes (rewann.individual.genes.Genes attribute)</a>
 </li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.num_configurations">num_configurations() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
       <li><a href="rewann.individual.html#rewann.individual.measures.num_used_activation_functions">num_used_activation_functions() (in module rewann.individual.measures)</a>
 </li>
   </ul></td>
@@ -570,7 +601,7 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rewann.environment.html#rewann.environment.params.ParamTree">ParamTree (class in rewann.environment.params)</a>
+      <li><a href="rewann.html#rewann.util.ParamTree">ParamTree (class in rewann.util)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.individual.Individual.Phenotype">Phenotype (rewann.individual.individual.Individual attribute)</a>
 
@@ -655,13 +686,6 @@
 </li>
       </ul></li>
       <li>
-    rewann.environment.params
-
-      <ul>
-        <li><a href="rewann.environment.html#module-rewann.environment.params">module</a>
-</li>
-      </ul></li>
-      <li>
     rewann.environment.ranking
 
       <ul>
@@ -703,8 +727,6 @@
         <li><a href="rewann.environment.tasks.html#module-rewann.environment.tasks.rnn">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.environment.util
 
@@ -712,6 +734,8 @@
         <li><a href="rewann.environment.html#module-rewann.environment.util">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.individual
 
@@ -797,6 +821,13 @@
 </li>
       </ul></li>
       <li>
+    rewann.tools.cli
+
+      <ul>
+        <li><a href="rewann.tools.html#module-rewann.tools.cli">module</a>
+</li>
+      </ul></li>
+      <li>
     rewann.tools.compare_experiments
 
       <ul>
@@ -804,17 +835,17 @@
 </li>
       </ul></li>
       <li>
-    rewann.tools.generate_experiments
+    rewann.tools.experiment_series
 
       <ul>
-        <li><a href="rewann.tools.html#module-rewann.tools.generate_experiments">module</a>
+        <li><a href="rewann.tools.html#module-rewann.tools.experiment_series">module</a>
 </li>
       </ul></li>
       <li>
-    rewann.tools.multi_spec
+    rewann.util
 
       <ul>
-        <li><a href="rewann.tools.html#module-rewann.tools.multi_spec">module</a>
+        <li><a href="rewann.html#module-rewann.util">module</a>
 </li>
       </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.run">run() (rewann.environment.environment.Environment method)</a>
@@ -835,6 +866,8 @@
 </li>
       <li><a href="rewann.environment.tasks.html#rewann.environment.tasks.select_task">select_task() (in module rewann.environment.tasks)</a>
 </li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.set_value">set_value() (rewann.tools.experiment_series.Variable method)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.setup_optimization">setup_optimization() (rewann.environment.environment.Environment method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.setup_params">setup_params() (in module rewann.environment.util)</a>
@@ -848,8 +881,6 @@
       <li><a href="rewann.individual.html#rewann.individual.expression.softmax">softmax() (in module rewann.individual.expression)</a>
 </li>
       <li><a href="rewann.individual.html#rewann.individual.expression.sort_hidden_nodes">sort_hidden_nodes() (in module rewann.individual.expression)</a>
-</li>
-      <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification">Specification (class in rewann.tools.multi_spec)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.TimeStore.start">start() (rewann.environment.util.TimeStore method)</a>
 </li>
@@ -927,16 +958,32 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="rewann.environment.html#rewann.environment.evolution.update_hof">update_hof() (in module rewann.environment.evolution)</a>
 </li>
-      <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.update_name_parts">update_name_parts() (rewann.tools.multi_spec.Specification method)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.html#rewann.util.ParamTree.update_params">update_params() (rewann.util.ParamTree method)</a>
+</li>
+      <li><a href="rewann.html#rewann.util.ParamTree.update_params_at">update_params_at() (rewann.util.ParamTree method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.value">value() (rewann.tools.experiment_series.Variable method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.value_name">value_name() (rewann.tools.experiment_series.Variable method)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable.values">values (rewann.tools.experiment_series.Variable attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rewann.environment.html#rewann.environment.params.ParamTree.update_params">update_params() (rewann.environment.params.ParamTree method)</a>
-
-      <ul>
-        <li><a href="rewann.tools.html#rewann.tools.multi_spec.Specification.update_params">(rewann.tools.multi_spec.Specification method)</a>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.var_names">var_names() (rewann.tools.experiment_series.ExperimentSeries method)</a>
 </li>
-      </ul></li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.Variable">Variable (class in rewann.tools.experiment_series)</a>
+</li>
+      <li><a href="rewann.tools.html#rewann.tools.experiment_series.ExperimentSeries.vars">vars() (rewann.tools.experiment_series.ExperimentSeries method)</a>
+</li>
   </ul></td>
 </tr></table>
 

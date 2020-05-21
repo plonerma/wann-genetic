@@ -28,14 +28,6 @@ rewann.environment.evolution module
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.params module
---------------------------------
-
-.. automodule:: rewann.environment.params
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 rewann.environment.ranking module
 ---------------------------------
 

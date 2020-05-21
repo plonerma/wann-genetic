@@ -3,6 +3,7 @@ Getting Started
 
 This guide is supposed to provide all the information required to run first experiments. For generating series of experiments see :doc:`experiment_series`.
 
+
 Installation
 ------------
 
@@ -121,4 +122,9 @@ To produce a html document from the markdown file, `pandoc <https://pandoc.org/>
 Example report
 --------------
 
-The resulting report might look like this example report (:doc:`example_report`).
+The resulting report might look like this example report:
+
+.. toctree::
+   :maxdepth: 2
+
+   example_report
