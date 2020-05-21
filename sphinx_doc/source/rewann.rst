@@ -6,10 +6,12 @@ rewann package
 .. autoclass:: rewann.Individual
   :members: measurements, recorded_measures
 
-.. autoclass:: rewann.Genotype
+.. autoclass:: rewann.Genes
   :members: apply,
 
 .. autoclass:: rewann.Network
+
+.. autoclass:: rewann.tools.ExperimentSeries
 
 Subpackages
 -----------
@@ -21,6 +23,18 @@ Subpackages
    rewann.individual
    rewann.postopt
    rewann.tools
+
+Submodules
+----------
+
+rewann.util module
+------------------
+
+.. automodule:: rewann.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
