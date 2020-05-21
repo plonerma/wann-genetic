@@ -36,6 +36,7 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'recommonmark',
     'sphinx_markdown_tables']
 
@@ -47,6 +48,13 @@ source_suffix = {
     '.txt': 'markdown',
     '.md': 'markdown',
 }
+
+
+intersphinx_mapping = {'python': ('http://docs.python.org/3', None),
+                       'numpy': ('https://numpy.org/doc/stable/', None),
+                       'scipy': ('http://docs.scipy.org/doc/scipy/reference', None),
+                       'matplotlib': ('https://matplotlib.org', None),
+                       'h5py': ('https://docs.h5py.org/en/latest/', None)}
 
 # The master toctree document.
 master_doc = 'index'
