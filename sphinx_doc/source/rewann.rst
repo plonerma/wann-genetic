@@ -7,9 +7,9 @@ rewann package
   :members: measurements, recorded_measures
 
 .. autoclass:: rewann.Genes
-  :members: apply,
 
 .. autoclass:: rewann.Network
+  :members: apply,
 
 .. autoclass:: rewann.tools.ExperimentSeries
 
