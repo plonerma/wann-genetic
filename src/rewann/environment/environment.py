@@ -15,8 +15,8 @@ from rewann import Individual, RecurrentIndividual
 from .tasks import select_task
 from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
-from .params import ParamTree
 
+from rewann.util import ParamTree
 from rewann.postopt import Report
 
 
