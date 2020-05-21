@@ -24,6 +24,11 @@ class Environment(ParamTree):
     """Environment for executing training and post training evaluations.
 
     Takes care of process pool, reporting, and experiment parameters.
+
+    Parameters
+    ----------
+    params : dict or str
+        Dictionary containing the parameters or a path to a parameters spec file.
     """
 
     from .util import (default_params, setup_params, open_data,
@@ -34,14 +39,7 @@ class Environment(ParamTree):
                        env_path)
 
     def __init__(self, params):
-        """Initialize an environment for training or post training analysis.
-
-        Parameters
-        ----------
-        params : dict or str
-            Dictionary containing the parameters or a path to a parameters spec file.
-
-        """
+        """Initialize an environment for training or post training analysis."""
         super().__init__()
 
         self.setup_params(params)
@@ -126,6 +124,7 @@ class Environment(ParamTree):
         return w
 
     def setup_pool(self, n=None):
+        """Setup process pool."""
         if n is None:
             n = self['config', 'num_workers']
         if n == 1:
@@ -140,6 +139,9 @@ class Environment(ParamTree):
             return self.pool.imap(func, iter)
 
     def setup_optimization(self):
+        """Setup everything that is required for training (eg. loading test
+        samples).
+        """
         log_path = self.env_path(self['storage', 'log_filename'])
         logging.info (f"Check log ('{log_path}') for details.")
 
@@ -175,6 +177,7 @@ class Environment(ParamTree):
 
 
     def run(self):
+        """Run optization and post optimization (if enabled)."""
         # set up logging, write params
         self.setup_optimization()
 
@@ -255,7 +258,38 @@ class Environment(ParamTree):
         if (commit_freq > 0 and gen % commit_freq == 0):
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
-    def population_metrics(self, population, gen=None, return_indiv_measurements=False, reduced_values=True):
+    def population_metrics(self, population, gen=None,
+                           return_indiv_measurements=False):
+        """Get available measurements for all individuals in the population and
+        calculate statistical key metrics.
+
+        The statistical key metrics include:
+
+        `Q_{0, 4}`
+            The quartiles :math:`\{1, 2, 3\}` as well as the minimum and
+            maximum :math:`(0,4)`.
+        `MEAN`, `STD`
+            Mean and standard deviation.
+        `MIN`, `MEDIAN`, `MAX`
+            Equal to `Q_0`, `Q_2`, `Q_3`
+
+        Parameters
+        ----------
+        population : [rewann.Individual]
+            List of individuals that constitute the population.
+        gen : int
+            Current generation index (required for caluclating the individuals
+            age).
+        return_indiv_measurements : bool, optional
+            Whether to return the individual measurements as well.
+
+        Returns
+        -------
+        dict
+            Dictionary of the produced measurements (cross product of key
+            metrics and a list of individual measurements).
+
+        """
         if gen is None:
             gen = self['population', 'num_generations']
 

@@ -18,7 +18,6 @@ except ImportError:
     # Running on pre-3.8 Python; use importlib-metadata package
     import importlib_metadata as metadata
 
-
 this_directory = os.path.dirname(os.path.abspath(__file__))
 default_params_path = os.path.join(this_directory, 'default.toml')
 default_params = toml.load(default_params_path)
@@ -28,6 +27,7 @@ def get_version():
 
 
 def derive_path(env):
+    """Set experiment data path based on experiment name, data, and available names."""
     if not 'experiment_path' in env:
         name = env['experiment_name']
         base_path = env['storage', 'data_base_path'] or './'
@@ -38,6 +38,7 @@ def derive_path(env):
     return env['experiment_path']
 
 def env_path(env, *parts):
+    """Get path string relative to experiment subdirectory."""
     p = os.path.join(env['experiment_path'], *parts)
     dir = os.path.dirname(p)
     if not os.path.exists(dir): os.makedirs(dir)  # make sure dir exists
@@ -45,6 +46,13 @@ def env_path(env, *parts):
 
 @contextmanager
 def open_data(env, mode='r'):
+    """Open hdf5-file that contains the evolved individuals.
+
+    Parameters
+    ----------
+    mode : str
+        'r' opens file for reading, 'w' fo writing.
+    """
     env.data_file = h5py.File(env.env_path('data.hdf5'), mode)
     yield env.data_file
     env.data_file.close()
@@ -52,6 +60,7 @@ def open_data(env, mode='r'):
 # Storing and retrieving individuals
 
 def ind_key(env, i):
+    """Key in hdf data file for individual with id i."""
     # maximum number of digits needed
     digits = len(str(env['population', 'num_generations'] * env['population', 'size']))
     return str(i).zfill(digits)
@@ -59,6 +68,7 @@ def ind_key(env, i):
 inds_group_key = 'individuals'
 
 def store_ind(env, ind):
+    """Store an individual in the hdf5 data file."""
     if inds_group_key in env.data_file:
         inds_group = env.data_file[inds_group_key]
     else:
@@ -80,6 +90,7 @@ def store_ind(env, ind):
     return data
 
 def load_ind(env, i):
+    """Load individual with id i from the hdf5 data file."""
     inds_group = env.data_file[inds_group_key]
     data = inds_group[ind_key(env, i)]
     if data is None:
@@ -87,6 +98,7 @@ def load_ind(env, i):
     return ind_from_hdf(env, data)
 
 def ind_from_hdf(env, data):
+    """Create individual from h5py dataset."""
     p = data.get('parent')
     p = None if p is None else p[()]
     return env.ind_class(
@@ -117,12 +129,22 @@ def make_index(raw):
 
 
 def gen_key(env, i):
+    """Hdf5 key for generation i."""
     digits = len(str(env['population', 'num_generations']))
     return str(i).zfill(digits)
 
 gens_group_key = 'generations'
 
 def store_gen(env, gen, population=None, indiv_measurements=None):
+    """Store a generation in the hdf5 data file.
+
+    Parameters
+    ----------
+    population : [rewann.Individual], optional
+        List of individuals to store for this generation.
+    indiv_measurements
+        Individuals measurements to store for this generation.
+    """
     if gens_group_key in env.data_file:
         gens_group = env.data_file[gens_group_key]
     else:
@@ -133,7 +155,11 @@ def store_gen(env, gen, population=None, indiv_measurements=None):
     gen_data['id'] = gen
 
     if population is not None:
-        store_pop(env, gen_data, population)
+        # store individuals
+        ids = store_pop(env, gen_data, population)
+        # store ids
+        gen_data['individuals'] = np.array(ids, dtype=int)
+
     if indiv_measurements is not None:
         df = indiv_measurements
         # https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95
@@ -142,13 +168,20 @@ def store_gen(env, gen, population=None, indiv_measurements=None):
         dataset.attrs['columns'] = np.array(df.columns.tolist(), dtype='S')
 
 def store_pop(env, gen_data, population):
+    """Store a list of individuals in the hdf5 data file."""
     for ind in population:
         store_ind(env, ind)
-    # store ids
-    ids = [ind.id for ind in population]
-    gen_data['individuals'] = np.array(ids, dtype=int)
+
+    return [ind.id for ind in population]
 
 def load_gen(env, gen):
+    """Load a generations metadata from the hdf5 data file.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    gen : int
+    """
     if isinstance(gen, str):
         gen = int(gen)
     if isinstance(gen, int):
@@ -157,6 +190,16 @@ def load_gen(env, gen):
     return gen
 
 def load_pop(env, gen, ids_only=False):
+    """Load a generations population from the hdf5 data file.
+
+    Parameters
+    ----------
+    env : rewann.Environment
+    gen: int
+    ids_only : bool, optional
+        Only return the ids of the individuals in this generation instead of
+        loading the complete individuals.
+    """
     gen = load_gen(env, gen)
     if not 'individuals' in gen:
         return None
@@ -167,6 +210,7 @@ def load_pop(env, gen, ids_only=False):
         return [load_ind(env, i) for i in inds]
 
 def store_hof(env):
+    """Store the hall of fame in the hdf5 data file."""
     for ind in env.hall_of_fame:
         store_ind(env, ind)
 
@@ -180,6 +224,7 @@ def store_hof(env):
         env.data_file['/hall_of_fame'][...] = ids
 
 def load_hof(env):
+    """Load the hall of fame from the hdf5 data file."""
     if 'hall_of_fame' not in env.data_file:
         return None
     ids = env.data_file['hall_of_fame'][...]
@@ -188,6 +233,7 @@ def load_hof(env):
 
 
 def load_indiv_measurements(env, gen):
+    """Load the measurements for the individuals of a generation."""
     gen = load_gen(env, gen)
     if not 'indiv_measurements' in gen:
         return None
@@ -199,28 +245,38 @@ def load_indiv_measurements(env, gen):
     return df
 
 def stored_generations(env):
+    """Return a list of generations that metadata are available for."""
     gens_group = env.data_file[gens_group_key]
     return sorted(gens_group.keys())
 
 def stored_populations(env):
+    """Return a list of generations that populations are available for."""
     gens_group = env.data_file[gens_group_key]
     return [
         gen for gen in stored_generations(env)
         if 'individuals' in gens_group[gen]]
 
 def stored_indiv_measurements(env):
+    """Return a list of generations that individuals measurements are available for."""
     gens_group = env.data_file[gens_group_key]
     return [
         gen for gen in stored_generations(env)
         if 'indiv_measurements' in gens_group[gen]]
 
 def store_gen_metrics(env, metrics):
+    """Store generation metrics from metrics.json."""
     metrics.to_json(env_path(env, 'metrics.json'))
 
 def load_gen_metrics(env):
+    """Load generation metrics from metrics.json."""
     return pd.read_json(env_path(env, 'metrics.json'))
 
 def setup_params(env, params):
+    """Set up parameters.
+
+    Based on default parameters create complete tree of parameters, get a new
+    subdirectory to write in, and derive objectives tuples from the parameters.+
+    """
     # set up params based on path or dict and default parameters
     if not isinstance(params, dict):
         params_path = params
