@@ -43,12 +43,13 @@ def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
     """
     Resizes, crops, and unskewes images
     """
-    if patchDim == None: patchDim = size
+    if patchDim is None:
+        patchDim = size
     nImg = np.shape(img)[0]
     procImg  = np.empty((nImg,size[0],size[1]))
 
     # Unskew and Resize
-    if unskew == True:
+    if unskew:
         for i in range(nImg):
             procImg[i,:,:] = deskew(cv2.resize(img[i,:,:],size),size)
 
