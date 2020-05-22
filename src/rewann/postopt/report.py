@@ -13,7 +13,6 @@ import logging
 import json
 
 from .vis import draw_graph
-from rewann import Environment
 from rewann.environment.util import load_ind
 from rewann.environment.evolution import evaluate_inds, express_inds
 from rewann.environment.tasks import ClassificationTask
@@ -234,6 +233,7 @@ def compile_report():
 
 
 def draw_network():
+    from rewann import Environment
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -270,6 +270,7 @@ def draw_network():
 
 
 def plot_gen_quartiles():
+    from rewann import Environment
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -284,6 +285,7 @@ def plot_gen_quartiles():
 
 
 def plot_gen_lines():
+    from rewann import Environment
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
