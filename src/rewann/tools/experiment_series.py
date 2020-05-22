@@ -12,19 +12,18 @@ from itertools import product
 from collections import OrderedDict
 from collections.abc import Mapping
 from functools import reduce
-from typing import Iterable, Collection
-from dataclasses import dataclass
+from typing import Iterable, Collection, Sequence
 
 from rewann.util import ParamTree
 
 
 
-@dataclass
 class Variable:
     """Represents a variable in an experiment series."""
-    key : tuple
-    values : tuple
-    fmt : str = ""
+    def __init__(self, key: tuple, values: Sequence, fmt: str=""):
+        self.key = key
+        self.values = values
+        self.fmt = fmt
 
     def value_name(self, i : int):
         """Return name part for value with index `i` of this variation."""
