@@ -20,6 +20,8 @@ class ParamTree(UserDict):
     def _proper_keys(self, keys):
         if not isinstance(keys, tuple) and not isinstance(keys, list):
             return [keys]
+        else:
+            return keys
 
     def __getitem__(self, keys):
         d = self.data
