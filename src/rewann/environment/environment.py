@@ -238,8 +238,8 @@ class Environment(ParamTree):
         else:
             r.compile_stats() # at least derive and store stats
 
-    def store_data(self, gen, pop):
-        gen_metrics = self.population_metrics(gen=gen, population=pop)
+    def store_data(self, gen, pop, dt=-1):
+        gen_metrics = self.population_metrics(gen=gen, population=pop, dt=dt)
         gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True)
 
         metric, metric_sign = self.hof_metric
@@ -258,7 +258,7 @@ class Environment(ParamTree):
         if (commit_freq > 0 and gen % commit_freq == 0):
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
-    def population_metrics(self, population, gen=None,
+    def population_metrics(self, population, gen=None, dt=-1,
                            return_indiv_measurements=False):
         """Get available measurements for all individuals in the population and
         calculate statistical key metrics.
@@ -315,6 +315,8 @@ class Environment(ParamTree):
             num_unique_individuals=len(set(population)),
 
             num_individuals=len(population),
+
+            delta_time=dt,
 
             # number of inds without edges
             num_no_edge_inds=np.sum(indiv_measurements['n_enabled_edges'] == 0),
