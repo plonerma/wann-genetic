@@ -15,24 +15,6 @@ def load_series_stats(spec_path, dir_path=None):
     spec.discover_data_dir(dir_path)
     return spec.assemble_stats()
 
-
-
-
-
-def load_experiment_series(spec_path, params_map=dict(), sort_by=False, data_path=None):
-    if os.path.isdir(spec_path):
-        spec_path = os.path.join(spec_path, 'spec.toml')
-
-    if data_path is None:
-        dir_path = os.path.dirname(os.path.realpath(spec_path))
-        data_path = os.path.join(dir_path, 'data')
-
-    df = assemble_dataframe(spec_path, data_path, params_map=params_map)
-
-    if sort_by is not False:
-        df = df.sort_values(by=sort_by)
-    return df
-
 def mean_comparison(df, group_var, group_values, measure='mean accuracy'):
     for v1, v2 in product(group_values, repeat=2):
         if v1 == v2: continue

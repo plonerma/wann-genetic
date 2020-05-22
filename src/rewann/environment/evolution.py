@@ -7,6 +7,7 @@ import logging
 
 from .ranking import rank_individuals
 
+
 class InnovationRecord(set):
     """Keeps track of edge and node counts.
 
@@ -37,10 +38,6 @@ class InnovationRecord(set):
     def edge_exists(self, src, dest):
         return (src, dest) in self
 
-    def add_edge(self, src, dest, **args):
-        # disregard args for now
-        # potentially switch to dicts and store args as value
-        self.add((src, dest))
 
 def apply_networks(params, x):
     network, weights = params
@@ -72,23 +69,18 @@ def evaluate_inds(env, pop, n_samples=-1, record_raw=False,
 
     apply_func=partial(apply_networks, x=x)
 
-    #logging.debug('expressing individuals')
-
     express_inds(env, pop)
 
     weights = env['sampling', 'current_weight']
 
-    #logging.debug(f'Applying networks ({n_samples})')
-
     results = env.pool_map(apply_func, [(ind.network, weights) for ind in pop])
-
-    #logging.debug('recording metrics')
 
     for y_raw, ind in zip(results, pop):
         ind.record_measurements(
             weights=weights,
             y_true=y_true, y_raw=y_raw,
             record_raw=record_raw)
+
 
 def express_inds(env, pop):
     """Express inds that have not been expressed yet.
@@ -107,6 +99,7 @@ def express_inds(env, pop):
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
+
 def create_initial_population(env):
     """Create initial population based on parameters in `env`.
 
@@ -115,6 +108,7 @@ def create_initial_population(env):
     env : rewann.Environment
     """
     initial = env['population', 'initial_genes']
+    n_samples = env['sampling', 'num_training_samples_per_iteration']
 
     if initial == 'empty':
         base_ind = env.ind_class.empty_initial(env.task.n_in, env.task.n_out)
@@ -131,12 +125,13 @@ def create_initial_population(env):
                     negative_edges_allowed=env['population', 'enable_edge_signs']))
             # disable some edges
         express_inds(env, pop)
-        evaluate_inds(env, pop, n_samples=env['sampling', 'num_training_samples_per_iteration'])
+        evaluate_inds(env, pop, n_samples=n_samples)
         order = rank_individuals(pop, objectives=env.objectives, return_order=True)
         pop = [pop[i] for i in order]
         return pop
     else:
         raise RuntimeError(f'Unknown initial genes type {initial}')
+
 
 def evolution(env):
     """Main function for evolutionary algorithm.
@@ -168,6 +163,7 @@ def evolution(env):
 
         # yield next generation
         yield innov.generation, pop
+
 
 def evolve_population(env, pop, innov):
     """Rank population, apply tournaments if enabled, and mutate surivers.
@@ -211,6 +207,7 @@ def evolve_population(env, pop, innov):
         new_pop.append(child)
 
     return new_pop
+
 
 def update_hof(env, pop):
     """Update the hall of fame.

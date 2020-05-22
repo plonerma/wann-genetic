@@ -2,10 +2,6 @@ import os
 from functools import partial
 import argparse
 
-from tabulate import tabulate
-
-tabulate = partial(tabulate, tablefmt='pipe')
-
 from matplotlib import pyplot as plt
 
 from sklearn.metrics import ConfusionMatrixDisplay
@@ -17,9 +13,15 @@ import logging
 import json
 
 from .vis import draw_graph
-from rewann.environment.util import load_ind, load_hof
+from rewann import Environment
+from rewann.environment.util import load_ind
 from rewann.environment.evolution import evaluate_inds, express_inds
 from rewann.environment.tasks import ClassificationTask
+
+from tabulate import tabulate
+
+tabulate = partial(tabulate, tablefmt='pipe')
+
 
 class Report:
     def __init__(self, env, report_name='report'):
@@ -107,16 +109,16 @@ class Report:
         measurements = ind.measurements_df(*ind.recorded_measures)
 
         self.add(tabulate([
-            (f'mean {m}:', measurements[m].mean())
-            for m in ind.recorded_measures
-        ] +
-        [
-            ('number of edges', len(ind.genes.edges)),
-            ('number of hidden nodes', ind.network.n_hidden),
-            ('number of layers', ind.network.n_layers),
-            ('birth', ind.birth),
-            ('number of mutations', ind.mutations),
-        ], ['key', 'value']))
+                (f'mean {m}:', measurements[m].mean())
+                for m in ind.recorded_measures
+            ] +
+            [
+                ('number of edges', len(ind.genes.edges)),
+                ('number of hidden nodes', ind.network.n_hidden),
+                ('number of layers', ind.network.n_layers),
+                ('birth', ind.birth),
+                ('number of mutations', ind.mutations),
+            ], ['key', 'value']))
 
         # plot graphs
         for m in ind.recorded_measures:
@@ -158,7 +160,7 @@ class Report:
                 i = np.argmax(measures)
                 indiv_id = self.env.hall_of_fame[i].id
                 value = measures[i]
-                stats.append((f'{func_name} {measure}', value, indiv_id))
+                stats.append((descr, value, indiv_id))
 
         self.add(
             "## Best results in hall of fame",
@@ -207,15 +209,15 @@ class Report:
             min=np.min
         ).get(m_func, np.mean)
 
-        self.env.hall_of_fame = sorted(self.env.hall_of_fame,
+        self.env.hall_of_fame = sorted(
+            self.env.hall_of_fame,
             key=lambda ind: -metric_sign*m_func(ind.measurements(metric))
-        )
+            )
 
         return self
 
-def compile_report():
-    from rewann import Environment
 
+def compile_report():
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('--path', type=str, help='path to experiment', default='.')
@@ -230,9 +232,8 @@ def compile_report():
             num_weights=args.weights, num_samples=args.samples
         ).compile()
 
-def draw_network():
-    from rewann import Environment
 
+def draw_network():
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -250,7 +251,6 @@ def draw_network():
 
     args = parser.parse_args()
     env = Environment(args.path)
-
 
     with env.open_data('r'):
         ind = load_ind(env, args.id)
@@ -270,8 +270,6 @@ def draw_network():
 
 
 def plot_gen_quartiles():
-    from rewann import Environment
-
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -284,9 +282,8 @@ def plot_gen_quartiles():
 
     Report(env).add_gen_metrics(args.measure)
 
-def plot_gen_lines():
-    from rewann import Environment
 
+def plot_gen_lines():
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')

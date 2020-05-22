@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 class Task:
     is_recurrent = False

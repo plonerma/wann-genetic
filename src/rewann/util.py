@@ -1,8 +1,8 @@
 from collections.abc import Mapping, MutableMapping
 from collections import UserDict
-from typing import Iterable
 
-def nested_update(d : MutableMapping, u : Mapping) -> MutableMapping:
+
+def nested_update(d: MutableMapping, u: Mapping) -> MutableMapping:
     """ Update nested parameters.
 
     Source:
@@ -13,6 +13,7 @@ def nested_update(d : MutableMapping, u : Mapping) -> MutableMapping:
         else:
             d[k] = v
     return d
+
 
 class ParamTree(UserDict):
     """Wraps a dict to allow access of fields via list of keys."""
@@ -48,15 +49,17 @@ class ParamTree(UserDict):
         d = self.data
 
         for k in self._proper_keys(keys):
-            try: d = d[k]
-            except: return False
+            try:
+                d = d[k]
+            except KeyError:
+                return False
         return True
 
-    def update_params(self, update : Mapping):
+    def update_params(self, update: Mapping):
         """Perform a nested update on the stored parameters."""
         nested_update(self.data, update)
 
-    def update_params_at(self, keys, update : Mapping):
+    def update_params_at(self, keys, update: Mapping):
         """Perform a nested update on the stored parameters starting at field referenced by keys."""
         *first_keys, last_key = self._proper_keys(keys)
 
@@ -67,8 +70,8 @@ class ParamTree(UserDict):
             target = target[k]
 
         if (isinstance(update, Mapping)
-            and last_key in target
-            and isinstance(target[last_key], Mapping)):
+                and last_key in target
+                and isinstance(target[last_key], Mapping)):
             nested_update(target[last_key], update)
         else:
             target[last_key] = update

@@ -2,9 +2,8 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-from matplotlib.path import Path
-
 from rewann.individual.network import RecurrentNetwork
+
 
 def node_names(net):
     return (
@@ -20,7 +19,6 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
     if ax is None:
         ax = plt.gca()
 
-
     ax.set_axis_off()
 
     g = nx.DiGraph()
@@ -31,15 +29,12 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
     g.add_nodes_from(nodes)
 
     # Colors
-    color=(
+    color = (
         ['#fdb462'] * net.n_in         # inputs
         + ['#ffed6f']                   # bias
         + ['#80b1d3'] * net.n_hidden   # hidden
         + ['#b3de69'] * net.n_out      # outputs
     )
-
-    # Positions
-    N = len(nodes)
 
     layers = list([len(s) for s in net.layers(including_input=True)])
 
@@ -59,7 +54,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         a, b+b.T, c.T
     ])
 
-    M_sum = np.sum(M,axis=0)
+    M_sum = np.sum(M, axis=0)
     M_sum[np.where(M_sum == 0)] = 1
 
     M = M / M_sum
@@ -73,18 +68,17 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
 
     i_0 = 0
     x_0 = 0
-    for l in layers:
-        bound = np.log(l)
-        ns = i_0 + np.arange(l)
+    for layer_size in layers:
+        bound = np.log(layer_size)
+        ns = i_0 + np.arange(layer_size)
         order = np.argsort(pos['y'][ns]) + i_0
 
+        x_n = layer_size // layer_h + 1
 
-        x_n = l // layer_h + 1
+        xi = np.mod(np.arange(layer_size), x_n)
+        yi = np.arange(layer_size) // x_n
 
-        xi = np.mod(np.arange(l), x_n)
-        yi = np.arange(l) // x_n
-
-        y_n = min(layer_h, l)
+        y_n = min(layer_h, layer_size)
 
         y_rel = np.linspace(bound, -bound, y_n)
         x_rel = np.linspace(-np.log(x_n), np.log(x_n), x_n)
@@ -95,10 +89,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         pos['x'][order] = x_rel[xi] + x_0
 
         x_0 += np.log(x_n) + 1
-        i_0 += l
-
-
-
+        i_0 += layer_size
 
     if labels == 'func_names':
         node_labels = [''] * (net.n_in + 1) + [
@@ -110,6 +101,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
             g, ax=ax, pos=pos, labels=dict(zip(nodes, node_labels)),
             font_size=8,
         )
+
     elif labels == 'names':
         pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
         nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
@@ -117,12 +109,12 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
             g, ax=ax, pos=pos, labels=dict(zip(nodes, nodes)),
             font_size=8,
         )
+
     elif labels == 'func_plots':
         # draw circles
         ax.scatter(pos['x'], pos['y'], 150, color, marker='o', zorder=10)
 
         pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
-
 
         for func, n in zip(net.nodes['func'], nodes[net.offset:]):
             func = net.available_act_functions[func][1]
@@ -135,21 +127,15 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
 
             verts = np.column_stack([x, y])
 
-
             ax.scatter(*pos[n], 50, 'k', marker=verts, zorder=200)
     else:
         pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
         nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
 
-
-
-
-    edge_params=dict(
-        edge_cmap = plt.get_cmap('tab10'),
-        alpha=.6,
-        ax=ax, pos=pos,
-        edge_vmin=0,
-        edge_vmax=9,
+    edge_params = dict(
+        edge_cmap=plt.get_cmap('tab10'),
+        alpha=.6, ax=ax, pos=pos,
+        edge_vmin=0, edge_vmax=9,
         arrows=True,
     )
 
@@ -166,10 +152,9 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         )
 
     nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
-        width=1, arrowstyle='-',
-        min_source_margin=10, min_target_margin=5,
-        **edge_params)
-
+                           width=1, arrowstyle='-',
+                           min_source_margin=10, min_target_margin=5,
+                           **edge_params)
 
     if isinstance(net, RecurrentNetwork):
         # draw recurrent edges
@@ -185,8 +170,8 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
             )
 
         nx.draw_networkx_edges(g, edgelist=edgelist, edge_color=edge_col,
-            min_source_margin=30, min_target_margin=20,
-            width=2, **edge_params)
+                               min_source_margin=30, min_target_margin=20,
+                               width=2, **edge_params)
 
 
 def draw_weight_matrix(net, ax=None):

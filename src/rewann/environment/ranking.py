@@ -1,9 +1,9 @@
-from itertools import count
 import numpy as np
 import logging
 from rewann import Individual
 
-def get_objective_values(ind : Individual, objectives):
+
+def get_objective_values(ind: Individual, objectives):
     """Get measurements of an individual for the specified objectives.
 
     Parameters
@@ -25,7 +25,8 @@ def get_objective_values(ind : Individual, objectives):
 
     measurements = ind.measurements(*metric_names, as_list=True)
 
-    return [s*v for v,s in zip(measurements, np.sign(signs))]
+    return [s*v for v, s in zip(measurements, np.sign(signs))]
+
 
 def rank_individuals(population, objectives, return_order=False):
     """Rank individuals by multiple objectives using NSGA-sort.
@@ -56,7 +57,6 @@ def rank_individuals(population, objectives, return_order=False):
         logging.warning(population[0]._measurements)
         raise e
 
-
     # compute fronts
     front_list = []
     ix = np.arange(len(population))
@@ -65,9 +65,6 @@ def rank_individuals(population, objectives, return_order=False):
     domination_matrix = dominates(objectives, *np.meshgrid(ix, ix, indexing='ij'))
 
     unassigned = np.ones(len(population), dtype=bool)
-
-    front_counter = count(1)
-
 
     while np.any(unassigned):
         # all individuals that aren't dominated (except of indivs in prior fronts)
@@ -93,7 +90,6 @@ def rank_individuals(population, objectives, return_order=False):
         for i in front_list[front_index]:
             population[i].front = front_index
 
-
     order = np.hstack(front_list)
     if return_order:
         return order
@@ -102,7 +98,8 @@ def rank_individuals(population, objectives, return_order=False):
         rank[order] = ix
         return rank
 
-def dominates(objectives : np.ndarray, i, j):
+
+def dominates(objectives: np.ndarray, i, j):
     """Pareto dominance
 
     :math:`i` dominates :math:`j` if it is just as good as :math:`j` in all
@@ -119,11 +116,11 @@ def dominates(objectives : np.ndarray, i, j):
     """
     return np.all(objectives[i] >= objectives[j], axis=-1) & np.any(objectives[i] > objectives[j], axis=-1)
 
+
 def crowding_distances(front_objectives):
     """Calculate the crowding distance."""
     # Order by objective value
     n_inds, n_objs = front_objectives.shape
-
 
     key = np.argsort(front_objectives, axis=0)
     obj_key = np.arange(n_objs)
@@ -132,8 +129,6 @@ def crowding_distances(front_objectives):
 
     sorted_obj[[0, -1]] = np.inf  # set bounds to inf
     sorted_obj[1:-1] = front_objectives[key, obj_key]
-
-    #warnings.filterwarnings("ignore", category=RuntimeWarning) # inf on purpose
 
     prevDist = np.abs(sorted_obj[1:-1]-sorted_obj[:-2])
     nextDist = np.abs(sorted_obj[1:-1]-sorted_obj[2:])
