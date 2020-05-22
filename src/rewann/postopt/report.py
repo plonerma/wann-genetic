@@ -217,6 +217,8 @@ class Report:
 
 
 def compile_report():
+    from rewann import Environment
+
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
     parser.add_argument('--path', type=str, help='path to experiment', default='.')
@@ -272,6 +274,7 @@ def draw_network():
 
 def plot_gen_quartiles():
     from rewann import Environment
+
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -287,6 +290,7 @@ def plot_gen_quartiles():
 
 def plot_gen_lines():
     from rewann import Environment
+
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
