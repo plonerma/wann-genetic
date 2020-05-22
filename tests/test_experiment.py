@@ -8,7 +8,7 @@ import pytest
 
 import logging
 
-def experiment_test(params_path, tmp_path):
+def experiment_test(params_path, tmp_path, mean_treshold=0.0, max_treshold=0.4):
     logging.info("Starting training")
     params = toml.load(params_path)
     params['experiment_path'] = tmp_path
@@ -24,7 +24,7 @@ def experiment_test(params_path, tmp_path):
 
     logging.info(f'Mean kappa score: {mean_kappa}')
     logging.info(f'Max kappa score: {max_kappa}')
-    assert mean_kappa > 0 and max_kappa > 0.4
+    assert mean_kappa > mean_treshold and max_kappa > max_treshold
 
 @pytest.mark.slow
 def test_layer_agnostic(tmp_path):
@@ -40,4 +40,4 @@ def test_negative_edges(tmp_path):
 
 @pytest.mark.slow
 def test_recurrent(tmp_path):
-    experiment_test('tests/test_recurrent_echo.toml', tmp_path)
+    experiment_test('tests/test_recurrent_echo.toml', tmp_path, max_treshold=0.2)
