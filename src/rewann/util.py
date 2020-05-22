@@ -17,6 +17,10 @@ def nested_update(d : MutableMapping, u : Mapping) -> MutableMapping:
 class ParamTree(UserDict):
     """Wraps a dict to allow access of fields via list of keys."""
 
+    @property
+    def params(self):
+        return self.data
+
     def _proper_keys(self, keys):
         if not isinstance(keys, tuple) and not isinstance(keys, list):
             return [keys]
@@ -59,7 +63,7 @@ class ParamTree(UserDict):
         target = self.data
 
         for k in first_keys:
-            target[k] = d.get(k, dict())
+            target[k] = target.get(k, dict())
             target = target[k]
 
         if (isinstance(update, Mapping)
