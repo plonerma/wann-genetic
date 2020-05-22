@@ -25,10 +25,17 @@ class Report:
     def __init__(self, env, report_name='report'):
         self.path = partial(env.env_path, report_name)
         self.env = env
-
         self.elements = list()
-
         self.fig, self.ax = plt.subplots()
+
+        self._gen_metrics = None
+
+    @property
+    def gen_metrics(self):
+        if self._gen_metrics is None:
+            self._gen_metrics = self.env.load_gen_metrics()
+            self._gen_metrics.index.names = ['generation']
+        return self._gen_metrics
 
     def rel_path(self, abspath):
         return os.path.relpath(abspath, start=self.path())
@@ -53,33 +60,47 @@ class Report:
         with open(self.path(fname), 'w') as f:
             json.dump(stats, f)
 
-    def add_gen_metrics(self):
-        metrics = self.env.load_gen_metrics()
-        metrics.index.names = ['generation']
+    def add_gen_line_plot(self, measures):
+        metrics = self.gen_metrics
+        metrics.plot(y=measures)
 
-        for bm in [f'{m}.mean' for m in self.env.ind_class.recorded_measures]:
-            mean = metrics[f'MEAN:{bm}']
-            median = metrics[f'MEDIAN:{bm}']
-            min = metrics[f'MIN:{bm}']
-            max = metrics[f'MAX:{bm}']
-            gen = metrics.index
-            try:
-                q1 = metrics[f'Q_1:{bm}']
-                q3 = metrics[f'Q_3:{bm}']
-            except KeyError:
-                logging.warning('Quantiles not included in measurements.')
-                q1, q3 = None, None
+        measures = ', '.join(measures)
 
-            plt.plot(gen, median, '-', label='median', linewidth=.25, color='tab:blue')
-            plt.plot(gen, mean, '-', label='mean', linewidth=.75, color='tab:green')
-            plt.legend()
+        caption = f"{measures} over generations"
+        plt.suptitle(caption)
+        self.add_fig(f'gen_metrics_{measures}', caption)
 
-            if q1 is not None:
-                plt.fill_between(gen, q1, q3, alpha=0.2, fc='tab:blue')
-            plt.fill_between(gen, min, max, alpha=0.1, fc='tab:blue')
-            caption = f"{bm} over generations"
-            plt.suptitle(caption)
-            self.add_fig(f'gen_metrics_{bm}', caption)
+    def add_gen_quartiles_plot(self, measure):
+        metrics = self.gen_metrics
+        mean = metrics[f'MEAN:{measure}']
+        median = metrics[f'MEDIAN:{measure}']
+        min = metrics[f'MIN:{measure}']
+        max = metrics[f'MAX:{measure}']
+        gen = metrics.index
+        try:
+            q1 = metrics[f'Q_1:{measure}']
+            q3 = metrics[f'Q_3:{measure}']
+        except KeyError:
+            logging.warning('Quartiles not included in measurements.')
+            q1, q3 = None, None
+
+        plt.plot(gen, median, '-', label='median', linewidth=.25, color='tab:blue')
+        plt.plot(gen, mean, '-', label='mean', linewidth=.75, color='tab:green')
+        plt.legend()
+
+        if q1 is not None:
+            plt.fill_between(gen, q1, q3, alpha=0.2, fc='tab:blue')
+        plt.fill_between(gen, min, max, alpha=0.1, fc='tab:blue')
+        caption = f"{measure} over generations"
+        plt.suptitle(caption)
+        self.add_fig(f'gen_metrics_{measure}', caption)
+
+    def add_gen_metrics(self, measures=None):
+        if measures is None:
+            measures = [f'{m}.mean' for m in self.env.ind_class.recorded_measures]
+
+        for bm in measures:
+            self.add_gen_quartiles_plot(bm)
 
     def add_ind_info(self, ind):
         self.add(f"### Individual {ind.id}\n")
@@ -246,3 +267,34 @@ def draw_network():
 
         Report(env).add_network(ind, labels=labels)
         logging.info(f'Plotted network for individual {ind.id}')
+
+
+def plot_gen_quartiles():
+    from rewann import Environment
+
+    logging.getLogger().setLevel(logging.INFO)
+
+    parser = argparse.ArgumentParser(description='Post Optimization')
+    parser.add_argument('--path', '-p', type=str, default='.',
+                        help='path to experiment')
+    parser.add_argument('measure', type=str, default='accuracy', nargs='+')
+
+    args = parser.parse_args()
+    env = Environment(args.path)
+
+    Report(env).add_gen_metrics(args.measure)
+
+def plot_gen_lines():
+    from rewann import Environment
+
+    logging.getLogger().setLevel(logging.INFO)
+
+    parser = argparse.ArgumentParser(description='Post Optimization')
+    parser.add_argument('--path', '-p', type=str, default='.',
+                        help='path to experiment')
+    parser.add_argument('measure', type=str, default='accuracy', nargs='+')
+
+    args = parser.parse_args()
+    env = Environment(args.path)
+
+    Report(env).add_gen_line_plot(args.measure)

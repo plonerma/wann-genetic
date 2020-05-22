@@ -18,6 +18,8 @@ setup(
             # post execution reporting
             'compile_report = rewann.postopt.report:compile_report',
             'draw_network = rewann.postopt.report:draw_network',
+            'plot_gen_quartiles = rewann.postopt.report:plot_gen_quartiles',
+            'plot_gen_lines = rewann.postopt.report:plot_gen_lines',
 
             # multivariate experiment series generation
             'generate_experiment_series = rewann.tools.cli:generate_experiments',
