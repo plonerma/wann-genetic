@@ -18,7 +18,7 @@ def experiment_test(params_path, tmp_path):
 
     logging.info("Starting evaluation")
 
-    metrics = exp.population_metrics(exp.hall_of_fame, reduced_values=False)
+    metrics = exp.population_metrics(exp.hall_of_fame)
     max_kappa = metrics['MAX:kappa.max']
     mean_kappa = metrics['MEAN:kappa.mean']
 
