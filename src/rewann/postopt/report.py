@@ -234,6 +234,7 @@ def compile_report():
 
 def draw_network():
     from rewann import Environment
+
     logging.getLogger().setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(description='Post Optimization')
