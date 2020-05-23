@@ -23,4 +23,4 @@ def generate_experiments():
 
     logging.getLogger().setLevel(logging.DEBUG)
 
-    spec = ExperimentSeries(args.specification).create_experiment_files(args.build_dir)
+    spec = ExperimentSeries.from_spec_file(args.specification).create_experiment_files(args.build_dir)
