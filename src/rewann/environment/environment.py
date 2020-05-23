@@ -246,8 +246,7 @@ class Environment(ParamTree):
             r.compile_stats() # at least derive and store stats
 
     def store_data(self, gen, pop, dt=-1):
-        gen_metrics = self.population_metrics(gen=gen, population=pop, dt=dt)
-        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True)
+        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True, dt=dt)
 
         metric, metric_sign = self.hof_metric
         p = ("MAX" if metric_sign > 0 else "MIN")
