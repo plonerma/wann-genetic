@@ -51,9 +51,9 @@ def rank_individuals(population, objectives, return_order=False):
     """
     try:
         values = [get_objective_values(ind, objectives) for ind in population]
-        objectives = np.array(values, dtype=float)
+        obj_values = np.array(values, dtype=float)
     except Exception as e:
-        logging.warning(values)
+        logging.warning(objectives)
         logging.warning(population[0]._measurements)
         raise e
 
@@ -62,7 +62,7 @@ def rank_individuals(population, objectives, return_order=False):
     ix = np.arange(len(population))
 
     # if dm[i, j], then i dominates j
-    domination_matrix = dominates(objectives, *np.meshgrid(ix, ix, indexing='ij'))
+    domination_matrix = dominates(obj_values, *np.meshgrid(ix, ix, indexing='ij'))
 
     unassigned = np.ones(len(population), dtype=bool)
 
@@ -82,7 +82,7 @@ def rank_individuals(population, objectives, return_order=False):
 
     for front_index, front in enumerate(front_list):
         # caculate crowding_distance
-        dist = np.sum(crowding_distances(objectives[front]), axis=-1)
+        dist = np.sum(crowding_distances(obj_values[front]), axis=-1)
         # sort
         front_list[front_index] = front[np.argsort(-dist)]
 

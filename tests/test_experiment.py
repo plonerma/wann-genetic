@@ -41,3 +41,7 @@ def test_negative_edges(tmp_path):
 @pytest.mark.slow
 def test_recurrent(tmp_path):
     experiment_test('tests/test_recurrent_echo.toml', tmp_path, max_treshold=0.2)
+
+@pytest.mark.slow
+def test_torch(tmp_path):
+    experiment_test('tests/test_torch.toml', tmp_path)

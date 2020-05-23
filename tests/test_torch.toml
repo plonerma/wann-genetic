@@ -1,0 +1,18 @@
+experiment_name='pytest'
+debug=true
+
+[task]
+name='iris'
+
+[postopt]
+  run_postopt=true
+  compile_report=false
+  num_weights=10
+  num_samples=-1
+
+[population]
+  num_generations=20
+  size=64
+
+[config]
+  backend='torch'

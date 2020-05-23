@@ -2,6 +2,8 @@ import torch
 import numpy as np
 from functools import reduce
 from rewann.individual.network import NetworkBase, softmax
+from rewann.individual.individual import Individual
+
 
 class MultiActivationModule(torch.nn.Module):
     """Applies multiple elementwise activation functions to a tensor."""
@@ -30,6 +32,7 @@ class MultiActivationModule(torch.nn.Module):
             torch.zeros_like(x) # start value
         )
 
+
 class ConcatLayer(torch.nn.Module):
     """Contatenates output of the active nodes and prior nodes."""
     def __init__(self, shared_weight, connections, node_act_funcs, all_act_funcs):
@@ -46,6 +49,7 @@ class ConcatLayer(torch.nn.Module):
         linear = linear * self.shared_weight[:, None, None]
         inner_out = self.activation(linear)
         return torch.cat([x, inner_out], dim=-1)
+
 
 class WannModule(torch.nn.Module):
     def __init__(self, offset, prop_steps, weight_mat, node_act_funcs, all_act_funcs):
@@ -78,8 +82,13 @@ class WannModule(torch.nn.Module):
     def forward(self, x):
         return self.model(x)
 
+
 class TorchNetwork(NetworkBase):
-    available_act_functions = [torch.relu, torch.sigmoid, torch.tanh]
+    available_act_functions = [
+        ('relu', torch.relu),
+        ('sigmoid', torch.sigmoid),
+        ('tanh', torch.tanh)
+    ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,7 +97,7 @@ class TorchNetwork(NetworkBase):
             offset=self.n_in + 1, prop_steps=np.hstack([self.propagation_steps, [self.n_out]]),
             weight_mat=self.weight_matrix,
             node_act_funcs = self.nodes['func'],
-            all_act_funcs=self.available_act_functions)
+            all_act_funcs=[f for _, f in self.available_act_functions])
 
     def apply(self, x, weights, func='softmax'):
         assert len(x.shape) == 2 # multiple one dimensional input arrays
@@ -120,3 +129,7 @@ class TorchNetwork(NetworkBase):
             return softmax(y, axis=-1)
         else:
             return y
+
+
+class TorchIndividual(Individual):
+    Phenotype = TorchNetwork
