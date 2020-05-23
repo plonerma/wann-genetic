@@ -12,6 +12,8 @@ from multiprocessing import Pool
 
 from rewann import Individual, RecurrentIndividual
 
+from rewann.individual.torch_network import TorchIndividual
+
 from .tasks import select_task
 from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
@@ -57,9 +59,14 @@ class Environment(ParamTree):
 
         # choose adequate type of individuals
         if self.task.is_recurrent:
+            if self['config', 'backend'].lower() == 'torch':
+                logging.warning('Torch RNN not implemented yet. Falling back on numpy.')
             self.ind_class = RecurrentIndividual
         else:
-            self.ind_class = Individual
+            if self['config', 'backend'].lower() == 'torch':
+                self.ind_class = TorchIndividual
+            else:
+                self.ind_class = Individual
 
         self.ind_class.recorded_measures = self['selection', 'recorded_metrics']
 
