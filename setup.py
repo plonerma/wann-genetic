@@ -28,5 +28,5 @@ setup(
     package_data={'rewann': ['environment/default.toml']},
     install_requires=[
         'pytest-watch', 'sklearn', 'numpy', 'mnist', 'opencv-python',
-        'h5py', 'tabulate', 'matplotlib', 'networkx', 'toml', 'pandas']
+        'h5py', 'tabulate', 'matplotlib', 'networkx', 'toml', 'pandas', 'torch']
 )
