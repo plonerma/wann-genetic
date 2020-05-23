@@ -5,35 +5,11 @@ from .expression import (
     apply_act_function, remap_node_ids, sort_hidden_nodes,
     softmax, get_array_field, build_weight_matrix, rearrange_matrix)
 
-
-
-
-class Network:
-    """Feed Forward Neural Network
-
-    For an explanation of how propagation works, see :doc:`network_propagation`.
-    """
-
-    ### Definition of the activations functions
-    available_act_functions = [
-        ('relu', lambda x: np.maximum(0, x)),
-        ('sigmoid', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
-        ('tanh', lambda x: np.tanh(x)),
-        ('gaussian (standard)', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
-        ('step', lambda x: 1.0*(x>0.0)),
-        ('identity', lambda x: x),
-        ('inverse', lambda x: -x),
-        ('squared', lambda x: x**2), #  unstable if applied multiple times
-        ('abs', lambda x: np.abs(x)),
-        ('cos', lambda x: np.cos(np.pi*x)),
-        ('sin ', lambda x: np.sin(np.pi*x)),
-
-    ]
-
+class NetworkBase:
+    """Base class for Feed Forward Neural Networks"""
     def __init__(self, n_in, n_out, nodes, weight_matrix, conn_mat,
                  propagation_steps=None,
                  **params):
-        # Relevant for computation
         self.n_in = n_in # without bias
         self.n_out = n_out
         self.nodes = nodes
@@ -145,6 +121,29 @@ class Network:
             layers[l] = i
 
         return layers
+
+
+class Network(NetworkBase):
+    """Numpy implmentation of a Feed Forward Neural Network
+
+    For an explanation of how propagation works, see :doc:`network_propagation`.
+    """
+
+    ### Definition of the activations functions
+    available_act_functions = [
+        ('relu', lambda x: np.maximum(0, x)),
+        ('sigmoid', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
+        ('tanh', lambda x: np.tanh(x)),
+        ('gaussian (standard)', lambda x: np.exp(-np.multiply(x, x) / 2.0)),
+        ('step', lambda x: 1.0*(x>0.0)),
+        ('identity', lambda x: x),
+        ('inverse', lambda x: -x),
+        ('squared', lambda x: x**2), #  unstable if applied multiple times
+        ('abs', lambda x: np.abs(x)),
+        ('cos', lambda x: np.cos(np.pi*x)),
+        ('sin ', lambda x: np.sin(np.pi*x)),
+
+    ]
 
     def apply(self, x, func='softmax', weights=1):
         assert len(x.shape) == 2 # multiple one dimensional input arrays
