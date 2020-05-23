@@ -1,6 +1,7 @@
 import torch
-
-from rewann.individual.network import NetworkBase
+import numpy as np
+from functools import reduce
+from rewann.individual.network import NetworkBase, softmax
 
 class MultiActivationModule(torch.nn.Module):
     """Applies multiple elementwise activation functions to a tensor."""
@@ -77,7 +78,7 @@ class WannModule(torch.nn.Module):
     def forward(self, x):
         return self.model(x)
 
-class TorchNetwork(Network):
+class TorchNetwork(NetworkBase):
     available_act_functions = [torch.relu, torch.sigmoid, torch.tanh]
 
     def __init__(self, *args, **kwargs):
@@ -93,9 +94,19 @@ class TorchNetwork(Network):
         assert len(x.shape) == 2 # multiple one dimensional input arrays
         assert isinstance(weights, np.ndarray)
 
-        self.model.shared_weight.data = torch.Tensor(weights)
-        x = x.expand(len(weights), -1, -1)
-        y = self.model(x)
+        x = torch.Tensor(x)
+
+        with torch.no_grad():
+            self.model.shared_weight.data = torch.Tensor(weights)
+
+            # add bias to x
+            bias = torch.ones(x.size()[:-1] + (1,))
+            x = torch.cat([x, bias], dim=-1)
+
+            # expand x for the weights
+            x = x.expand(len(weights), -1, -1)
+
+            y = self.model(x).numpy()
 
         # if any node is nan, we cant rely on the result
         valid = np.all(~np.isnan(y), axis=-1)
