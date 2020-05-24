@@ -23,7 +23,7 @@ rewann.individual.network module
 
 
 rewann.individual.torch_network module
---------------------------------
+--------------------------------------
 
 .. automodule:: rewann.individual.torch_network
   :members:
