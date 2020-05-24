@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.individual package &#8212; ReWann  documentation</title>
+    <title>rewann.individual package &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -33,8 +33,9 @@
         <li class="right" >
           <a href="rewann.environment.tasks.html" title="rewann.environment.tasks package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -153,9 +154,9 @@
 <dl class="py class">
 <dt id="rewann.individual.network.Network">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.individual.network.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_in</span></em>, <em class="sig-param"><span class="n">n_out</span></em>, <em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">weight_matrix</span></em>, <em class="sig-param"><span class="n">conn_mat</span></em>, <em class="sig-param"><span class="n">propagation_steps</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Feed Forward Neural Network</p>
-<p>For an explanation of how propagation works, see <a class="reference internal" href="network_propagation.html"><span class="doc">Implementation of Signal Propagation in Neural Networks</span></a>.</p>
+<dd><p>Bases: <a class="reference internal" href="#rewann.individual.network.NetworkBase" title="rewann.individual.network.NetworkBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.network.NetworkBase</span></code></a></p>
+<p>Numpy implmentation of a Feed Forward Neural Network</p>
+<p>For an explanation of how propagation works, see <a class="reference internal" href="network_propagation.html"><span class="doc">Numpy Implementation of Signal Propagation in Neural Networks</span></a>.</p>
 <dl class="py method">
 <dt id="rewann.individual.network.Network.activation_functions">
 <code class="sig-name descname">activation_functions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network.activation_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network.activation_functions" title="Permalink to this definition">¶</a></dt>
@@ -177,21 +178,28 @@
 <dd><p>Apply updates for active nodes (active nodes can’t share edges).</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt id="rewann.individual.network.NetworkBase">
+<em class="property">class </em><code class="sig-prename descclassname">rewann.individual.network.</code><code class="sig-name descname">NetworkBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_in</span></em>, <em class="sig-param"><span class="n">n_out</span></em>, <em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">weight_matrix</span></em>, <em class="sig-param"><span class="n">conn_mat</span></em>, <em class="sig-param"><span class="n">propagation_steps</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#NetworkBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.NetworkBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for Feed Forward Neural Networks</p>
 <dl class="py method">
-<dt id="rewann.individual.network.Network.from_genes">
-<em class="property">classmethod </em><code class="sig-name descname">from_genes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network.from_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network.from_genes" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.from_genes">
+<em class="property">classmethod </em><code class="sig-name descname">from_genes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#NetworkBase.from_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.NetworkBase.from_genes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert genes to weight matrix and activation vector.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.index_to_gene_id">
-<code class="sig-name descname">index_to_gene_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network.index_to_gene_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network.index_to_gene_id" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.index_to_gene_id">
+<code class="sig-name descname">index_to_gene_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#NetworkBase.index_to_gene_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.NetworkBase.index_to_gene_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return gene node id from network node index.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.layers">
-<code class="sig-name descname">layers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">including_input</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network.layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network.layers" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.layers">
+<code class="sig-name descname">layers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">including_input</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#NetworkBase.layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.NetworkBase.layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get layers of nodes (a hierachical sorting).</p>
 <p>Nodes in layer <span class="math notranslate nohighlight">\(i\)</span> will not have any incoming edges from nodes in
 layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
@@ -203,38 +211,38 @@ layers <span class="math notranslate nohighlight">\(\ge i\)</span>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.n_act_funcs">
-<em class="property">property </em><code class="sig-name descname">n_act_funcs</code><a class="headerlink" href="#rewann.individual.network.Network.n_act_funcs" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.n_act_funcs">
+<em class="property">property </em><code class="sig-name descname">n_act_funcs</code><a class="headerlink" href="#rewann.individual.network.NetworkBase.n_act_funcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of enabled activations functions.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.n_hidden">
-<em class="property">property </em><code class="sig-name descname">n_hidden</code><a class="headerlink" href="#rewann.individual.network.Network.n_hidden" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.n_hidden">
+<em class="property">property </em><code class="sig-name descname">n_hidden</code><a class="headerlink" href="#rewann.individual.network.NetworkBase.n_hidden" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of hidden nodes the network contains.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.n_layers">
-<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#rewann.individual.network.Network.n_layers" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.n_layers">
+<em class="property">property </em><code class="sig-name descname">n_layers</code><a class="headerlink" href="#rewann.individual.network.NetworkBase.n_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of hidden layers in the network.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.n_nodes">
-<em class="property">property </em><code class="sig-name descname">n_nodes</code><a class="headerlink" href="#rewann.individual.network.Network.n_nodes" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.n_nodes">
+<em class="property">property </em><code class="sig-name descname">n_nodes</code><a class="headerlink" href="#rewann.individual.network.NetworkBase.n_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Total number of nodes the network contains.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.node_layers">
-<code class="sig-name descname">node_layers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network.node_layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.Network.node_layers" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.node_layers">
+<code class="sig-name descname">node_layers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#NetworkBase.node_layers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.network.NetworkBase.node_layers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return layer index of each node</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.individual.network.Network.offset">
-<em class="property">property </em><code class="sig-name descname">offset</code><a class="headerlink" href="#rewann.individual.network.Network.offset" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.network.NetworkBase.offset">
+<em class="property">property </em><code class="sig-name descname">offset</code><a class="headerlink" href="#rewann.individual.network.NetworkBase.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Offset for nodes that won’t be updated (inputs &amp; bias).</p>
 </dd></dl>
 
@@ -634,8 +642,9 @@ func (then <cite>name</cite> parameter can be set)</p>
         <li class="right" >
           <a href="rewann.environment.tasks.html" title="rewann.environment.tasks package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" >rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" >rewann package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

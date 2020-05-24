@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.tools package &#8212; ReWann  documentation</title>
+    <title>rewann.tools package &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,8 +29,9 @@
         <li class="right" >
           <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -46,11 +47,6 @@
 </div>
 <div class="section" id="module-rewann.tools.compare_experiments">
 <span id="rewann-tools-compare-experiments-module"></span><h2>rewann.tools.compare_experiments module<a class="headerlink" href="#module-rewann.tools.compare_experiments" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="rewann.tools.compare_experiments.load_experiment_series">
-<code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">load_experiment_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_path</span></em>, <em class="sig-param"><span class="n">params_map</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">sort_by</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">data_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#load_experiment_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.load_experiment_series" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
 <dt id="rewann.tools.compare_experiments.load_series_stats">
 <code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">load_series_stats</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec_path</span></em>, <em class="sig-param"><span class="n">dir_path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#load_series_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.load_series_stats" title="Permalink to this definition">¶</a></dt>
@@ -171,22 +167,12 @@ frames.</p>
 
 <dl class="py class">
 <dt id="rewann.tools.experiment_series.Variable">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.tools.experiment_series.</code><code class="sig-name descname">Variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></span></em>, <em class="sig-param"><span class="n">fmt</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#Variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.Variable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">rewann.tools.experiment_series.</code><code class="sig-name descname">Variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#Variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.Variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a variable in an experiment series.</p>
-<dl class="py attribute">
-<dt id="rewann.tools.experiment_series.Variable.fmt">
-<code class="sig-name descname">fmt</code><em class="property">: str</em><em class="property"> = ''</em><a class="headerlink" href="#rewann.tools.experiment_series.Variable.fmt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt id="rewann.tools.experiment_series.Variable.iter_indices">
 <code class="sig-name descname">iter_indices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#Variable.iter_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.Variable.iter_indices" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="rewann.tools.experiment_series.Variable.key">
-<code class="sig-name descname">key</code><em class="property">: tuple</em><em class="property"> = None</em><a class="headerlink" href="#rewann.tools.experiment_series.Variable.key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -204,11 +190,6 @@ frames.</p>
 <code class="sig-name descname">value_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#Variable.value_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.Variable.value_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return name part for value with index <cite>i</cite> of this variation.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt id="rewann.tools.experiment_series.Variable.values">
-<code class="sig-name descname">values</code><em class="property">: tuple</em><em class="property"> = None</em><a class="headerlink" href="#rewann.tools.experiment_series.Variable.values" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -269,8 +250,9 @@ frames.</p>
         <li class="right" >
           <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" >rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" >rewann package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

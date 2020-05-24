@@ -9,4 +9,5 @@ ReWann
    experiment_series
    cli
    network_propagation
+   torch_network
    modules

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.environment.evolution &#8212; ReWann  documentation</title>
+    <title>rewann.environment.evolution &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -44,6 +44,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">.ranking</span> <span class="kn">import</span> <span class="n">rank_individuals</span>
+
 
 <div class="viewcode-block" id="InnovationRecord"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.InnovationRecord">[docs]</a><span class="k">class</span> <span class="nc">InnovationRecord</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Keeps track of edge and node counts.</span>
@@ -73,12 +74,8 @@
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_counter</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="InnovationRecord.edge_exists"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.InnovationRecord.edge_exists">[docs]</a>    <span class="k">def</span> <span class="nf">edge_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span></div></div>
 
-<div class="viewcode-block" id="InnovationRecord.add_edge"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.InnovationRecord.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
-        <span class="c1"># disregard args for now</span>
-        <span class="c1"># potentially switch to dicts and store args as value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">))</span></div></div>
 
 <div class="viewcode-block" id="apply_networks"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.apply_networks">[docs]</a><span class="k">def</span> <span class="nf">apply_networks</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="n">network</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">params</span>
@@ -110,23 +107,18 @@
 
     <span class="n">apply_func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">apply_networks</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="c1">#logging.debug(&#39;expressing individuals&#39;)</span>
-
     <span class="n">express_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
 
     <span class="n">weights</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;current_weight&#39;</span><span class="p">]</span>
 
-    <span class="c1">#logging.debug(f&#39;Applying networks ({n_samples})&#39;)</span>
-
     <span class="n">results</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">pool_map</span><span class="p">(</span><span class="n">apply_func</span><span class="p">,</span> <span class="p">[(</span><span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">pop</span><span class="p">])</span>
-
-    <span class="c1">#logging.debug(&#39;recording metrics&#39;)</span>
 
     <span class="k">for</span> <span class="n">y_raw</span><span class="p">,</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
         <span class="n">ind</span><span class="o">.</span><span class="n">record_measurements</span><span class="p">(</span>
             <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
             <span class="n">y_true</span><span class="o">=</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_raw</span><span class="o">=</span><span class="n">y_raw</span><span class="p">,</span>
             <span class="n">record_raw</span><span class="o">=</span><span class="n">record_raw</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="express_inds"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.express_inds">[docs]</a><span class="k">def</span> <span class="nf">express_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Express inds that have not been expressed yet.</span>
@@ -145,6 +137,7 @@
     <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds_to_express</span><span class="p">,</span> <span class="n">networks</span><span class="p">):</span>
         <span class="n">ind</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="n">net</span></div>
 
+
 <div class="viewcode-block" id="create_initial_population"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.create_initial_population">[docs]</a><span class="k">def</span> <span class="nf">create_initial_population</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create initial population based on parameters in `env`.</span>
 
@@ -153,6 +146,7 @@
 <span class="sd">    env : rewann.Environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">initial</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_genes&#39;</span><span class="p">]</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;num_training_samples_per_iteration&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;empty&#39;</span><span class="p">:</span>
         <span class="n">base_ind</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">empty_initial</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">)</span>
@@ -169,12 +163,13 @@
                     <span class="n">negative_edges_allowed</span><span class="o">=</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enable_edge_signs&#39;</span><span class="p">]))</span>
             <span class="c1"># disable some edges</span>
         <span class="n">express_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span>
-        <span class="n">evaluate_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;num_training_samples_per_iteration&#39;</span><span class="p">])</span>
+        <span class="n">evaluate_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">)</span>
         <span class="n">order</span> <span class="o">=</span> <span class="n">rank_individuals</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">objectives</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">objectives</span><span class="p">,</span> <span class="n">return_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">pop</span> <span class="o">=</span> <span class="p">[</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">pop</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial genes type </span><span class="si">{</span><span class="n">initial</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="evolution"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.evolution">[docs]</a><span class="k">def</span> <span class="nf">evolution</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Main function for evolutionary algorithm.</span>
@@ -206,6 +201,7 @@
 
         <span class="c1"># yield next generation</span>
         <span class="k">yield</span> <span class="n">innov</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span> <span class="n">pop</span></div>
+
 
 <div class="viewcode-block" id="evolve_population"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.evolve_population">[docs]</a><span class="k">def</span> <span class="nf">evolve_population</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Rank population, apply tournaments if enabled, and mutate surivers.</span>
@@ -249,6 +245,7 @@
         <span class="n">new_pop</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">new_pop</span></div>
+
 
 <div class="viewcode-block" id="update_hof"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.evolution.update_hof">[docs]</a><span class="k">def</span> <span class="nf">update_hof</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pop</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update the hall of fame.</span>
@@ -332,7 +329,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

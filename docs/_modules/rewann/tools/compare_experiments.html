@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.tools.compare_experiments &#8212; ReWann  documentation</title>
+    <title>rewann.tools.compare_experiments &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -52,24 +52,6 @@
     <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="o">.</span><span class="n">from_spec_file</span><span class="p">(</span><span class="n">spec_path</span><span class="p">)</span>
     <span class="n">spec</span><span class="o">.</span><span class="n">discover_data_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">assemble_stats</span><span class="p">()</span></div>
-
-
-
-
-
-<div class="viewcode-block" id="load_experiment_series"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.compare_experiments.load_experiment_series">[docs]</a><span class="k">def</span> <span class="nf">load_experiment_series</span><span class="p">(</span><span class="n">spec_path</span><span class="p">,</span> <span class="n">params_map</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">sort_by</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">spec_path</span><span class="p">):</span>
-        <span class="n">spec_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spec_path</span><span class="p">,</span> <span class="s1">&#39;spec.toml&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">data_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">spec_path</span><span class="p">))</span>
-        <span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
-
-    <span class="n">df</span> <span class="o">=</span> <span class="n">assemble_dataframe</span><span class="p">(</span><span class="n">spec_path</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">params_map</span><span class="o">=</span><span class="n">params_map</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">sort_by</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="mean_comparison"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.compare_experiments.mean_comparison">[docs]</a><span class="k">def</span> <span class="nf">mean_comparison</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">group_var</span><span class="p">,</span> <span class="n">group_values</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="s1">&#39;mean accuracy&#39;</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">group_values</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -113,7 +95,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

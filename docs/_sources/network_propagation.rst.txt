@@ -1,5 +1,5 @@
-Implementation of Signal Propagation in Neural Networks
-=======================================================
+Numpy Implementation of Signal Propagation in Neural Networks
+=============================================================
 
 
 Feed-Forward Networks

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.postopt.vis.vis_network &#8212; ReWann  documentation</title>
+    <title>rewann.postopt.vis.vis_network &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -40,9 +40,8 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib.path</span> <span class="kn">import</span> <span class="n">Path</span>
-
 <span class="kn">from</span> <span class="nn">rewann.individual.network</span> <span class="kn">import</span> <span class="n">RecurrentNetwork</span>
+
 
 <div class="viewcode-block" id="node_names"><a class="viewcode-back" href="../../../../rewann.postopt.vis.html#rewann.postopt.vis.vis_network.node_names">[docs]</a><span class="k">def</span> <span class="nf">node_names</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -58,7 +57,6 @@
     <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
-
     <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
 
     <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
@@ -69,15 +67,12 @@
     <span class="n">g</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="c1"># Colors</span>
-    <span class="n">color</span><span class="o">=</span><span class="p">(</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="p">(</span>
         <span class="p">[</span><span class="s1">&#39;#fdb462&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">net</span><span class="o">.</span><span class="n">n_in</span>         <span class="c1"># inputs</span>
         <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;#ffed6f&#39;</span><span class="p">]</span>                   <span class="c1"># bias</span>
         <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;#80b1d3&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">net</span><span class="o">.</span><span class="n">n_hidden</span>   <span class="c1"># hidden</span>
         <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;#b3de69&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">net</span><span class="o">.</span><span class="n">n_out</span>      <span class="c1"># outputs</span>
     <span class="p">)</span>
-
-    <span class="c1"># Positions</span>
-    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
 
     <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">including_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
 
@@ -97,7 +92,7 @@
         <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="n">b</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">T</span>
     <span class="p">])</span>
 
-    <span class="n">M_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">M_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">M_sum</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">M_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">/</span> <span class="n">M_sum</span>
@@ -111,18 +106,17 @@
 
     <span class="n">i_0</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">x_0</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-        <span class="n">bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-        <span class="n">ns</span> <span class="o">=</span> <span class="n">i_0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">layer_size</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">layer_size</span><span class="p">)</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="n">i_0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">layer_size</span><span class="p">)</span>
         <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][</span><span class="n">ns</span><span class="p">])</span> <span class="o">+</span> <span class="n">i_0</span>
 
+        <span class="n">x_n</span> <span class="o">=</span> <span class="n">layer_size</span> <span class="o">//</span> <span class="n">layer_h</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="n">x_n</span> <span class="o">=</span> <span class="n">l</span> <span class="o">//</span> <span class="n">layer_h</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">layer_size</span><span class="p">),</span> <span class="n">x_n</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">layer_size</span><span class="p">)</span> <span class="o">//</span> <span class="n">x_n</span>
 
-        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">x_n</span><span class="p">)</span>
-        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">//</span> <span class="n">x_n</span>
-
-        <span class="n">y_n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">layer_h</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+        <span class="n">y_n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">layer_h</span><span class="p">,</span> <span class="n">layer_size</span><span class="p">)</span>
 
         <span class="n">y_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bound</span><span class="p">,</span> <span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">y_n</span><span class="p">)</span>
         <span class="n">x_rel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x_n</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x_n</span><span class="p">),</span> <span class="n">x_n</span><span class="p">)</span>
@@ -133,10 +127,7 @@
         <span class="n">pos</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][</span><span class="n">order</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_rel</span><span class="p">[</span><span class="n">xi</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_0</span>
 
         <span class="n">x_0</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x_n</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="n">i_0</span> <span class="o">+=</span> <span class="n">l</span>
-
-
-
+        <span class="n">i_0</span> <span class="o">+=</span> <span class="n">layer_size</span>
 
     <span class="k">if</span> <span class="n">labels</span> <span class="o">==</span> <span class="s1">&#39;func_names&#39;</span><span class="p">:</span>
         <span class="n">node_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span>
@@ -148,6 +139,7 @@
             <span class="n">g</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">node_labels</span><span class="p">)),</span>
             <span class="n">font_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
         <span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">labels</span> <span class="o">==</span> <span class="s1">&#39;names&#39;</span><span class="p">:</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
@@ -155,12 +147,12 @@
             <span class="n">g</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)),</span>
             <span class="n">font_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
         <span class="p">)</span>
+
     <span class="k">elif</span> <span class="n">labels</span> <span class="o">==</span> <span class="s1">&#39;func_plots&#39;</span><span class="p">:</span>
         <span class="c1"># draw circles</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="mi">150</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
-
 
         <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">],</span> <span class="n">nodes</span><span class="p">[</span><span class="n">net</span><span class="o">.</span><span class="n">offset</span><span class="p">:]):</span>
             <span class="n">func</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">available_act_functions</span><span class="p">[</span><span class="n">func</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
@@ -173,21 +165,15 @@
 
             <span class="n">verts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
 
-
             <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">pos</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">verts</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
         <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
 
-
-
-
-    <span class="n">edge_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-        <span class="n">edge_cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab10&#39;</span><span class="p">),</span>
-        <span class="n">alpha</span><span class="o">=.</span><span class="mi">6</span><span class="p">,</span>
-        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span>
-        <span class="n">edge_vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">edge_vmax</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+    <span class="n">edge_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">edge_cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab10&#39;</span><span class="p">),</span>
+        <span class="n">alpha</span><span class="o">=.</span><span class="mi">6</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span>
+        <span class="n">edge_vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">edge_vmax</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
         <span class="n">arrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -204,10 +190,9 @@
         <span class="p">)</span>
 
     <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">edgelist</span><span class="o">=</span><span class="n">edgelist</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_col</span><span class="p">,</span>
-        <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowstyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
-        <span class="n">min_source_margin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_target_margin</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">edge_params</span><span class="p">)</span>
-
+                           <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arrowstyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                           <span class="n">min_source_margin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_target_margin</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                           <span class="o">**</span><span class="n">edge_params</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">RecurrentNetwork</span><span class="p">):</span>
         <span class="c1"># draw recurrent edges</span>
@@ -223,8 +208,8 @@
             <span class="p">)</span>
 
         <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">edgelist</span><span class="o">=</span><span class="n">edgelist</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_col</span><span class="p">,</span>
-            <span class="n">min_source_margin</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">min_target_margin</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-            <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">edge_params</span><span class="p">)</span></div>
+                               <span class="n">min_source_margin</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">min_target_margin</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                               <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">edge_params</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="draw_weight_matrix"><a class="viewcode-back" href="../../../../rewann.postopt.vis.html#rewann.postopt.vis.vis_network.draw_weight_matrix">[docs]</a><span class="k">def</span> <span class="nf">draw_weight_matrix</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -275,7 +260,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
