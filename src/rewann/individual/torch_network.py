@@ -84,6 +84,13 @@ class WannModule(torch.nn.Module):
 
 
 class TorchNetwork(NetworkBase):
+    """Torch implmentation of a Feed Forward Neural Network
+
+    .. seealso::
+
+        :doc:`torch_network`.
+    """
+
     available_act_functions = [
         ('relu', torch.relu),
         ('sigmoid', torch.sigmoid),
