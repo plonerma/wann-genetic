@@ -230,7 +230,7 @@ class Environment(ParamTree):
             logging.info(f'Completed generation {gen}; {ts.dt:.02}s elapsed, {avg:.02}s avg, {ts.total:.02}s total. '
                          f'Expected time remaining: {expected_time:.02}s')
 
-            self.store_data(gen, pop)
+            self.store_data(gen, pop, dt=ts.dt)
         self.last_population = pop
         self.store_hof()
 
