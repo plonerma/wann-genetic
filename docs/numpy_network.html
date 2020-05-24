@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Numpy Implementation of WANNs &#8212; ReWann 0.1b.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Torch Implementation of WANNs" href="torch_network.html" />
+    <link rel="prev" title="Command Line Interfaces" href="cli.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="torch_network.html" title="Torch Implementation of WANNs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interfaces"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="numpy-implementation-of-wanns">
+<h1>Numpy Implementation of WANNs<a class="headerlink" href="#numpy-implementation-of-wanns" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="feed-forward-networks">
+<h2>Feed-Forward Networks<a class="headerlink" href="#feed-forward-networks" title="Permalink to this headline">¶</a></h2>
+<p>The final activation state can be reached by multiplying the initial activation
+vector (only input nodes and bias is set) with the weight matrix and applying
+the activation functions. In the implementation only the columns of matrix are
+used that correspond to the nodes that are currently calculated. The order of
+calculation is determined by the layers (calculated during genes expression by
+hierarchically sorting the hidden nodes). Additionaly, only the rows are used
+that correspond to nodes in layers prior to the current layer. All other rows
+have to contain zero.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>During expression the nodes are topologically sorted. Therefore, the index of
+a node in the network does not correspond to the index of the same node in
+the gene.</p>
+</div>
+<div class="figure align-default" id="id1">
+<a class="reference internal image-reference" href="_images/figure_stored_weights.svg"><img alt="stored weight matrix" height="600pt" src="_images/figure_stored_weights.svg" /></a>
+<p class="caption"><span class="caption-text">Weight matrix of the network. Only the are marked with the green dashed
+lines are stored in memory all other values have to be zero and don’t need
+to be stored explicitly (this is relevant when looking at the indexing in
+the implementation of the signal propagation algorithm).</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="recurrent-networks">
+<h2>Recurrent Networks<a class="headerlink" href="#recurrent-networks" title="Permalink to this headline">¶</a></h2>
+<p>For recurrent networks, two weight matrices are generated. The first
+corresponds to the weight matrix in a feed-forward network. It also has to be
+acyclic and determines a topological sorting of the nodes. The second matrix
+represents the recurrent connections. The recurrent weight matrix does not need
+to be acyclic since the signal will not be used during forward feeding but in
+the next step of element processing. Additionally, the recurrent weight matrix
+can contain connections from output nodes to hidden nodes or output nodes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cli.html"
+                        title="previous chapter">Command Line Interfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="torch_network.html"
+                        title="next chapter">Torch Implementation of WANNs</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="torch_network.html" title="Torch Implementation of WANNs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cli.html" title="Command Line Interfaces"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

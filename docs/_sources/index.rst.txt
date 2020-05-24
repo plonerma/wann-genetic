@@ -8,6 +8,6 @@ ReWann
    params
    experiment_series
    cli
-   network_propagation
+   numpy_network
    torch_network
    modules

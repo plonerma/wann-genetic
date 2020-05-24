@@ -21,6 +21,16 @@ rewann.individual.network module
   :undoc-members:
   :show-inheritance:
 
+
+rewann.individual.torch_network module
+--------------------------------------
+
+.. automodule:: rewann.individual.torch_network
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+
 rewann.individual.genes module
 ------------------------------
 
@@ -28,6 +38,7 @@ rewann.individual.genes module
    :members:
    :undoc-members:
    :show-inheritance:
+
 
 rewann.individual.expression module
 -----------------------------------
@@ -37,6 +48,7 @@ rewann.individual.expression module
    :undoc-members:
    :show-inheritance:
 
+
 rewann.individual.genetic\_operations module
 --------------------------------------------
 
@@ -44,6 +56,7 @@ rewann.individual.genetic\_operations module
    :members:
    :undoc-members:
    :show-inheritance:
+
 
 rewann.individual.measures module
 ---------------------------------
