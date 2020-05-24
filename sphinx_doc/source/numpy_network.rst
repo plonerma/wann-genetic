@@ -1,5 +1,5 @@
-Numpy Implementation of Signal Propagation in Neural Networks
-=============================================================
+Numpy Implementation of WANNs
+=============================
 
 
 Feed-Forward Networks
