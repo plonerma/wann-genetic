@@ -3,12 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 import os
-import subprocess
 import logging
-
-
-from multiprocessing import Pool
-
 
 from rewann import Individual, RecurrentIndividual
 
@@ -137,7 +132,15 @@ class Environment(ParamTree):
         if n == 1:
             self.pool = None
         else:
-            self.pool = Pool(n)
+            if self['config', 'backend'].lower() == 'torch':
+                logging.info('Using torch multiprocessing')
+                from torch.multiprocessing import Pool
+                self.pool = Pool(n)
+            else:
+                logging.info('Using usual multiprocessing')
+                from multiprocessing import Pool
+                self.pool = Pool(n)
+
 
     def pool_map(self, func, iter):
         if self.pool is None:

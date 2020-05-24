@@ -106,6 +106,9 @@ class TorchNetwork(NetworkBase):
             node_act_funcs = self.nodes['func'],
             all_act_funcs=[f for _, f in self.available_act_functions])
 
+        # share memory with all workers
+        self.model.share_memory()
+
     def apply(self, x, weights, func='softmax'):
         assert len(x.shape) == 2 # multiple one dimensional input arrays
         assert isinstance(weights, np.ndarray)

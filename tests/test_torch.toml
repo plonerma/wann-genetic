@@ -16,3 +16,4 @@ name='iris'
 
 [config]
   backend='torch'
+  num_workers=2
