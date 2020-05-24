@@ -7,7 +7,7 @@ setup(
     packages=find_packages(src_dir),
     package_dir={'': src_dir},
     author='Max Ploner',
-    version='0.1a.0',
+    version='0.1b.0',
     author_email='rewann@maxploner.de',
     #scripts=['src/rewann/cli/inspect_run', 'src/rewann/cli/inspect_run.py'],
     entry_points={
@@ -28,5 +28,5 @@ setup(
     package_data={'rewann': ['environment/default.toml']},
     install_requires=[
         'pytest-watch', 'sklearn', 'numpy', 'mnist', 'opencv-python',
-        'h5py', 'tabulate', 'matplotlib', 'networkx', 'toml', 'pandas']
+        'h5py', 'tabulate', 'matplotlib', 'networkx', 'toml', 'pandas', 'torch']
 )

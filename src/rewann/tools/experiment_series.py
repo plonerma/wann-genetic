@@ -15,6 +15,7 @@ from functools import reduce
 from typing import Iterable, Collection, Sequence
 
 from rewann.util import ParamTree
+from rewann import Environment
 
 
 
@@ -67,16 +68,17 @@ class ExperimentSeries:
 
     experiment_paths = None
 
-    def __init__(self, spec : Mapping, base_params=dict(), data_path=None):
+    def __init__(self, spec: Mapping, base_params=dict(), data_path=None):
         self.variables = OrderedDict()
         self.base_params = base_params
         self.name_fstr = spec['experiment_name']
         self.data_path = data_path
+        self._environments = dict()
 
         self.init_variables(spec)
 
     @classmethod
-    def from_spec_file(cls, spec_path : str, data_path=None):
+    def from_spec_file(cls, spec_path: str, data_path=None):
         """Create experiment series from toml specification file."""
         if os.path.isdir(spec_path):
             spec_path = os.path.join(spec_path, 'spec.toml')
@@ -131,7 +133,7 @@ class ExperimentSeries:
         """Return iteratator containing all the possible configurations."""
         return product(*[var.iter_indices() for var in self.vars()])
 
-    def configuration_name(self, c : Collection[int]) -> str:
+    def configuration_name(self, c: Collection[int]) -> str:
         """Get full experiment name for a given configuration."""
         assert len(c) == len(self.variables)
 
@@ -140,7 +142,7 @@ class ExperimentSeries:
             for name, var, i in zip(self.var_names(), self.vars(), c)
         })
 
-    def configuration_params(self, c : Collection[int], use_base=True):
+    def configuration_params(self, c: Collection[int], use_base=True):
         params = ParamTree()
 
         if use_base:
@@ -151,6 +153,22 @@ class ExperimentSeries:
 
         params['experiment_name'] = self.configuration_name(c)
         return params
+
+    def configuration_env(self, c: Collection[int]):
+        if self.experiment_paths is None:
+            try:
+                self.discover_data_dir()
+            except AssertionError:
+                raise RuntimeError("Load set correct experiments data path first.")
+
+        if c not in self._environments:
+            c_name = self.configuration_name(c).lower()
+            c_path = self.experiment_paths[c_name]
+            if c_path is None:
+                logging.critical(f'No experiment data for configuration {c_name} found.')
+                return None
+            self._environments[c] = Environment(c_path)
+        return self._environments[c]
 
     def flat_values(self, c : Collection[int]) -> Mapping:
         """Flatten all values.
@@ -275,5 +293,6 @@ class ExperimentSeries:
                     stats = json.load(f)
 
                 stats.update(self.flat_values(c))
+                stats['_configuration'] = c
                 data.append(stats)
         return pd.DataFrame(data)

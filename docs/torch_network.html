@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Torch Implementation of WANNs &#8212; ReWann 0.1b.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rewann" href="modules.html" />
+    <link rel="prev" title="Numpy Implementation of WANNs" href="numpy_network.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="rewann"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="numpy_network.html" title="Numpy Implementation of WANNs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="torch-implementation-of-wanns">
+<h1>Torch Implementation of WANNs<a class="headerlink" href="#torch-implementation-of-wanns" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="feed-forward-neural-networks">
+<h2>Feed-Forward Neural Networks<a class="headerlink" href="#feed-forward-neural-networks" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="rewann.individual.html#rewann.individual.torch_network.ConcatLayer" title="rewann.individual.torch_network.ConcatLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.torch_network.ConcatLayer</span></code></a> implements the basic building block of FF-WANNs: The input is fed to a multi activation block vis a linear layer (instead of using the bias of the linear layer, a bias node is used just like in the <a class="reference internal" href="numpy_network.html"><span class="doc">Numpy Implementation of WANNs</span></a> - this makes the conversion from the genes easier). In the current implementation each existing activation function is calculated once on each node and not selected functions are removed via a mask. Finally, the output of the activation block is concatenated to the original input.</p>
+<div class="figure align-default" id="id1">
+<a class="reference internal image-reference" href="_images/figure_concat_layer.svg"><img alt="diagram of a concat layer" height="300pt" src="_images/figure_concat_layer.svg" /></a>
+<p class="caption"><span class="caption-text">Diagram of <a class="reference internal" href="rewann.individual.html#rewann.individual.torch_network.ConcatLayer" title="rewann.individual.torch_network.ConcatLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.torch_network.ConcatLayer</span></code></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While traversing the layers, the activation vector gets bigger and bigger. In the numpy implementation, the activation vector is fully sized from the beginning.</p>
+<p>Limiting the size the activation vector needs to take on is only possible if one of the following conditions is met:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The maximum number of nodes a network can is restricted</p></li>
+<li><p>The number of nodes a layer can hold (not so problematic) as well as the number of layers an edge can cross/skip is restricted (keep in mind that a node might have a lower possible layer and an upper possible layer - if we do the topological sorting starting at the output layer).</p></li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numpy_network.html"
+                        title="previous chapter">Numpy Implementation of WANNs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">rewann</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="rewann"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="numpy_network.html" title="Numpy Implementation of WANNs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

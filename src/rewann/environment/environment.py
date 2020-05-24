@@ -230,7 +230,7 @@ class Environment(ParamTree):
             logging.info(f'Completed generation {gen}; {ts.dt:.02}s elapsed, {avg:.02}s avg, {ts.total:.02}s total. '
                          f'Expected time remaining: {expected_time:.02}s')
 
-            self.store_data(gen, pop)
+            self.store_data(gen, pop, dt=ts.dt)
         self.last_population = pop
         self.store_hof()
 
@@ -246,8 +246,7 @@ class Environment(ParamTree):
             r.compile_stats() # at least derive and store stats
 
     def store_data(self, gen, pop, dt=-1):
-        gen_metrics = self.population_metrics(gen=gen, population=pop, dt=dt)
-        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True)
+        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True, dt=dt)
 
         metric, metric_sign = self.hof_metric
         p = ("MAX" if metric_sign > 0 else "MIN")

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann package &#8212; ReWann  documentation</title>
+    <title>rewann package &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="rewann.environment package" href="rewann.environment.html" />
-    <link rel="prev" title="Implementation of Signal Propagation in Neural Networks" href="network_propagation.html" /> 
+    <link rel="prev" title="rewann" href="modules.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -31,9 +31,10 @@
           <a href="rewann.environment.html" title="rewann.environment package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="network_propagation.html" title="Implementation of Signal Propagation in Neural Networks"
+          <a href="modules.html" title="rewann"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">rewann</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -72,8 +73,8 @@
 <dl class="py class">
 <dt id="rewann.Network">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_in</span></em>, <em class="sig-param"><span class="n">n_out</span></em>, <em class="sig-param"><span class="n">nodes</span></em>, <em class="sig-param"><span class="n">weight_matrix</span></em>, <em class="sig-param"><span class="n">conn_mat</span></em>, <em class="sig-param"><span class="n">propagation_steps</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/network.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.Network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Feed Forward Neural Network</p>
-<p>For an explanation of how propagation works, see <a class="reference internal" href="network_propagation.html"><span class="doc">Implementation of Signal Propagation in Neural Networks</span></a>.</p>
+<dd><p>Numpy implmentation of a Feed Forward Neural Network</p>
+<p>For an explanation of how propagation works, see <a class="reference internal" href="numpy_network.html"><span class="doc">Numpy Implementation of WANNs</span></a>.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -113,6 +114,7 @@ executed experiments.</p>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.individual">rewann.individual.individual module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.network">rewann.individual.network module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.torch_network">rewann.individual.torch_network module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.genes">rewann.individual.genes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.expression">rewann.individual.expression module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.genetic_operations">rewann.individual.genetic_operations module</a></li>
@@ -160,6 +162,11 @@ executed experiments.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.UserDict" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.UserDict</span></code></a></p>
 <p>Wraps a dict to allow access of fields via list of keys.</p>
 <dl class="py method">
+<dt id="rewann.util.ParamTree.params">
+<em class="property">property </em><code class="sig-name descname">params</code><a class="headerlink" href="#rewann.util.ParamTree.params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="rewann.util.ParamTree.update_params">
 <code class="sig-name descname">update_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/util.html#ParamTree.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.ParamTree.update_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a nested update on the stored parameters.</p>
@@ -194,8 +201,8 @@ executed experiments.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="network_propagation.html"
-                        title="previous chapter">Implementation of Signal Propagation in Neural Networks</a></p>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">rewann</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="rewann.environment.html"
                         title="next chapter">rewann.environment package</a></p>
@@ -226,9 +233,10 @@ executed experiments.</p>
           <a href="rewann.environment.html" title="rewann.environment package"
              >next</a> |</li>
         <li class="right" >
-          <a href="network_propagation.html" title="Implementation of Signal Propagation in Neural Networks"
+          <a href="modules.html" title="rewann"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

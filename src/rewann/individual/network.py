@@ -126,7 +126,7 @@ class NetworkBase:
 class Network(NetworkBase):
     """Numpy implmentation of a Feed Forward Neural Network
 
-    For an explanation of how propagation works, see :doc:`network_propagation`.
+    For an explanation of how propagation works, see :doc:`numpy_network`.
     """
 
     ### Definition of the activations functions
@@ -197,7 +197,7 @@ class Network(NetworkBase):
 
 
 class RecurrentNetwork(Network):
-    """Recurrrent Neural Network"""
+    """Numpy implementation of Recurrrent Neural Network"""
     def __init__(self, *args, recurrent_weight_matrix=None, **kwargs):
         super().__init__(*args, **kwargs)
 

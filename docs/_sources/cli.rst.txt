@@ -1,7 +1,10 @@
 Command Line Interfaces
 =======================
 
-On installation, rewann registers these CLI entry points (using the ``--help`` option displays usage):
+On installation, rewann registers these CLI entry points (using the ``--help`` option displays usage).
+
+Running an experiment
+---------------------
 
 ``run_experiment [-h] [--comment COMMENT] PATH``
 
@@ -12,6 +15,21 @@ On installation, rewann registers these CLI entry points (using the ``--help`` o
     -h, --help         show help message
     --comment COMMENT  add comment field to params
 
+Experiment series generation
+----------------------------
+
+``generate_experiment_series [-h] [--build_dir BUILD_DIR] SERIES_SPEC_FILE``
+
+  Simple templating tool to generate a series of experiments from a series specification file (see :doc:`experiment_series` for details).
+
+  Optional:
+
+    -h, --help                 show this help message and exit
+    --build_dir BUILD_DIR, -o  output directory for experiment specification files (defaults to 'build')
+
+
+Plotting and reporting
+----------------------
 
 ``compile_report [-h] [--path PATH] [--weights WEIGHTS] [--samples SAMPLES]``
 
@@ -32,18 +50,28 @@ On installation, rewann registers these CLI entry points (using the ``--help`` o
 
   Optional:
 
-    -h, --help            show this help message and exit
+    -h, --help            show help message
     --path PATH, -p PATH  path to experiment (defaults to current working directory)
     --function_names, -l  use names of activation as node labels
     --function_plots, -g  use plot functions on nodes
     --names, -n           use names of nodes as labels
 
+``plot_gen_lines [-h] [--path PATH] measure [measure ...]``
 
-``generate_experiment_series [-h] [--build_dir BUILD_DIR] SERIES_SPEC_FILE``
-
-  Simple templating tool to generate a series of experiments from a series specification file (see :doc:`experiment_series` for details).
+  Draw line plot of generation metrics (if mulitple measures are given, they
+  will be drawn in the same graph).
 
   Optional:
 
-    -h, --help                 show this help message and exit
-    --build_dir BUILD_DIR, -o  output directory for experiment specification files (defaults to 'build')
+    -h, --help            show help message
+    --path PATH, -p PATH  path to experiment (defaults to current working directory)
+
+``plot_gen_quartiles [-h] [--path PATH] measure [measure ...]``
+
+  Draw quartile plots of generation metrics (if multiple measures are given,
+  multiple file will be created).
+
+  Optional:
+
+    -h, --help            show help message
+    --path PATH, -p PATH  path to experiment (defaults to current working directory)

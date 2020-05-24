@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.environment package &#8212; ReWann  documentation</title>
+    <title>rewann.environment package &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -33,8 +33,9 @@
         <li class="right" >
           <a href="rewann.html" title="rewann package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -78,7 +79,7 @@
 </dl>
 <dl class="py attribute">
 <dt id="rewann.environment.environment.Environment.default_params">
-<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'debug': True, 'num_workers': 1}, 'mutation': {'add_recurrent_edge': {'probability': 0.3}, 'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_functions': 'all', 'hof_size': 10, 'initial_enabled_edge_probability': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_training_samples_per_iteration': -1, 'num_weight_samples_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'include_prediction_records': False, 'log_filename': 'execution.log'}, 'task': {'name': 'iris'}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'backend': 'numpy', 'debug': True, 'num_workers': 1}, 'mutation': {'add_recurrent_edge': {'probability': 0.3}, 'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_functions': 'all', 'hof_size': 10, 'initial_enabled_edge_probability': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_training_samples_per_iteration': -1, 'num_weight_samples_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'include_prediction_records': False, 'log_filename': 'execution.log'}, 'task': {'name': 'iris'}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -150,7 +151,7 @@ loading the complete individuals.</p></li>
 
 <dl class="py method">
 <dt id="rewann.environment.environment.Environment.population_metrics">
-<code class="sig-name descname">population_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">gen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_indiv_measurements</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.population_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.population_metrics" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">population_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">gen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">return_indiv_measurements</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.population_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.population_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available measurements for all individuals in the population and
 calculate statistical key metrics.</p>
 <p>The statistical key metrics include:</p>
@@ -232,7 +233,7 @@ subdirectory to write in, and derive objectives tuples from the parameters.+</p>
 
 <dl class="py method">
 <dt id="rewann.environment.environment.Environment.store_data">
-<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.store_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.store_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -285,11 +286,6 @@ subdirectory to write in, and derive objectives tuples from the parameters.+</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></a></p>
 <p>Keeps track of edge and node counts.</p>
 <p>Edge ids need to be tracked if crossover should ever be implemented.</p>
-<dl class="py method">
-<dt id="rewann.environment.evolution.InnovationRecord.add_edge">
-<code class="sig-name descname">add_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">dest</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#InnovationRecord.add_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.InnovationRecord.add_edge" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt id="rewann.environment.evolution.InnovationRecord.edge_exists">
 <code class="sig-name descname">edge_exists</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">src</span></em>, <em class="sig-param"><span class="n">dest</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evolution.html#InnovationRecord.edge_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evolution.InnovationRecord.edge_exists" title="Permalink to this definition">¶</a></dt>
@@ -745,8 +741,9 @@ subdirectory to write in, and derive objectives tuples from the parameters.+</p>
         <li class="right" >
           <a href="rewann.html" title="rewann package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann  documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rewann.html" >rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="rewann.html" >rewann package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.tools.experiment_series &#8212; ReWann  documentation</title>
+    <title>rewann.tools.experiment_series &#8212; ReWann 0.1b.0 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -50,19 +50,18 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Mapping</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Collection</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">rewann.util</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 
 
 
-<div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.Variable">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Variable</span><span class="p">:</span>
+<div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.Variable">[docs]</a><span class="k">class</span> <span class="nc">Variable</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Represents a variable in an experiment series.&quot;&quot;&quot;</span>
-    <span class="n">key</span> <span class="p">:</span> <span class="nb">tuple</span>
-    <span class="n">values</span> <span class="p">:</span> <span class="nb">tuple</span>
-    <span class="n">fmt</span> <span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">=</span> <span class="n">fmt</span>
 
 <div class="viewcode-block" id="Variable.value_name"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.Variable.value_name">[docs]</a>    <span class="k">def</span> <span class="nf">value_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span> <span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return name part for value with index `i` of this variation.&quot;&quot;&quot;</span>
@@ -97,7 +96,7 @@
 
 
 
-<div class="viewcode-block" id="ExperimentSeries"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.ExperimentSeries">[docs]</a><span class="k">class</span> <span class="nc">ExperimentSeries</span><span class="p">:</span>
+<div class="viewcode-block" id="ExperimentSeries"><a class="viewcode-back" href="../../../rewann.html#rewann.tools.ExperimentSeries">[docs]</a><span class="k">class</span> <span class="nc">ExperimentSeries</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Represents an experiment series.</span>
 
 <span class="sd">    Can be used to generate experiment files and read in data from previously</span>
@@ -346,7 +345,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
