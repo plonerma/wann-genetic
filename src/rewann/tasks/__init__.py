@@ -2,7 +2,7 @@ from .base import ClassificationTask, RecurrentTask
 
 from .image import mnist_256, digit_raw
 
-from .rnn import EchoTask, AddingTask
+from .rnn import EchoTask, AddingTask, CopyTask
 
 from functools import partial
 
@@ -24,7 +24,8 @@ available_tasks = {
                     load_func=digit_raw),
 
     'echo20': EchoTask(20),
-    'adding': AddingTask(8)
+    'adding': AddingTask(8),
+    'copy10': CopyTask(10)
 }
 
 def select_task(task_name):

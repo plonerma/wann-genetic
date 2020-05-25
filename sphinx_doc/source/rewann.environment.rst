@@ -1,14 +1,6 @@
 rewann.environment package
 ==========================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   rewann.environment.tasks
-
 Submodules
 ----------
 

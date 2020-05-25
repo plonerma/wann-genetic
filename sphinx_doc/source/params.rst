@@ -23,6 +23,10 @@ The following sections give an overview over the available configuration fields 
 task
 ----
 
+.. seealso::
+
+  See :doc:`tasks` for available tasks.
+
 .. table::
   :widths: 35 20 45
   :width: 100%
@@ -30,7 +34,7 @@ task
   ==========  =======  ===========
   Parameter   Default  Description
   ==========  =======  ===========
-  ``name``    'iris'   Task to train on (available tasks are defined in ``rewann.environment.tasks``).
+  ``name``    'iris'   Task to train on (available tasks are defined in ``rewann.tasks``).
   ==========  =======  ===========
 
 
@@ -101,6 +105,10 @@ mutation
 --------
 The following sections define the types of mutations that are possible and how frequently they occur.
 The probability of all enabled mutation types will be normalized to a sum of one.
+
+.. seealso::
+
+  See :doc:`mutation_types` for details on how the mutation types work.
 
 
 mutation.new_edge

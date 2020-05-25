@@ -15,7 +15,7 @@ import json
 from .vis import draw_graph
 from rewann.environment.util import load_ind
 from rewann.environment.evolution import evaluate_inds, express_inds
-from rewann.environment.tasks import ClassificationTask
+from rewann.tasks import ClassificationTask
 
 from tabulate import tabulate
 
