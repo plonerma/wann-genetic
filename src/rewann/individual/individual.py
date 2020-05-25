@@ -83,6 +83,7 @@ class Individual:
                 ms_new = apply_measures({
                     'weight': weights,
                     'y_true': [y_true] * len(weights),
+                    'y_labels': list(range(self.genes.n_out)),
                     'y_raw': y_raw
                 }, self.recorded_measures)
             except Exception as e:
