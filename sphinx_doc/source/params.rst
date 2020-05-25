@@ -23,6 +23,10 @@ The following sections give an overview over the available configuration fields 
 task
 ----
 
+.. seealso::
+
+  See :doc:`tasks` for available tasks.
+
 .. table::
   :widths: 35 20 45
   :width: 100%
