@@ -67,10 +67,13 @@ class Individual:
     def record_measurements(self, *, weights, y_true, y_raw, record_raw=False):
         assert len(y_raw.shape) == 3 # weights, samples, nodes
 
+        y_true = [y_true] * len(weights)
+        y_labels = [np.arange(self.genes.n_out)] * len(weights)
+
         if record_raw:
             self._measurements = {
                 'weight': weights,
-                'y_true': [y_true] * len(weights),
+                'y_true': y_true,
                 'y_raw': y_raw,
                 'n_evaluations': len(weights)
             }
@@ -82,8 +85,8 @@ class Individual:
             try:
                 ms_new = apply_measures({
                     'weight': weights,
-                    'y_true': [y_true] * len(weights),
-                    'y_labels': list(range(self.genes.n_out)),
+                    'y_true': y_true,
+                    'y_labels': y_labels,
                     'y_raw': y_raw
                 }, self.recorded_measures)
             except Exception as e:

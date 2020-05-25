@@ -100,7 +100,7 @@ def mean_squared_error(y_true, y_raw):
     return np.mean((y_true - y_raw) ** 2)
 
 @new_measure
-def cm(y_true, y_pred):
+def cm(y_true, y_pred, y_labels):
     try:
         return sklearn.metrics.confusion_matrix(y_true, y_pred, normalize='all', labels=y_labels)
     except Exception as e:
@@ -111,8 +111,14 @@ def cm(y_true, y_pred):
 @new_measure
 def log_loss(y_true, y_prob, y_labels):
     # nan is same as maximally falsely predicted
-    y_prob[np.isnan(y_prob)] = 0
-    return sklearn.metrics.log_loss(y_true, y_prob, labels=y_labels)
+    try:
+        y_prob[np.isnan(y_prob)] = 0
+        return sklearn.metrics.log_loss(y_true, y_prob, labels=y_labels)
+    except Exception as e:
+        logging.warning(y_true)
+        logging.warning(y_prob)
+        logging.warning(y_labels)
+        raise e
 
 @new_measure
 def true_positives(cm):

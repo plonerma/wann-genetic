@@ -39,7 +39,8 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
     'recommonmark',
-    'sphinx_markdown_tables']
+    'sphinx_markdown_tables',
+    'sphinxcontrib.bibtex']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
