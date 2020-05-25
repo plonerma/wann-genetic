@@ -102,6 +102,10 @@ mutation
 The following sections define the types of mutations that are possible and how frequently they occur.
 The probability of all enabled mutation types will be normalized to a sum of one.
 
+.. seealso::
+
+  See :doc:`mutation_types` for details on how the mutation types work.
+
 
 mutation.new_edge
 .................
