@@ -1,8 +1,13 @@
+"""Module containig basic recurrent toy tasks."""
+
+
 import numpy as np
 
 from .base import RecurrentTask
 
 class EchoTask(RecurrentTask):
+    """(see :ref:`echo_task`)"""
+    
     def __init__(self, length, delay=1, dim=2):
         assert delay >= 0 # can't go back in time
         assert dim > 1 # (case 1 is trivial)
@@ -37,7 +42,9 @@ class EchoTask(RecurrentTask):
 
 
 class AddingTask(RecurrentTask):
-    """ As described in Unitary Evolution Recurrent Neural Networks """
+    """ As described in "Unitary Evolution Recurrent Neural Networks"
+    (see :ref:`adding_task`)
+    """
 
     n_in = 2
     n_out = 1
@@ -67,3 +74,11 @@ class AddingTask(RecurrentTask):
         y[:, -1] = values_a + values_b
 
         return x, y
+
+
+class CopyTask(RecurrentTask):
+    """(see :ref:`copy_task`)"""
+    pass
+
+    def get_data(self, test=False):
+        raise NotImplementedError

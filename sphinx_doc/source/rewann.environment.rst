@@ -1,9 +1,6 @@
 rewann.environment package
 ==========================
 
-Subpackages
------------
-
 Submodules
 ----------
 
