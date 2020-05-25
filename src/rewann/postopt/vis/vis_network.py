@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from rewann.individual.network import RecurrentNetwork
+from rewann.individual.torch_network import TorchNetwork
 
+import torch
 
 def node_names(net):
     return (
@@ -121,7 +123,11 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
 
             x = np.linspace(0, 2, 10)
             x = np.hstack([x, 1-x, -x, x-1])
-            y = func(x)
+            if isinstance(net, TorchNetwork):
+                x = torch.Tensor(x)
+                y = func(x).numpy()
+            else:
+                y = func(x)
             y = y - np.min(y)
             y = y - np.max(y)/2
 
