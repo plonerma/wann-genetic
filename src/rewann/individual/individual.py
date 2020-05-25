@@ -75,6 +75,7 @@ class Individual:
                 'weight': weights,
                 'y_true': y_true,
                 'y_raw': y_raw,
+                'y_labels': y_labels,
                 'n_evaluations': len(weights)
             }
 
