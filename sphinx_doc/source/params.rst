@@ -30,7 +30,7 @@ task
   ==========  =======  ===========
   Parameter   Default  Description
   ==========  =======  ===========
-  ``name``    'iris'   Task to train on (available tasks are defined in ``rewann.environment.tasks``).
+  ``name``    'iris'   Task to train on (available tasks are defined in ``rewann.tasks``).
   ==========  =======  ===========
 
 

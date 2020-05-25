@@ -1,29 +1,29 @@
-rewann.environment.tasks package
+rewann.tasks package
 ================================
 
 Submodules
 ----------
 
-rewann.environment.tasks.base module
+rewann.tasks.base module
 ------------------------------------
 
-.. automodule:: rewann.environment.tasks.base
+.. automodule:: rewann.tasks.base
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.tasks.image module
+rewann.tasks.image module
 -------------------------------------
 
-.. automodule:: rewann.environment.tasks.image
+.. automodule:: rewann.tasks.image
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.tasks.rnn module
+rewann.tasks.rnn module
 -----------------------------------
 
-.. automodule:: rewann.environment.tasks.rnn
+.. automodule:: rewann.tasks.rnn
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +32,7 @@ rewann.environment.tasks.rnn module
 Module contents
 ---------------
 
-.. automodule:: rewann.environment.tasks
+.. automodule:: rewann.tasks
    :members:
    :undoc-members:
    :show-inheritance:

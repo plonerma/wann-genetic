@@ -11,10 +11,9 @@ from multiprocessing import Pool
 
 
 from rewann import Individual, RecurrentIndividual
-
 from rewann.individual.torch_network import TorchIndividual
+from rewann.tasks import select_task
 
-from .tasks import select_task
 from .evolution import evolution, update_hof
 from .util import get_version, TimeStore
 

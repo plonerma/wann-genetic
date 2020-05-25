@@ -21,6 +21,7 @@ Subpackages
 
    rewann.environment
    rewann.individual
+   rewann.tasks
    rewann.postopt
    rewann.tools
 
