@@ -1,18 +1,6 @@
 rewann package
 ==============
 
-.. autoclass:: rewann.Environment
-
-.. autoclass:: rewann.Individual
-  :members: measurements, recorded_measures
-
-.. autoclass:: rewann.Genes
-
-.. autoclass:: rewann.Network
-  :members: apply,
-
-.. autoclass:: rewann.tools.ExperimentSeries
-
 Subpackages
 -----------
 
@@ -20,9 +8,10 @@ Subpackages
    :maxdepth: 4
 
    rewann.environment
+   rewann.genetic_algorithm
    rewann.individual
-   rewann.tasks
    rewann.postopt
+   rewann.tasks
    rewann.tools
 
 Submodules

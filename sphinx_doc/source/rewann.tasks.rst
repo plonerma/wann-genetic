@@ -1,11 +1,11 @@
 rewann.tasks package
-================================
+====================
 
 Submodules
 ----------
 
 rewann.tasks.base module
-------------------------------------
+------------------------
 
 .. automodule:: rewann.tasks.base
    :members:
@@ -13,7 +13,7 @@ rewann.tasks.base module
    :show-inheritance:
 
 rewann.tasks.image module
--------------------------------------
+-------------------------
 
 .. automodule:: rewann.tasks.image
    :members:
@@ -21,7 +21,7 @@ rewann.tasks.image module
    :show-inheritance:
 
 rewann.tasks.rnn module
------------------------------------
+-----------------------
 
 .. automodule:: rewann.tasks.rnn
    :members:

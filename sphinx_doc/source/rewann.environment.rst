@@ -12,26 +12,10 @@ rewann.environment.environment module
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.evolution module
------------------------------------
+rewann.environment.evaluation\_util module
+------------------------------------------
 
-.. automodule:: rewann.environment.evolution
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-rewann.environment.ranking module
----------------------------------
-
-.. automodule:: rewann.environment.ranking
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-rewann.environment.run module
------------------------------
-
-.. automodule:: rewann.environment.run
+.. automodule:: rewann.environment.evaluation_util
    :members:
    :undoc-members:
    :show-inheritance:

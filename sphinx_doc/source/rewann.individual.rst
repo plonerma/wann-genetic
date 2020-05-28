@@ -1,35 +1,17 @@
 rewann.individual package
 =========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rewann.individual.numpy
+   rewann.individual.torch
+
 Submodules
 ----------
-
-rewann.individual.individual module
------------------------------------
-
-.. automodule:: rewann.individual.individual
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-rewann.individual.network module
---------------------------------
-
-.. automodule:: rewann.individual.network
-  :members:
-  :undoc-members:
-  :show-inheritance:
-
-
-rewann.individual.torch_network module
---------------------------------------
-
-.. automodule:: rewann.individual.torch_network
-  :members:
-  :undoc-members:
-  :show-inheritance:
-
 
 rewann.individual.genes module
 ------------------------------
@@ -39,34 +21,29 @@ rewann.individual.genes module
    :undoc-members:
    :show-inheritance:
 
+rewann.individual.individual\_base module
+-----------------------------------------
 
-rewann.individual.expression module
------------------------------------
-
-.. automodule:: rewann.individual.expression
+.. automodule:: rewann.individual.individual_base
    :members:
    :undoc-members:
    :show-inheritance:
 
+rewann.individual.network\_base module
+--------------------------------------
 
-rewann.individual.genetic\_operations module
---------------------------------------------
-
-.. automodule:: rewann.individual.genetic_operations
+.. automodule:: rewann.individual.network_base
    :members:
    :undoc-members:
    :show-inheritance:
 
+rewann.individual.util module
+-----------------------------
 
-rewann.individual.measures module
----------------------------------
-
-.. automodule:: rewann.individual.measures
+.. automodule:: rewann.individual.util
    :members:
    :undoc-members:
    :show-inheritance:
-
-
 
 
 Module contents
