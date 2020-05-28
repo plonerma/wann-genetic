@@ -6,11 +6,14 @@ import os
 import logging
 
 from rewann import Individual, RecurrentIndividual
-from rewann.individual.torch_network import TorchIndividual
+from rewann.individual.torch import Individual as TorchIndividual
 from rewann.tasks import select_task
 
-from .evolution import evolution, update_hof
+from rewann import GeneticAlgorithm
+
 from .util import get_version, TimeStore
+
+from .evaluation_util import get_objective_values, update_hall_of_fame, make_measurements
 
 from rewann.util import ParamTree
 from rewann.postopt import Report
@@ -206,24 +209,33 @@ class Environment(ParamTree):
             self.pool.close()
 
     def optimize(self):
-        generations = evolution(self)
-
         logging.info("Starting evolutionary algorithm")
 
         ts = TimeStore()
 
+        alg = GeneticAlgorithm(self)
+
         ts.start()
-        for _ in range(self['population', 'num_generations']):
+        for gen in np.arange(self['population', 'num_generations']) + 1:
 
             ts.start()
 
-            w = self.sample_weights()
-            logging.debug(f'Sampled weight {w}')
+            pop = alg.ask()
 
-            gen, pop = next(generations)
+            # evaluate indivs
+
+            weights = self.sample_weights()
+
+            logging.debug(f'Sampled weight {weights}')
+
+            make_measurements(self, pop, weights=weights)
+
+            obj_values = np.array([get_objective_values(ind, self.objectives) for ind in pop])
+
+            alg.tell(obj_values)
 
             logging.debug('Updating hall of fame')
-            self.hall_of_fame = update_hof(self, pop)
+            self.hall_of_fame = update_hall_of_fame(self, pop)
 
             ts.stop()
 
@@ -301,23 +313,13 @@ class Environment(ParamTree):
         if gen is None:
             gen = self['population', 'num_generations']
 
-        base_metrix = ['n_hidden', 'n_enabled_edges', 'n_total_edges',
-                       'n_evaluations', 'age', 'front', 'n_layers', 'n_mutations']
+        rows = list()
+        for ind in population:
+            data = ind.metadata(current_gen=gen)
+            data.update(ind.measurements)
+            rows.append(data)
 
-
-        prefixed_measures = self.ind_class.recorded_measures
-
-
-        prefixes = {'max': np.max, 'mean': np.mean, 'min': np.min}
-
-        measures = base_metrix + [
-            f'{m}.{p}' for p in prefixes for m in prefixed_measures
-        ]
-
-        indiv_measurements = pd.DataFrame(data=[
-            ind.measurements(*measures, current_gen=gen) for ind in population
-        ])
-
+        indiv_measurements = pd.DataFrame(data=rows)
 
         metrics = dict(
             num_unique_individuals=len(set(population)),
@@ -350,3 +352,23 @@ class Environment(ParamTree):
             return metrics, indiv_measurements
         else:
             return metrics
+
+
+def run_experiment():
+    """Execute an experiment (see :doc:`cli`)."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Post Optimization')
+
+    parser.add_argument('path', type=str, help='path to experiment specification')
+
+    parser.add_argument('--comment', type=str, help='add comment field to params.', default=None)
+
+    args = parser.parse_args()
+    env = Environment(args.path)
+
+    if args.comment is not None:
+        env['comment'] = args.comment
+    env.run()
+
+    logging.info(f'Completed excution.')

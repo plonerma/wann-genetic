@@ -2,8 +2,6 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rewann.individual.network import RecurrentNetwork
-
 
 def node_names(net):
     return (
@@ -36,7 +34,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         + ['#b3de69'] * net.n_out      # outputs
     )
 
-    layers = list([len(s) for s in net.layers(including_input=True)])
+    layers = list([len(s) for s in net.layers(include_input=True)])
 
     # pos x will be determined by layer, pos y will be iterated on
     # input, bias and output nodes will have static position, hidden node
@@ -156,7 +154,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
                            min_source_margin=10, min_target_margin=5,
                            **edge_params)
 
-    if isinstance(net, RecurrentNetwork):
+    if net.is_recurrent:
         # draw recurrent edges
 
         edge_col = list()

@@ -1,58 +1,37 @@
 import torch
-import numpy as np
-from functools import reduce
-from rewann.individual.network import NetworkBase, softmax
-from rewann.individual.individual import Individual
+
+from .ffnn import MultiActivationModule
+
+from rewann.individual.network_base import BaseRNN
 
 
-class MultiActivationModule(torch.nn.Module):
-    """Applies multiple elementwise activation functions to a tensor."""
-    def __init__(self, node_act_funcs, all_act_funcs):
-        super().__init__()
-        num_nodes = len(node_act_funcs)
+class ReConcatLayer(torch.nn.Module):
+    """Contatenates output of the active nodes and prior nodes (recurrent)."""
 
-        mask = torch.zeros((num_nodes, len(all_act_funcs)))
-
-        for node, func in enumerate(node_act_funcs):
-            mask[node, func] = 1
-
-        self.mask = mask
-        self.all_act_funcs = all_act_funcs
-
-    def forward(self, x):
-        return reduce(
-            lambda first, act: (
-                torch.add(
-                    first,
-                    torch.mul(
-                        act[1](x), # apply activation func
-                        self.mask[..., act[0]])) # mask output
-            ),
-            enumerate(self.all_act_funcs), # index, func
-            torch.zeros_like(x) # start value
-        )
-
-
-class ConcatLayer(torch.nn.Module):
-    """Contatenates output of the active nodes and prior nodes."""
-    def __init__(self, shared_weight, connections, node_act_funcs, all_act_funcs):
+    def __init__(self, shared_weight, ff_weight, re_weight, node_act_funcs, all_act_funcs):
         super().__init__()
 
-        size_in, size_out = connections.size()
-        self.linear = torch.nn.Linear(size_in, len(node_act_funcs), bias=False)
-        self.weight = connections
-        self.activation = MultiActivationModule(node_act_funcs, all_act_funcs)
+        self.ff_weight = ff_weight
+        self.re_weight = re_weight
         self.shared_weight = shared_weight
 
-    def forward(self, x):
-        linear = torch.nn.functional.linear(x, self.weight)
+        self.activation = MultiActivationModule(node_act_funcs, all_act_funcs)
+
+    def forward(self, input):
+        x, last_X = input
+
+        linear = np.add(
+            torch.nn.functional.linear(x, self.ff_weight),
+            torch.nn.functional.linear(last_X, self.re_weight)
+        )
+
         linear = linear * self.shared_weight[:, None, None]
         inner_out = self.activation(linear)
-        return torch.cat([x, inner_out], dim=-1)
+        return torch.cat([x, inner_out], dim=-1), last_X
 
 
-class WannModule(torch.nn.Module):
-    def __init__(self, offset, prop_steps, weight_mat, node_act_funcs, all_act_funcs):
+class ReWannModule(torch.nn.Module):
+    def __init__(self, offset, prop_steps, ff_weight_mat, re_weight_mat, node_act_funcs, all_act_funcs):
         super().__init__()
 
         self.shared_weight = torch.nn.Parameter(torch.Tensor([1]))
@@ -65,14 +44,16 @@ class WannModule(torch.nn.Module):
             indices = np.arange(step) + shift
 
             # connections from prior nodes to nodes in layer
-            conns = torch.Tensor(weight_mat[:offset + shift, indices].T)
+            ff_weight = torch.Tensor(ff_weight_mat[:offset + shift, indices].T)
+            re_weight = torch.Tensor(re_weight_mat[:, indices].T)
 
             # activation funcs of nodes in layer
             funcs = node_act_funcs[indices]
 
-            layers.append(ConcatLayer(
+            layers.append(ReConcatLayer(
                 self.shared_weight,
-                conns, funcs, all_act_funcs))
+                ff_weight=ff_weight, re_weight=re_weight,
+                node_act_funcs=funcs, all_act_funcs=all_act_funcs))
 
             shift += step
 
@@ -82,9 +63,8 @@ class WannModule(torch.nn.Module):
     def forward(self, x):
         return self.model(x)
 
-
-class TorchNetwork(NetworkBase):
-    """Torch implmentation of a Feed Forward Neural Network
+class Network(BaseRNN):
+    """Torch implmentation of a Recurrent Neural Network
 
     .. seealso::
 
@@ -139,7 +119,3 @@ class TorchNetwork(NetworkBase):
             return softmax(y, axis=-1)
         else:
             return y
-
-
-class TorchIndividual(Individual):
-    Phenotype = TorchNetwork

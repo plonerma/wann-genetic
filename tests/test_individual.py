@@ -1,7 +1,7 @@
 import numpy as np
 import json
 
-from rewann.individual import Individual
+from rewann import Individual
 
 sample = Individual(genes=Individual.Genotype(
     n_in=3,

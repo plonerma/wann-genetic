@@ -1,3 +1,5 @@
 from .genes import Genes, RecurrentGenes
-from .network import Network, RecurrentNetwork
-from .individual import Individual, RecurrentIndividual
+
+from .individual_base import IndividualBase, RecurrentIndividualBase
+
+from .numpy import Individual, RecurrentIndividual

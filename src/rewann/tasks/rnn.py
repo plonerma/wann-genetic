@@ -35,7 +35,7 @@ class EchoTask(RecurrentTask):
 
         y = np.empty(size, dtype=float)
 
-        y[:, :delay] = np.nan  # there is nothing to echo
+        y[:, :delay] = 0  # there is nothing to echo
         y[:, delay:] = x_class[:, :-delay]  # output is input shifted by delay
 
         return x, y

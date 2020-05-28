@@ -1,4 +1,4 @@
+from .genetic_algorithm import GeneticAlgorithm
 from .individual import (Individual, RecurrentIndividual,
-                         Genes, RecurrentGenes,
-                         Network, RecurrentNetwork)
+                         Genes, RecurrentGenes)
 from .environment import Environment

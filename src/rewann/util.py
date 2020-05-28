@@ -1,5 +1,11 @@
 from collections.abc import Mapping, MutableMapping
 from collections import UserDict
+import numpy as np
+
+
+def get_array_field(array : np.ndarray, key : str, default=None):
+    """Return field if it exists else return default value."""
+    return array[key] if key in array.dtype.names else default
 
 
 def nested_update(d: MutableMapping, u: Mapping) -> MutableMapping:

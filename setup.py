@@ -13,7 +13,7 @@ setup(
     entry_points={
         'console_scripts': [
             # execution of a single experiment
-            'run_experiment = rewann.environment.run:run_experiment',
+            'run_experiment = rewann.environment.environment:run_experiment',
 
             # post execution reporting
             'compile_report = rewann.postopt.report:compile_report',

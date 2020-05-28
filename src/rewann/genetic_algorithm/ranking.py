@@ -1,45 +1,17 @@
 import numpy as np
 import logging
-from rewann import Individual
 
 
-def get_objective_values(ind: Individual, objectives):
-    """Get measurements of an individual for the specified objectives.
-
-    Parameters
-    ----------
-    ind : rewann.Individual
-        The individual to get the measurements for.
-    objectives : tuple
-        Tuple (metric_names, sign) that specifies the objectives.
-        `metric_names` is a list of the measurements to get, sign specifies
-        whether the objective is to be maximized (positive) or minimized
-        (negative).
-
-    Returns
-    -------
-    np.ndarray
-        Signed measurements for the individual.
-    """
-    metric_names, signs = objectives
-
-    measurements = ind.measurements(*metric_names, as_list=True)
-
-    return [s*v for v, s in zip(measurements, np.sign(signs))]
-
-
-def rank_individuals(population, objectives, return_order=False):
+def rank_individuals(population, obj_values, return_order=False):
     """Rank individuals by multiple objectives using NSGA-sort.
 
     Parameters
     ----------
     population : List[rewann.Individual]
         List of individuals to rank.
-    objectives : tuple
-        Tuple (metric_names, sign) that specifies the objectives.
-        `metric_names` is a list of the measurements to get, sign specifies
-        whether the objective is to be maximized (positive) or minimized
-        (negative).
+    obj_values : np.ndarray
+        (N x m) array where N is the number of individuals and m the number of
+        objectives to be maximized.
     return_order : bool, optional
         Return a ranked ordering instead of returning the a rank for each individual.
 
@@ -49,14 +21,6 @@ def rank_individuals(population, objectives, return_order=False):
         Depending on whether return_order is set, the function returns a ranking or
         an ordering according to the objectives.
     """
-    try:
-        values = [get_objective_values(ind, objectives) for ind in population]
-        obj_values = np.array(values, dtype=float)
-    except Exception as e:
-        logging.warning(objectives)
-        logging.warning(population[0]._measurements)
-        raise e
-
     # compute fronts
     front_list = []
     ix = np.arange(len(population))

@@ -1,7 +1,8 @@
 import numpy as np
 import logging
 
-from .expression import get_array_field
+from rewann.util import get_array_field
+
 
 def add_node(ind, env, innov):
     """Split an existing edge and add a node in the middle."""

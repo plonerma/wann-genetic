@@ -4,9 +4,11 @@ import argparse
 
 from matplotlib import pyplot as plt
 
+import sklearn
 from sklearn.metrics import ConfusionMatrixDisplay
 
 import numpy as np
+import pandas as pd
 
 import logging
 
@@ -14,7 +16,7 @@ import json
 
 from .vis import draw_graph
 from rewann.environment.util import load_ind
-from rewann.environment.evolution import evaluate_inds, express_inds
+from rewann.environment.evaluation_util import evaluate_inds, express_inds
 from rewann.tasks import ClassificationTask
 
 from tabulate import tabulate
@@ -98,18 +100,28 @@ class Report:
 
     def add_gen_metrics(self, measures=None):
         if measures is None:
-            measures = [f'{m}.mean' for m in self.env.ind_class.recorded_measures]
+            measures = [f'{m}.mean' for m in self.env['selection', 'recorded_metrics']]
 
         for bm in measures:
             self.add_gen_quartiles_plot(bm)
 
     def add_ind_info(self, ind):
+        env = self.env
+
         self.add(f"### Individual {ind.id}\n")
-        measurements = ind.measurements_df(*ind.recorded_measures)
+
+        data = dict(ind.raw_measurements)
+        
+        if 'predictions' in data:
+            del data['predictions']
+            del data['y_true']
+
+        measurements = pd.DataFrame(data=data)
+        measurements = measurements.sort_values(by=['weight'])
 
         self.add(tabulate([
                 (f'mean {m}:', measurements[m].mean())
-                for m in ind.recorded_measures
+                for m in env['selection', 'recorded_metrics']
             ] +
             [
                 ('number of edges', len(ind.genes.edges)),
@@ -120,17 +132,22 @@ class Report:
             ], ['key', 'value']))
 
         # plot graphs
-        for m in ind.recorded_measures:
+        for m in env['selection', 'recorded_metrics']:
             plt.plot(measurements['weight'], measurements[m])
             caption = f'Metric {m}'
             plt.xlabel('weight')
             plt.ylabel(m)
             self.add_fig(f'metric_{m}_{ind.id}', caption)
 
-        if isinstance(self.env.task, ClassificationTask):
+        if isinstance(env.task, ClassificationTask):
             self.add('#### Confusion matrix')
 
-            cmd = ConfusionMatrixDisplay(np.mean(ind.measurements('cm'), axis=0), display_labels=self.env.task.y_labels)
+            cms = [
+                sklearn.metrics.confusion_matrix(ind.raw_measurements['y_true'], pred, normalize='all', labels=list(range(len(env.task.y_labels))))
+                for pred in ind.raw_measurements['predictions']
+            ]
+
+            cmd = ConfusionMatrixDisplay(np.mean(cms, axis=0), display_labels=env.task.y_labels)
             cmd.plot(ax=plt.gca())
             self.add_fig(f'confusion_matrix_{ind.id}')
 
@@ -146,17 +163,18 @@ class Report:
         plt.clf()
 
     def compile_stats(self):
-        measures = self.env.ind_class.recorded_measures
-        stat_funcs = [('mean', np.mean), ('max', np.max), ('min', np.min)]
-        hof_metrics = [ind.measurements(*measures, as_dict=True) for ind in self.env.hall_of_fame]
+        pop_stat_funcs = [('MIN', np.argmin), ('MAX', np.argmax)]
+        hof_measurements = [ind.measurements for ind in self.env.hall_of_fame]
 
         stats = list()
 
-        for measure in measures:
-            for func_name, func in stat_funcs:
-                descr = f'{func_name} {measure}'
-                measures = [func(m[measure]) for m in hof_metrics]
-                i = np.argmax(measures)
+        for measure in hof_measurements[0].keys():
+
+            measures = [m[measure] for m in hof_measurements]
+
+            for pop_fname, pop_f in pop_stat_funcs:
+                descr = f'{pop_fname}:{measure}'
+                i = pop_f(measures)
                 indiv_id = self.env.hall_of_fame[i].id
                 value = measures[i]
                 stats.append((descr, value, indiv_id))
@@ -167,7 +185,7 @@ class Report:
         )
 
         self.write_stats({
-            key: value for key, value, *_ in stats
+            key: float(value) for key, value, *_ in stats
         })
 
     def compile(self):
@@ -186,32 +204,48 @@ class Report:
         self.write_main_doc()
 
     def run_evaluations(self, num_weights=100, num_samples=1000):
-        self.env.sample_weights(num_weights)
+        env = self.env
+        env.load_hof()
+        env.task.load_test()
 
-        self.env.load_hof()
-        self.env.task.load_test()
+        express_inds(env, env.hall_of_fame)
 
         logging.info('Evaluating indivs in hall of fame.')
 
-        evaluate_inds(self.env, self.env.hall_of_fame,
-                      n_samples=num_samples,
-                      record_raw=True,
-                      use_test_samples=True)
+        measures = env['selection', 'recorded_metrics']
 
-        metric, metric_sign = self.env.hof_metric
-        metric, m_func = metric.split('.')
+        if isinstance(env.task, ClassificationTask):
+            measures = measures + ['predictions']
 
-        m_func = m_func.lower()
-        m_func = dict(
-            mean=np.mean,
-            max=np.max,
-            min=np.min
-        ).get(m_func, np.mean)
+        x, y_true = env.task.get_data(test=True, samples=num_samples)
+        weights = env.sample_weights(num_weights)
 
-        self.env.hall_of_fame = sorted(
-            self.env.hall_of_fame,
-            key=lambda ind: -metric_sign*m_func(ind.measurements(metric))
-            )
+        measurements = env.pool_map((
+            lambda network: network.get_measurements(
+                weights=weights,
+                x=x, y_true=y_true,
+                measures=measures
+            )), env.hall_of_fame)
+
+        for ind, m in zip(env.hall_of_fame, measurements):
+            ind.measurements = dict()
+            for k, v in m.items():
+                if k == 'predictions':
+                    continue
+                for fname, func in [('min', np.min), ('mean', np.mean), ('max', np.max)]:
+                    ind.measurements[f'{k}.{fname}'] = func(v)
+
+            m.update({
+                'y_true': y_true,
+                'weight': weights,
+            })
+            ind.raw_measurements = m
+
+        metric, metric_sign = env.hof_metric
+
+        env.hall_of_fame = sorted(
+            env.hall_of_fame,
+            key=lambda ind: -metric_sign*ind.measurements[metric])
 
         return self
 
