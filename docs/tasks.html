@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tasks &#8212; ReWann 0.1b.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generating Series of Experiments" href="experiment_series.html" />
+    <link rel="prev" title="Mutation Types" href="mutation_types.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="experiment_series.html" title="Generating Series of Experiments"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mutation_types.html" title="Mutation Types"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tasks">
+<h1>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h1>
+<p>This document describes the implemented tasks.</p>
+<div class="section" id="classification-tasks">
+<h2>Classification Tasks<a class="headerlink" href="#classification-tasks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="iris">
+<h3>Iris<a class="headerlink" href="#iris" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="mnist">
+<h3>MNIST<a class="headerlink" href="#mnist" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="recurrent-tasks">
+<h2>Recurrent Tasks<a class="headerlink" href="#recurrent-tasks" title="Permalink to this headline">¶</a></h2>
+<p>Recurrent tasks are derived from <a class="reference internal" href="rewann.tasks.html#rewann.tasks.base.RecurrentTask" title="rewann.tasks.base.RecurrentTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.tasks.base.RecurrentTask</span></code></a>.</p>
+<div class="section" id="echo-task">
+<span id="id1"></span><h3>Echo Task<a class="headerlink" href="#echo-task" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="adding-task">
+<span id="id2"></span><h3>Adding Task<a class="headerlink" href="#adding-task" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="copy-task">
+<span id="id3"></span><h3>Copy Task<a class="headerlink" href="#copy-task" title="Permalink to this headline">¶</a></h3>
+<p>Copy task as described in <a class="bibtex reference internal" href="#arjovsky-uni" id="id4">[ASB15]</a>.</p>
+<p>The alphabet consists of 10 symbols ( <span class="math notranslate nohighlight">\(\Sigma = \{ 0,...,7, e, d \}\)</span>).
+Eight of those represent the available categories (<span class="math notranslate nohighlight">\(\{0,..,7\}\)</span>) that
+are supposed to be reproduced.
+<span class="math notranslate nohighlight">\(e\)</span> symbolizes an empty space, and <span class="math notranslate nohighlight">\(d\)</span> is the delimiter.
+Each sequence is (<span class="math notranslate nohighlight">\(T+20\)</span>) elements long:
+10 elements for the input,
+<span class="math notranslate nohighlight">\(T\)</span> elements memorization phase (the last element in that phase is <span class="math notranslate nohighlight">\(d\)</span>),
+and 10 empty elements during which the network will need to reproduce the input
+sequence.</p>
+<p>E.g.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>input:           6976018327eee ... eeedeeeeeeeeee
+expected output: eeeeeeeeeeeee ... eeee6976018327
+                 |  (in)   | (waiting) |  (out)  |
+</pre></div>
+</div>
+</div>
+<div class="section" id="name-orign-task">
+<h3>Name Orign Task<a class="headerlink" href="#name-orign-task" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="bibtex-bibliography-tasks-0"><dl class="citation">
+<dt class="bibtex label" id="arjovsky-uni"><span class="brackets"><a class="fn-backref" href="#id4">ASB15</a></span></dt>
+<dd><p>Martin Arjovsky, Amar Shah, and Yoshua Bengio. Unitary evolution recurrent neural networks. <em>CoRR</em>, 2015. <span><a class="reference external" href="#"></a></span>https://arxiv.org/abs/1511.06464. <a class="reference external" href="https://arxiv.org/abs/1511.06464v4">arXiv:1511.06464v4</a>.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mutation_types.html"
+                        title="previous chapter">Mutation Types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="experiment_series.html"
+                        title="next chapter">Generating Series of Experiments</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="experiment_series.html" title="Generating Series of Experiments"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mutation_types.html" title="Mutation Types"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

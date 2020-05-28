@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.tools package &#8212; ReWann 0.1b.0 documentation</title>
+    <title>rewann.tools package &#8212; ReWann 0.1b.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -15,7 +15,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="rewann.postopt.vis package" href="rewann.postopt.vis.html" /> 
+    <link rel="prev" title="rewann.tasks package" href="rewann.tasks.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,10 +27,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
+          <a href="rewann.tasks.html" title="rewann.tasks package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
       </ul>
     </div>  
@@ -45,6 +45,16 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-rewann.tools.cli">
+<span id="rewann-tools-cli-module"></span><h2>rewann.tools.cli module<a class="headerlink" href="#module-rewann.tools.cli" title="Permalink to this headline">¶</a></h2>
+<p>Command Line Script for generating a series of experiments based on
+specification and base parameters for multivariate testing.</p>
+<dl class="py function">
+<dt id="rewann.tools.cli.generate_experiments">
+<code class="sig-prename descclassname">rewann.tools.cli.</code><code class="sig-name descname">generate_experiments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/cli.html#generate_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.cli.generate_experiments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-rewann.tools.compare_experiments">
 <span id="rewann-tools-compare-experiments-module"></span><h2>rewann.tools.compare_experiments module<a class="headerlink" href="#module-rewann.tools.compare_experiments" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -55,16 +65,6 @@
 <dl class="py function">
 <dt id="rewann.tools.compare_experiments.mean_comparison">
 <code class="sig-prename descclassname">rewann.tools.compare_experiments.</code><code class="sig-name descname">mean_comparison</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">group_var</span></em>, <em class="sig-param"><span class="n">group_values</span></em>, <em class="sig-param"><span class="n">measure</span><span class="o">=</span><span class="default_value">'mean accuracy'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/compare_experiments.html#mean_comparison"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.compare_experiments.mean_comparison" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-<div class="section" id="module-rewann.tools.cli">
-<span id="rewann-tools-cli-module"></span><h2>rewann.tools.cli module<a class="headerlink" href="#module-rewann.tools.cli" title="Permalink to this headline">¶</a></h2>
-<p>Command Line Script for generating a series of experiments based on
-specification and base parameters for multivariate testing.</p>
-<dl class="py function">
-<dt id="rewann.tools.cli.generate_experiments">
-<code class="sig-prename descclassname">rewann.tools.cli.</code><code class="sig-name descname">generate_experiments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/cli.html#generate_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.cli.generate_experiments" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -83,6 +83,11 @@ executed experiments.</p>
 <code class="sig-name descname">assemble_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#ExperimentSeries.assemble_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.ExperimentSeries.assemble_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load stats for available experiments.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt id="rewann.tools.experiment_series.ExperimentSeries.configuration_env">
+<code class="sig-name descname">configuration_env</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">c</span><span class="p">:</span> <span class="n">Collection<span class="p">[</span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tools/experiment_series.html#ExperimentSeries.configuration_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tools.experiment_series.ExperimentSeries.configuration_env" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="rewann.tools.experiment_series.ExperimentSeries.configuration_name">
@@ -193,22 +198,6 @@ frames.</p>
 
 </dd></dl>
 
-<div class="section" id="example-usage">
-<h3>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rewann.tools</span> <span class="kn">import</span> <span class="n">ExperimentSeries</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-<span class="gp">... </span>  <span class="n">experiment_name</span><span class="o">=</span><span class="s2">&quot;a: </span><span class="si">{var_a}</span><span class="s2">; b: </span><span class="si">{var_b}</span><span class="s2">&quot;</span><span class="p">,</span>
-<span class="gp">... </span>  <span class="n">var_a</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;section_a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span>
-<span class="gp">... </span>  <span class="n">var_b</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;section_b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">])</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">series</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">series</span><span class="o">.</span><span class="n">num_configurations</span><span class="p">()</span>
-<span class="go">9</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">series</span><span class="o">.</span><span class="n">configuration_name</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
-<span class="go">&#39;a: 1; b: z&#39;</span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="module-rewann.tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rewann.tools" title="Permalink to this headline">¶</a></h2>
@@ -222,8 +211,8 @@ frames.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="rewann.postopt.vis.html"
-                        title="previous chapter">rewann.postopt.vis package</a></p>
+  <p class="topless"><a href="rewann.tasks.html"
+                        title="previous chapter">rewann.tasks package</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -248,10 +237,10 @@ frames.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="rewann.postopt.vis.html" title="rewann.postopt.vis package"
+          <a href="rewann.tasks.html" title="rewann.tasks package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >rewann</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="rewann.html" >rewann package</a> &#187;</li> 
       </ul>
     </div>

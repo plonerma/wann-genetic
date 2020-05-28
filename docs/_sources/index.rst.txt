@@ -6,6 +6,8 @@ ReWann
 
    getting_started
    params
+   mutation_types
+   tasks
    experiment_series
    cli
    numpy_network

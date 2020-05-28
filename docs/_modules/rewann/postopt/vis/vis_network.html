@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.postopt.vis.vis_network &#8212; ReWann 0.1b.0 documentation</title>
+    <title>rewann.postopt.vis.vis_network &#8212; ReWann 0.1b.1 documentation</title>
     <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -39,8 +39,6 @@
 <span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="kn">from</span> <span class="nn">rewann.individual.network</span> <span class="kn">import</span> <span class="n">RecurrentNetwork</span>
 
 
 <div class="viewcode-block" id="node_names"><a class="viewcode-back" href="../../../../rewann.postopt.vis.html#rewann.postopt.vis.vis_network.node_names">[docs]</a><span class="k">def</span> <span class="nf">node_names</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
@@ -74,7 +72,7 @@
         <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;#b3de69&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">net</span><span class="o">.</span><span class="n">n_out</span>      <span class="c1"># outputs</span>
     <span class="p">)</span>
 
-    <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">including_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">include_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
 
     <span class="c1"># pos x will be determined by layer, pos y will be iterated on</span>
     <span class="c1"># input, bias and output nodes will have static position, hidden node</span>
@@ -194,7 +192,7 @@
                            <span class="n">min_source_margin</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_target_margin</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
                            <span class="o">**</span><span class="n">edge_params</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">RecurrentNetwork</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">net</span><span class="o">.</span><span class="n">is_recurrent</span><span class="p">:</span>
         <span class="c1"># draw recurrent edges</span>
 
         <span class="n">edge_col</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -260,7 +258,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
