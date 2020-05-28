@@ -6,6 +6,7 @@ import numpy as np
 
 import cv2
 
+
 def digit_raw(test=False):
     '''
     Converts 8x8 scikit digits to
@@ -39,6 +40,7 @@ def mnist_256(test=False):
 
     return x, y_true
 
+
 def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
     """
     Resizes, crops, and unskewes images
@@ -62,6 +64,7 @@ def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
     procImg = cropImg
 
     return procImg
+
 
 def deskew(image, image_shape, negated=True):
     """

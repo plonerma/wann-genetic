@@ -111,7 +111,7 @@ class Report:
         self.add(f"### Individual {ind.id}\n")
 
         data = dict(ind.raw_measurements)
-        
+
         if 'predictions' in data:
             del data['predictions']
             del data['y_true']

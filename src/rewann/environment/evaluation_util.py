@@ -39,7 +39,6 @@ def update_hall_of_fame(env, pop):
         weights = env.sample_weights()
         make_measurements(env, inds, weights=weights)
 
-
     candidates = env.hall_of_fame + elite
 
     if len(candidates) <= hof_size:
@@ -54,10 +53,12 @@ def update_hall_of_fame(env, pop):
         ]
     return env.hall_of_fame
 
+
 def make_measurements(env, pop, weights):
     measurements = evaluate_inds(env, pop, weights, measures=env['selection', 'recorded_metrics'])
     for ind, measurements in zip(pop, measurements):
         ind.record_measurements(weights=weights, measurements=measurements)
+
 
 def evaluate_inds(env, pop, weights, test=False, measures=['log_loss'], n_samples=None):
     """Use the process pool to evaluate a list of individuals.
@@ -111,7 +112,8 @@ def express_inds(env, pop):
     """
     inds_to_express = list(filter(lambda i: i.network is None, pop))
 
-    networks = env.pool_map(env.ind_class.Phenotype.from_genes, (i.genes for i in inds_to_express))
+    networks = env.pool_map(env.ind_class.Phenotype.from_genes,
+                            (i.genes for i in inds_to_express))
     for ind, net in zip(inds_to_express, networks):
         ind.network = net
 
@@ -137,5 +139,5 @@ def get_objective_values(ind, objectives):
     metric_names, signs = objectives
 
     return [
-        s*m for s,m in zip(signs, ind.get_data(*metric_names, as_list=True))
+        s*m for s, m in zip(signs, ind.get_data(*metric_names, as_list=True))
     ]

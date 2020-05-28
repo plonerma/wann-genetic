@@ -77,7 +77,7 @@ class BaseFFNN:
     def __init__(self, n_in, n_out, nodes, weight_matrix, conn_mat,
                  hidden_layers,
                  **params):
-        self.n_in = n_in # without bias
+        self.n_in = n_in  # without bias
         self.n_out = n_out
         self.nodes = nodes
         self.weight_matrix = weight_matrix
@@ -128,7 +128,7 @@ class BaseFFNN:
         # reorder hidden nodes
         hidden_node_order, hidden_layers = cls.sort_hidden_nodes(conn_mat[genes.n_static:, genes.n_static:])
 
-        indices_in  = np.r_[: n_in + 1] # includes bias
+        indices_in  = np.r_[: n_in + 1]  # includes bias
         indices_out = np.r_[  n_in + 1 : n_in + 1 + n_out]
         indices_hid = n_in + 1 + n_out + hidden_node_order
 
@@ -148,7 +148,7 @@ class BaseFFNN:
             n_in=genes.n_in, n_out=genes.n_out,
             nodes=nodes,
             weight_matrix=w_matrix,
-            conn_mat=conn_mat!=0,
+            conn_mat=(conn_mat != 0),
             hidden_layers=hidden_layers,
         )
 
@@ -156,7 +156,7 @@ class BaseFFNN:
         """Get layers of nodes (a hierachical sorting).
 
         Nodes in layer :math:`i` will not have any incoming edges from nodes in
-        layers :math:`\ge i`.
+        layers :math:`\\ge i`.
 
         Parameters
         ----------
@@ -224,10 +224,10 @@ class BaseFFNN:
         layers = list()
         num_sorted_nodes = 0
 
-        for _ in range(len(conn_mat)): # maximum number of steps
+        for _ in range(len(conn_mat)):  # maximum number of steps
 
             # look at all nodes with no blocking edges
-            next_nodes, = np.where(blocking_edges==0)
+            next_nodes, = np.where(blocking_edges == 0)
 
             # If there are no new nodes to look at,
             if len(next_nodes) == 0:
@@ -243,7 +243,7 @@ class BaseFFNN:
             if latest_possible:
                 unblocked_edges = np.sum(conn_mat[:, next_nodes], axis=1)
             else:
-                unblocked_edges =  np.sum(conn_mat[next_nodes, :], axis=0)
+                unblocked_edges = np.sum(conn_mat[next_nodes, :], axis=0)
 
             # unblock edges
             blocking_edges = blocking_edges - unblocked_edges
@@ -298,7 +298,7 @@ class BaseRNN(BaseFFNN):
         hidden_conn_mat = conn_mat[genes.n_static:, genes.n_static:]
         hidden_node_order, hidden_layers = cls.sort_hidden_nodes(hidden_conn_mat)
 
-        indices_in  = np.r_[: n_in + 1] # includes bias
+        indices_in  = np.r_[: n_in + 1]  # includes bias
         indices_out = np.r_[  n_in + 1 : n_in + 1 + n_out]
         indices_hid = n_in + 1 + n_out + hidden_node_order
 
@@ -322,7 +322,7 @@ class BaseRNN(BaseFFNN):
             n_in=genes.n_in, n_out=genes.n_out,
             nodes=nodes,
             weight_matrix=ff_w_mat,
-            conn_mat=conn_mat!=0,
+            conn_mat= (conn_mat != 0),
             hidden_layers=hidden_layers,
             recurrent_weight_matrix=re_w_mat,
         )

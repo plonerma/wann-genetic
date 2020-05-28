@@ -3,7 +3,6 @@ import logging
 import numpy as np
 import pandas as pd
 import os
-import logging
 
 from rewann import Individual, RecurrentIndividual
 from rewann.individual.torch import Individual as TorchIndividual
@@ -13,7 +12,8 @@ from rewann import GeneticAlgorithm
 
 from .util import get_version, TimeStore
 
-from .evaluation_util import get_objective_values, update_hall_of_fame, make_measurements
+from .evaluation_util import (get_objective_values, update_hall_of_fame,
+                              make_measurements)
 
 from rewann.util import ParamTree
 from rewann.postopt import Report
@@ -27,13 +27,14 @@ class Environment(ParamTree):
     Parameters
     ----------
     params : dict or str
-        Dictionary containing the parameters or a path to a parameters spec file.
+        Dictionary containing the parameters or a path to a parameters spec
+        file.
     """
 
     from .util import (default_params, setup_params, open_data,
-                       store_gen, store_gen_metrics, load_pop, load_gen_metrics,
+                       store_gen, store_gen_metrics, load_gen_metrics,
                        stored_populations, stored_indiv_measurements,
-                       store_hof, load_hof,
+                       store_hof, load_hof, load_pop,
                        load_indiv_measurements,
                        env_path)
 
@@ -44,12 +45,10 @@ class Environment(ParamTree):
         self.setup_params(params)
 
         self.metrics = list()
-        self.pool= None
+        self.pool = None
         self.data_file = None
 
         self.hall_of_fame = list()
-
-        use_test_samples = True
 
         # choose task
         self.task = select_task(self['task', 'name'])
@@ -57,7 +56,8 @@ class Environment(ParamTree):
         # choose adequate type of individuals
         if self.task.is_recurrent:
             if self['config', 'backend'].lower() == 'torch':
-                logging.warning('Torch RNN not implemented yet. Falling back on numpy.')
+                logging.warning('Torch RNN not implemented yet. '
+                                'Falling back on numpy.')
             self.ind_class = RecurrentIndividual
         else:
             if self['config', 'backend'].lower() == 'torch':
@@ -65,13 +65,13 @@ class Environment(ParamTree):
             else:
                 self.ind_class = Individual
 
-        self.ind_class.recorded_measures = self['selection', 'recorded_metrics']
-
         # only use enabeld activations functions
         funcs = self.ind_class.Phenotype.available_act_functions
+        enabled_acts = self['population', 'enabled_activation_functions']
+
         if self['population', 'enabled_activation_functions'] != 'all':
             self.ind_class.Phenotype.available_act_functions = [
-                funcs[i] for i in self['population', 'enabled_activation_functions']
+                funcs[i] for i in enabled_acts
             ]
 
     def seed(self, seed=None):
@@ -89,8 +89,9 @@ class Environment(ParamTree):
 
     @property
     def elite_size(self):
-        """Size of the elite (:math:`population\ size * elite\ ratio`)."""
-        return int(np.floor(self['selection', 'elite_ratio'] * self['population', 'size']))
+        """Size of the elite (:math:`population\\ size * elite\\ ratio`)."""
+        return int(np.floor(self['selection', 'elite_ratio']
+                            * self['population', 'size']))
 
     def sample_weights(self, n=None):
         if n is None:
@@ -102,25 +103,25 @@ class Environment(ParamTree):
             w = 1
 
         elif dist == 'uniform':
-            l = self['sampling', 'lower_bound']
-            u = self['sampling', 'upper_bound']
-            assert l is not None and u is not None
+            lower = self['sampling', 'lower_bound']
+            upper = self['sampling', 'upper_bound']
+            assert lower is not None and upper is not None
 
-            w = np.random.uniform(l, u, size=n)
+            w = np.random.uniform(lower, upper, size=n)
 
         elif dist == 'lognormal':
-            m = self['sampling', 'mean']
-            s = self['sampling', 'sigma']
-            assert m is not None and s is not None
+            mu = self['sampling', 'mean']
+            sigma = self['sampling', 'sigma']
+            assert mu is not None and sigma is not None
 
-            w = np.random.lognormal(m, s, size=n)
+            w = np.random.lognormal(mu, sigma, size=n)
 
         elif dist == 'normal':
-            m = self['sampling', 'mean']
-            s = self['sampling', 'sigma']
-            assert m is not None and s is not None
+            mu = self['sampling', 'mean']
+            sigma = self['sampling', 'sigma']
+            assert mu is not None and sigma is not None
 
-            w = np.random.normal(m, s, size=n)
+            w = np.random.normal(mu, sigma, size=n)
 
         else:
             raise RuntimeError(f'Distribution {dist} not implemented.')
@@ -143,7 +144,6 @@ class Environment(ParamTree):
                 from multiprocessing import Pool
                 self.pool = Pool(n)
 
-
     def pool_map(self, func, iter):
         if self.pool is None:
             return map(func, iter)
@@ -155,7 +155,7 @@ class Environment(ParamTree):
         samples).
         """
         log_path = self.env_path(self['storage', 'log_filename'])
-        logging.info (f"Check log ('{log_path}') for details.")
+        logging.info(f"Check log ('{log_path}') for details.")
 
         logger = logging.getLogger()
 
@@ -178,15 +178,16 @@ class Environment(ParamTree):
 
         # log used parameters
         params_toml = toml.dumps(self.params)
-        logging.debug(f"Running experiments with the following parameters:\n{params_toml}")
+        logging.debug(f"Running experiments with the following parameters:\n"
+                      f"{params_toml}")
 
         with open(self.env_path('params.toml'), 'w') as f:
             params = dict(self.params)
-            params['is_report'] = True # mark stored params as part of a report
+            # mark stored params as part of a report
+            params['is_report'] = True
             toml.dump(params, f)
 
         self.seed()
-
 
     def run(self):
         """Run optization and post optimization (if enabled)."""
@@ -230,7 +231,10 @@ class Environment(ParamTree):
 
             make_measurements(self, pop, weights=weights)
 
-            obj_values = np.array([get_objective_values(ind, self.objectives) for ind in pop])
+            obj_values = np.array([
+                get_objective_values(ind, self.objectives)
+                for ind in pop
+            ])
 
             alg.tell(obj_values)
 
@@ -249,18 +253,19 @@ class Environment(ParamTree):
         self.store_hof()
 
     def post_optimization(self):
-        r = Report(self).run_evaluations( # run evaluations on test data
+        r = Report(self).run_evaluations(  # run evaluations on test data
             num_weights=self['postopt', 'num_weights'],
-            num_samples=self['postopt', 'num_samples'] # all
+            num_samples=self['postopt', 'num_samples']  # all
         )
 
         if self['postopt', 'compile_report']:
-            r.compile() # plot metrics, derive stats
+            r.compile()  # plot metrics, derive stats
         else:
-            r.compile_stats() # at least derive and store stats
+            r.compile_stats()  # at least derive and store stats
 
     def store_data(self, gen, pop, dt=-1):
-        gen_metrics, indiv_metrics = self.population_metrics(gen=gen, population=pop, return_indiv_measurements=True, dt=dt)
+        gen_metrics, indiv_metrics = self.population_metrics(
+            gen=gen, population=pop, return_indiv_measurements=True, dt=dt)
 
         metric, metric_sign = self.hof_metric
         p = ("MAX" if metric_sign > 0 else "MIN")
@@ -271,10 +276,15 @@ class Environment(ParamTree):
         self.metrics.append(gen_metrics)
 
         commit_freq = self['storage', 'commit_elite_freq']
+
         if (commit_freq > 0 and gen % commit_freq == 0):
-            self.store_gen(gen, population=pop[:self.elite_size], indiv_metrics=indiv_metrics)
+
+            self.store_gen(
+                gen, population=pop[:self.elite_size],
+                indiv_metrics=indiv_metrics)
 
         commit_freq = self['storage', 'commit_metrics_freq']
+
         if (commit_freq > 0 and gen % commit_freq == 0):
             self.store_gen_metrics(pd.DataFrame(data=self.metrics))
 
@@ -286,7 +296,7 @@ class Environment(ParamTree):
         The statistical key metrics include:
 
         `Q_{0, 4}`
-            The quartiles :math:`\{1, 2, 3\}` as well as the minimum and
+            The quartiles :math:`\\{1, 2, 3\\}` as well as the minimum and
             maximum :math:`(0,4)`.
         `MEAN`, `STD`
             Mean and standard deviation.
@@ -357,7 +367,7 @@ class Environment(ParamTree):
 def run_experiment():
     """Execute an experiment (see :doc:`cli`)."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description='Post Optimization')
 
     parser.add_argument('path', type=str, help='path to experiment specification')

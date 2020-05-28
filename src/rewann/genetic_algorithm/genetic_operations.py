@@ -11,9 +11,9 @@ def add_node(ind, env, innov):
     enabled = get_array_field(ind.genes.edges, 'enabled', True)
     recurrent = get_array_field(ind.genes.edges, 'recurrent', False)
 
-
     options, = np.where(enabled & ~recurrent)
-    if len(options) == 0: return None
+    if len(options) == 0:
+        return None
 
     edge_to_disable = np.random.choice(options)
 
@@ -51,13 +51,15 @@ def add_node(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
+
 def new_edge(env, innov, ind, src, dest, recurrent=False):
     e = np.zeros(1, dtype=ind.genes.edges.dtype)
     e['src'] = src
     e['dest'] = dest
     e['enabled'] = True
+
     if env['population']['enable_edge_signs']:
-        e['sign'] = np.random.choice([-1,1])
+        e['sign'] = np.random.choice([-1, 1])
     else:
         e['sign'] = 1
 
@@ -66,6 +68,7 @@ def new_edge(env, innov, ind, src, dest, recurrent=False):
 
     e['id'] = innov.next_edge_id()
     return e
+
 
 def add_edge_layer_based(ind, env, innov):
     """Layer-based edge introduction strategy.
@@ -97,13 +100,12 @@ def add_edge_layer_based(ind, env, innov):
 
         for dest in dest_options:
             if ind.network.conn_matrix[src, dest - ind.network.offset]:
-                continue # connection already exists
+                continue  # connection already exists
 
             if src >= ind.network.offset:
                 src = ind.network.nodes['id'][src - ind.network.offset]
 
             dest = ind.network.nodes['id'][dest - ind.network.offset]
-
 
             return ind.genes.__class__(
                 edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest)),
@@ -125,26 +127,21 @@ def add_edge_layer_agnostic(ind, env, innov):
 
     np.fill_diagonal(reachability_matrix, True)
 
-
     n_paths = 0
     while n_paths < np.sum(reachability_matrix):
         n_paths = np.sum(reachability_matrix)
         reachability_matrix = np.dot(reachability_matrix, reachability_matrix)
-
 
     # edges are possible where src can not be reached from dest and there is no
     # direct connection from src to dest
     possible_edges = (network.conn_matrix == False)
     possible_edges[hidden] = np.logical_and(possible_edges[hidden], (reachability_matrix == False).T)
 
-    # Disallow edges from output and to inputs
-    #possible_edges[network.offset:, :] = False
-    #possible_edges[:, :-network.n_out] = False
-
     # only the edges that are possible are relevant
     src_options, dest_options = np.where(possible_edges)
 
-    if len(src_options) == 0: return None  # We can't introduce another edge
+    if len(src_options) == 0:
+        return None  # We can't introduce another edge
 
     # select one of the edes (with equal probabilities)
     i = np.random.randint(len(src_options))
@@ -161,6 +158,7 @@ def add_edge_layer_agnostic(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
+
 def add_edge(ind, env, innov):
     """Add a new edge based on the strategy selected in experiment parameters."""
     return {
@@ -168,13 +166,15 @@ def add_edge(ind, env, innov):
         'layer_agnostic': add_edge_layer_agnostic
     }[env['mutation', 'new_edge', 'strategy']](ind, env, innov)
 
+
 def reenable_edge(ind, env, innov):
     """Reenable one currently disabled edge."""
     edges = np.copy(ind.genes.edges)
 
     # Choose an disabled edge
     options, = np.where(edges['enabled'] == False)
-    if len(options) == 0: return None # Make sure one exists
+    if len(options) == 0:
+        return None  # Make sure one exists
 
     edge_to_enable = np.random.choice(options)
 
@@ -184,6 +184,7 @@ def reenable_edge(ind, env, innov):
         edges=edges, nodes=ind.genes.nodes,
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
+
 
 def change_activation(ind, env, innov):
     """Change the activation of one node."""
@@ -196,7 +197,9 @@ def change_activation(ind, env, innov):
 
     # choose one of all but the current act funcs
     new_act = np.random.randint(ind.network.n_act_funcs - 1)
-    if new_act >= nodes[selected_node]['func']: new_act += 1
+
+    if new_act >= nodes[selected_node]['func']:
+        new_act += 1
 
     nodes[selected_node]['func'] = new_act
 
@@ -205,12 +208,14 @@ def change_activation(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
+
 def change_edge_sign(ind, env, innov):
     """Change the sign of one edge (can be disabled in params; see :doc:`params`)."""
     edges = np.copy(ind.genes.edges)
     # Choose an enabled edge
     options, = np.where(ind.genes.edges['sign'].astype(bool))
-    if len(options) == 0: return None
+    if len(options) == 0:
+        return None
 
     edge_to_change = np.random.choice(options)
 
@@ -221,12 +226,14 @@ def change_edge_sign(ind, env, innov):
         n_in=ind.genes.n_in, n_out=ind.genes.n_out
     )
 
+
 def add_recurrent_edge(ind, env, innov):
     """Add a recurrent edge to the genes (only enabled on recurrent tasks)."""
     network = ind.network
     src_options, dest_options = np.where(network.recurrent_weight_matrix == 0)
 
-    if len(src_options) == 0: return None  # We can't introduce another edge
+    if len(src_options) == 0:
+        return None  # We can't introduce another edge
 
     i_options = np.arange(len(src_options))
     np.random.shuffle(i_options)
@@ -241,7 +248,8 @@ def add_recurrent_edge(ind, env, innov):
 
         e = ind.genes.edges
         matches = e['recurrent'] & (e['src'] == src) & (e['dest'] == dest)
-        if np.any(matches): continue
+        if np.any(matches):
+            continue
 
         return ind.genes.__class__(
             edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest, recurrent=True)),
@@ -258,8 +266,8 @@ def mutation(ind, env, innov):
         ('new_node', add_node),
         ('reenable_edge', reenable_edge),
         ('change_activation', change_activation),
-        ('change_edge_sign', change_edge_sign), # might be disabled
-        ('add_recurrent_edge', add_recurrent_edge), # might be disabled
+        ('change_edge_sign', change_edge_sign),  # might be disabled
+        ('add_recurrent_edge', add_recurrent_edge),  # might be disabled
     ], dtype=[('name', 'U32'), ('func', object)])
 
     # get probabilities from params
@@ -290,7 +298,7 @@ def mutation(ind, env, innov):
     # apply functions until one actually generates a mutation
     for name, func in permutated_mutation_functions:
         new_genes = func(ind, env, innov)
-        if new_genes is not None: # mutation was successful
+        if new_genes is not None:  # mutation was successful
 
             child = ind.__class__(
                 genes=new_genes, id=innov.next_ind_id(),

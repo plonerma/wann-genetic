@@ -9,13 +9,13 @@ GeneEncoding = Tuple[Tuple[str, np.dtype], ...]
 class Genes:
     """Genetic encoding of Feed Forward Networks."""
     # data
-    edges : np.array
-    nodes : np.array
+    edges: np.array
+    nodes: np.array
 
-    n_in : int
-    n_out : int
+    n_in: int
+    n_out: int
 
-    edge_encoding : GeneEncoding = (
+    edge_encoding: GeneEncoding = (
         # innovation number
         ('id', np.dtype(int)),
 
@@ -32,7 +32,7 @@ class Genes:
         # reenabled
         ('enabled', np.dtype(bool))
     )
-    node_encoding : GeneEncoding = (
+    node_encoding: GeneEncoding = (
         ('id', np.dtype(int)),
 
         # input and bias nodes are not stored in genes, since no activation
@@ -52,18 +52,18 @@ class Genes:
     @property
     def n_static(self):
         """Nodes that will always be in the network (all but the hidden nodes)."""
-        return self.n_in + self.n_out + 1 # bias
+        return self.n_in + self.n_out + 1  # bias
 
     def __init__(self, *, edges, nodes, n_in, n_out):
-        self.edges=np.array(edges, dtype=list(self.edge_encoding))
-        self.nodes=np.array(nodes, dtype=list(self.node_encoding))
+        self.edges = np.array(edges, dtype=list(self.edge_encoding))
+        self.nodes = np.array(nodes, dtype=list(self.node_encoding))
         # sort entries by id
         self.nodes = self.nodes[np.argsort(self.nodes['id'])]
 
         # n_out == number of output nodes in genes
         assert np.sum(self.nodes['out']) == n_out
         # indices of output nodes are continous and start at right id
-        assert (n_out == 0  or (
+        assert (n_out == 0 or (
             np.all(self.nodes['id'][:n_out] == n_in + 1 + np.arange(n_out))
             and np.all(self.nodes['out'][:n_out])
         ))
@@ -111,7 +111,7 @@ class Genes:
 
         edges = np.zeros(n_edges, dtype=list(cls.edge_encoding))
 
-        edges['id'] = 0 # initial edges dont keep an id
+        edges['id'] = 0  # initial edges dont keep an id
 
         edges['src'] = np.tile(np.arange(n_in+1), n_out)
         edges['dest'] = np.repeat(n_in+1 + np.arange(n_out), n_in+1)
@@ -122,7 +122,6 @@ class Genes:
             edges['sign'] = np.random.choice([-1,+1], n_edges)
         else:
             edges['sign'] = 1
-
 
         # start only with output nodes (input and bias nodes are implicit)
         nodes = np.zeros(n_out, dtype=list(cls.node_encoding))
@@ -142,11 +141,11 @@ class Genes:
 
 class RecurrentGenes(Genes):
     """Genetic encoding of Recurrent Networks."""
-    edge_encoding : GeneEncoding = (
+    edge_encoding: GeneEncoding = (
         # innovation number
         ('id', np.dtype(int)),
 
-         # id of source node (any but output)
+        # id of source node (any but output)
         ('src', np.dtype(int)),
 
         # id of destination node (either hidden or output)

@@ -21,7 +21,7 @@ class InnovationRecord(set):
         """
         self = cls()
         self.node_counter = count(start_id)
-        self.edge_counter = count(1) # 0 are initial edges
+        self.edge_counter = count(1)  # 0 are initial edges
         self.individual_counter = count(0)
         self.generation = 0
         return self
@@ -37,6 +37,7 @@ class InnovationRecord(set):
 
     def edge_exists(self, src, dest):
         return (src, dest) in self
+
 
 class GeneticAlgorithm:
     population = None
@@ -68,11 +69,9 @@ class GeneticAlgorithm:
         env = self.env
 
         initial = env['population', 'initial_genes']
-        n_samples = env['sampling', 'num_training_samples_per_iteration']
 
         if initial == 'empty':
             base_ind = env.ind_class.empty_initial(env.task.n_in, env.task.n_out)
-            express_inds(env, [base_ind])
             self.population = [base_ind]*env['population', 'size']
 
         elif initial == 'full':
@@ -80,7 +79,8 @@ class GeneticAlgorithm:
             prob_enabled = env['population', 'initial_enabled_edge_probability']
             for i in range(env['population', 'size']):
                 self.population.append(
-                    env.ind_class.full_initial(env.task.n_in, env.task.n_out,
+                    env.ind_class.full_initial(
+                        env.task.n_in, env.task.n_out,
                         id=i, prob_enabled=prob_enabled,  # disable some edges
                         negative_edges_allowed=env['population', 'enable_edge_signs']))
 
@@ -106,7 +106,7 @@ class GeneticAlgorithm:
 
         if env['selection', 'use_tournaments']:
             participants = np.random.randint(
-                len(pop) - culling_size, # last `culling_size` individuals are ignored
+                len(pop) - culling_size,  # last `culling_size` individuals are ignored
                 size=(num_places_left, env['selection', 'tournament_size']))
 
             winner = np.argmin(participants, axis=-1)

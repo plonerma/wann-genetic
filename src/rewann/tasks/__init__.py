@@ -4,8 +4,6 @@ from .image import mnist_256, digit_raw
 
 from .rnn import EchoTask, AddingTask, CopyTask
 
-from functools import partial
-
 
 def load_iris(test=False):
     from sklearn import datasets
@@ -27,6 +25,7 @@ available_tasks = {
     'adding': AddingTask(8),
     'copy10': CopyTask(10)
 }
+
 
 def select_task(task_name):
     return available_tasks.get(task_name, available_tasks.get('iris'))

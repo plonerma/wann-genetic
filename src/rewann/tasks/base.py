@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 
+
 class Task:
     is_recurrent = False
 
@@ -16,8 +17,10 @@ class Task:
     def get_data(self):
         raise NotImplementedError()
 
+
 class RecurrentTask(Task):
     is_recurrent = True
+
 
 class ClassificationTask(Task):
     x, y, test_x, test_y, _y_labels = None, None, None, None, None

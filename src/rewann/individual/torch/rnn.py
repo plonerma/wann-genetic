@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 from .ffnn import MultiActivationModule
 
@@ -20,7 +21,7 @@ class ReConcatLayer(torch.nn.Module):
     def forward(self, input):
         x, last_X = input
 
-        linear = np.add(
+        linear = torch.add(
             torch.nn.functional.linear(x, self.ff_weight),
             torch.nn.functional.linear(last_X, self.re_weight)
         )
@@ -63,6 +64,7 @@ class ReWannModule(torch.nn.Module):
     def forward(self, x):
         return self.model(x)
 
+
 class Network(BaseRNN):
     """Torch implmentation of a Recurrent Neural Network
 
@@ -71,51 +73,4 @@ class Network(BaseRNN):
         :doc:`torch_network`.
     """
 
-    available_act_functions = [
-        ('relu', torch.relu),
-        ('sigmoid', torch.sigmoid),
-        ('tanh', torch.tanh)
-    ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.model = WannModule(
-            offset=self.n_in + 1, prop_steps=np.hstack([self.propagation_steps, [self.n_out]]),
-            weight_mat=self.weight_matrix,
-            node_act_funcs = self.nodes['func'],
-            all_act_funcs=[f for _, f in self.available_act_functions])
-
-        # share memory with all workers
-        self.model.share_memory()
-
-    def apply(self, x, weights, func='softmax'):
-        assert len(x.shape) == 2 # multiple one dimensional input arrays
-        assert isinstance(weights, np.ndarray)
-
-        x = torch.Tensor(x)
-
-        with torch.no_grad():
-            self.model.shared_weight.data = torch.Tensor(weights)
-
-            # add bias to x
-            bias = torch.ones(x.size()[:-1] + (1,))
-            x = torch.cat([x, bias], dim=-1)
-
-            # expand x for the weights
-            x = x.expand(len(weights), -1, -1)
-
-            y = self.model(x).numpy()
-
-        # if any node is nan, we cant rely on the result
-        valid = np.all(~np.isnan(y), axis=-1)
-        y[~valid, :] = np.nan
-
-        y = y[..., -self.n_out:]
-
-        if func == 'argmax':
-            return np.argmax(y, axis=-1)
-        elif func == 'softmax':
-            return softmax(y, axis=-1)
-        else:
-            return y
+    pass

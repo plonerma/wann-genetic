@@ -30,11 +30,11 @@ class MultiActivationModule(torch.nn.Module):
                 torch.add(
                     first,
                     torch.mul(
-                        act[1](x), # apply activation func
-                        self.mask[..., act[0]])) # mask output
+                        act[1](x),  # apply activation func
+                        self.mask[..., act[0]]))  # mask output
             ),
-            enumerate(self.all_act_funcs), # index, func
-            torch.zeros_like(x) # start value
+            enumerate(self.all_act_funcs),  # index, func
+            torch.zeros_like(x)  # start value
         )
 
 
@@ -73,7 +73,7 @@ class Network(BaseFFNN):
 
         self.shared_weight = torch.nn.Parameter(torch.Tensor([1]))
 
-        all_act_funcs=[f for _, f in self.available_act_functions]
+        all_act_funcs = [f for _, f in self.available_act_functions]
 
         # prepare ConcatLayers
         layers = list()
@@ -96,7 +96,7 @@ class Network(BaseFFNN):
         self.model.share_memory()
 
     def get_measurements(self, weights, x, y_true=None, measures=['predictions']):
-        assert len(x.shape) == 2 # multiple one dimensional input arrays
+        assert len(x.shape) == 2  # multiple one dimensional input arrays
         assert isinstance(weights, np.ndarray)
 
         x = torch.Tensor(x)

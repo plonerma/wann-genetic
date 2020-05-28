@@ -31,7 +31,7 @@ class Network(FFNN, BaseRNN):
             act_vec[..., self.n_in] = 1  # bias is one
 
 
-            if i > 0: # not the first iteration
+            if i > 0:  # not the first iteration
                 # propagate signal through time
 
                 M = self.recurrent_weight_matrix
@@ -39,11 +39,10 @@ class Network(FFNN, BaseRNN):
                 # multiply weight matrix with base weights
                 M = M[None, :, :] * weights[:, None, None]
 
-                recurrent_sum =  np.matmul(act_vec, M)
+                recurrent_sum = np.matmul(act_vec, M)
 
             else:
                 recurrent_sum = None
-
 
             # propagate signal through all layers
             for active_nodes in self.layers():
@@ -51,7 +50,6 @@ class Network(FFNN, BaseRNN):
                     add_to_sum = 0
                 else:
                     add_to_sum = recurrent_sum[..., active_nodes - self.offset]
-
 
                 act_vec[..., active_nodes] = self.calc_act(
                     act_vec, active_nodes, weights,
@@ -62,7 +60,7 @@ class Network(FFNN, BaseRNN):
         # if any node is nan, we cant rely on the result
         valid = np.all(~np.isnan(act_vec), axis=-1)
         act_vec[~valid, :] = np.nan
-        
+
         logging.debug(y_raw)
 
         return self.measurements_from_output(y_raw, y_true, measures)

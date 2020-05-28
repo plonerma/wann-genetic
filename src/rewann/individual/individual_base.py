@@ -58,7 +58,6 @@ class IndividualBase:
             self.measurements = dict(n_evaluations=0)
 
         ms = self.measurements
-        ms_new = measurements
 
         for k, v in measurements.items():
 
@@ -82,9 +81,9 @@ class IndividualBase:
         data = dict(
             n_hidden=self.network.n_hidden,
             n_layers=self.network.n_layers,
-            id = self.id,
-            birth = self.birth,
-            n_mutations = self.mutations,
+            id=self.id,
+            birth=self.birth,
+            n_mutations=self.mutations,
             n_enabled_edges=np.sum(self.genes.edges['enabled'] == True),
             n_disabled_edges=np.sum(self.genes.edges['enabled'] == False),
             n_total_edges=len(self.genes.edges),
@@ -118,7 +117,6 @@ class IndividualBase:
         except KeyError as e:
             logging.debug(self.measurements.keys())
             raise e
-
 
     @classmethod
     def empty_initial(cls, *args, **kwargs):

@@ -41,7 +41,7 @@ class Network(BaseFFNN):
     For an explanation of how propagation works, see :doc:`numpy_network`.
     """
 
-    ### Definition of the activations functions
+    # Definition of the activations functions
     available_act_functions = [
         ('relu', lambda x: np.maximum(0, x)),
         ('sigmoid', lambda x: (np.tanh(x/2.0) + 1.0)/2.0),
@@ -50,7 +50,7 @@ class Network(BaseFFNN):
         ('step', lambda x: 1.0*(x>0.0)),
         ('identity', lambda x: x),
         ('inverse', lambda x: -x),
-        ('squared', lambda x: x**2), #  unstable if applied multiple times
+        ('squared', lambda x: x**2),  # unstable if applied multiple times
         ('abs', lambda x: np.abs(x)),
         ('cos', lambda x: np.cos(np.pi*x)),
         ('sin ', lambda x: np.sin(np.pi*x)),
@@ -58,13 +58,13 @@ class Network(BaseFFNN):
     ]
 
     def get_measurements(self, weights, x, y_true=None, measures=['predictions']):
-        assert len(x.shape) == 2 # multiple one dimensional input arrays
+        assert len(x.shape) == 2  # multiple one dimensional input arrays
         assert isinstance(weights, np.ndarray)
 
         # initial activations
         act_vec = np.empty((weights.shape[0], x.shape[0], self.n_nodes), dtype=float)
         act_vec[..., :self.n_in] = x[...]
-        act_vec[..., self.n_in] = 1 # bias
+        act_vec[..., self.n_in] = 1  # bias
 
         # propagate signal through all layers
         for active_nodes in self.layers():
@@ -94,9 +94,9 @@ class Network(BaseFFNN):
             return_values['predictions'] = y_pred
 
 
-        y_raw  = y_raw.reshape(y_raw.shape[0], -1, self.n_out)
-        y_prob  = y_prob.reshape(y_raw.shape[0], -1, self.n_out)
-        y_pred  = y_pred.reshape(y_raw.shape[0], -1)
+        y_raw = y_raw.reshape(y_raw.shape[0], -1, self.n_out)
+        y_prob = y_prob.reshape(y_raw.shape[0], -1, self.n_out)
+        y_pred = y_pred.reshape(y_raw.shape[0], -1)
 
         if y_true is not None:
             y_true = y_true.reshape(-1)

@@ -1,16 +1,16 @@
 """Module containig basic recurrent toy tasks."""
 
-
 import numpy as np
 
 from .base import RecurrentTask
+
 
 class EchoTask(RecurrentTask):
     """(see :ref:`echo_task`)"""
 
     def __init__(self, length, delay=1, dim=2):
-        assert delay >= 0 # can't go back in time
-        assert dim > 1 # (case 1 is trivial)
+        assert delay >= 0  # can't go back in time
+        assert dim > 1  # (case 1 is trivial)
         self.sample_length = length
         self.n_in = self.n_out = dim
         self.delay = delay
@@ -31,7 +31,7 @@ class EchoTask(RecurrentTask):
 
         # one hot encoding
         # source: https://stackoverflow.com/a/36960495
-        x = (np.arange(2) == x_class[...,None]).astype(int)
+        x = (np.arange(2) == x_class[..., None]).astype(int)
 
         y = np.empty(size, dtype=float)
 
@@ -56,8 +56,8 @@ class AddingTask(RecurrentTask):
     def get_data(self, samples, test=False):
         T = self.sample_length
         x = np.empty((samples, T, 2), dtype=float)
-        x[:, :, 1] = 0 # marker
-        x[:, :, 0] = np.random.uniform(0, 1, size=(samples, T)) # value
+        x[:, :, 1] = 0  # marker
+        x[:, :, 0] = np.random.uniform(0, 1, size=(samples, T))  # value
 
         half = T//2
         a = np.random.randint(half, size=samples)
@@ -65,8 +65,8 @@ class AddingTask(RecurrentTask):
 
         sample = np.arange(samples)
 
-        x[sample, a, 1] = 1 # set marker for a
-        x[sample, b, 1] = 1 # set marker for b
+        x[sample, a, 1] = 1  # set marker for a
+        x[sample, b, 1] = 1  # set marker for b
 
         values_a = x[sample, a, 0]
         values_b = x[sample, b, 0]
@@ -112,9 +112,9 @@ class CopyTask(RecurrentTask):
 
         # input starts with sequence
         x[:,   :L,      :] = onehot_sequence
-        x[:, L :-(L+1), e] = 1 # T-1 empty fields
-        x[:, -(L+1),    d] = 1 # delimiter
-        x[:, -L:,       e] = 1 # L empty fields
+        x[:, L :-(L+1), e] = 1  # T-1 empty fields
+        x[:, -(L+1),    d] = 1  # delimiter
+        x[:, -L:,       e] = 1  # L empty fields
 
         # expected output data
         y = np.zeros((samples, T+2*L))

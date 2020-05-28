@@ -78,7 +78,10 @@ def dominates(objectives: np.ndarray, i, j):
     j
         Index (or indices if `j` is numpy.ndarray) of individual(s) :math:`j`.
     """
-    return np.all(objectives[i] >= objectives[j], axis=-1) & np.any(objectives[i] > objectives[j], axis=-1)
+    return (
+        np.all(objectives[i] >= objectives[j], axis=-1)   # all just as good
+        & np.any(objectives[i] > objectives[j], axis=-1)  # one is better
+    )
 
 
 def crowding_distances(front_objectives):
