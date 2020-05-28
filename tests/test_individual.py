@@ -48,9 +48,9 @@ def test_gene_expression():
     ], dtype=np.float)
 
 
-    print (expected_weight_matrix.shape)
-    print (expected_weight_matrix)
-    print (sample.network.weight_matrix.shape)
-    print (sample.network.weight_matrix)
+    print(expected_weight_matrix.shape)
+    print(expected_weight_matrix)
+    print(sample.network.weight_matrix.shape)
+    print(sample.network.weight_matrix)
 
     assert np.all(sample.network.weight_matrix == expected_weight_matrix)

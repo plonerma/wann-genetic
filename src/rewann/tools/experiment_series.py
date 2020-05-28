@@ -1,9 +1,8 @@
 """Tools for generating and anlysing series of experiments."""
 
-
-
 import os
-import toml, json
+import toml
+import json
 import logging
 
 import pandas as pd
@@ -18,15 +17,14 @@ from rewann.util import ParamTree
 from rewann import Environment
 
 
-
 class Variable:
     """Represents a variable in an experiment series."""
-    def __init__(self, key: tuple, values: Sequence, fmt: str=""):
+    def __init__(self, key: tuple, values: Sequence, fmt: str = ""):
         self.key = key
         self.values = values
         self.fmt = fmt
 
-    def value_name(self, i : int):
+    def value_name(self, i: int):
         """Return name part for value with index `i` of this variation."""
         v = self.values[i]
 
@@ -44,19 +42,18 @@ class Variable:
         else:
             return fmt.format(v)
 
-    def value(self, i : int):
+    def value(self, i: int):
         value = self.values[i]
         if isinstance(value, Mapping):
-            return {k:v for k,v in value.items() if k != '_fmt'}
+            return {k: v for k, v in value.items() if k != '_fmt'}
         else:
             return value
 
-    def set_value(self, params : ParamTree, i : int):
+    def set_value(self, params: ParamTree, i: int):
         params.update_params_at(self.key, self.value(i))
 
     def iter_indices(self):
         return range(len(self.values))
-
 
 
 class ExperimentSeries:
@@ -98,7 +95,7 @@ class ExperimentSeries:
 
         return cls(spec=spec, base_params=base_params, data_path=data_path)
 
-    def init_variables(self, spec : Mapping):
+    def init_variables(self, spec: Mapping):
         """Initialize the variables."""
         for name, var in spec.items():
             if isinstance(var, dict):
@@ -114,7 +111,7 @@ class ExperimentSeries:
                 self.variables[name] = Variable(key, var['values'],
                                                 var.get('fmt', None))
             else:
-                if not name in ('experiment_name', 'base_params'):
+                if name not in ('experiment_name', 'base_params'):
                     logging.warning(f'Key {name} unkown. Skipping.')
 
     def var_names(self) -> Iterable:
@@ -170,7 +167,7 @@ class ExperimentSeries:
             self._environments[c] = Environment(c_path)
         return self._environments[c]
 
-    def flat_values(self, c : Collection[int]) -> Mapping:
+    def flat_values(self, c: Collection[int]) -> Mapping:
         """Flatten all values.
 
         If a variable has a dict value, it will use multiple fields with keys
@@ -188,10 +185,9 @@ class ExperimentSeries:
                 values[var_name] = value
             values[f"{var_name}/_name"] = var.value_name(i)
 
-
         return values
 
-    def create_experiment_files(self, outdir : str):
+    def create_experiment_files(self, outdir: str):
         """Generate parameters file for this series of experiments.
 
         Parameters

@@ -9,7 +9,6 @@ import logging
 from .experiment_series import ExperimentSeries
 
 
-
 def generate_experiments():
     parser = ArgumentParser(description="Generate a series of experiments "
                             "based on specification and base parameters for "
@@ -23,4 +22,5 @@ def generate_experiments():
 
     logging.getLogger().setLevel(logging.DEBUG)
 
-    spec = ExperimentSeries.from_spec_file(args.specification).create_experiment_files(args.build_dir)
+    spec = ExperimentSeries.from_spec_file(args.specification)
+    spec.create_experiment_files(args.build_dir)
