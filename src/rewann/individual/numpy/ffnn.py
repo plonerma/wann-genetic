@@ -81,7 +81,7 @@ class Network(BaseFFNN):
     def measurements_from_output(self, y_raw, y_true, measures):
         return_values = dict()
 
-        if 'y_raw' in measures:
+        if 'raw' in measures:
             return_values['raw'] = y_raw
 
         y_pred = np.argmax(y_raw, axis=-1)

@@ -121,7 +121,7 @@ class Network(BaseFFNN):
     def measurements_from_output(self, y_raw, y_true, measures):
         return_values = dict()
 
-        if 'y_raw' in measures:
+        if 'raw' in measures:
             return_values['raw'] = y_raw
 
         with torch.no_grad():
@@ -145,18 +145,19 @@ class Network(BaseFFNN):
                     for pred in y_pred
                 ])
 
-            y_true = torch.LongTensor(y_true.astype(int))
+            if y_true is not None:
+                y_true = torch.LongTensor(y_true.astype(int))
 
-            if 'log_loss' in measures:
-                return_values['log_loss'] = np.array([
-                    torch.nn.functional.cross_entropy(w_y_raw, y_true)
-                    for w_y_raw in y_raw
-                ])
+                if 'log_loss' in measures:
+                    return_values['log_loss'] = np.array([
+                        torch.nn.functional.cross_entropy(w_y_raw, y_true)
+                        for w_y_raw in y_raw
+                    ])
 
-            if 'mse_loss' in measures:
-                return_values['mse_loss'] = np.array([
-                    torch.nn.functional.mse_loss(w_y_raw, y_true)
-                    for w_y_raw in y_raw
-                ])
+                if 'mse_loss' in measures:
+                    return_values['mse_loss'] = np.array([
+                        torch.nn.functional.mse_loss(w_y_raw, y_true)
+                        for w_y_raw in y_raw
+                    ])
 
         return return_values
