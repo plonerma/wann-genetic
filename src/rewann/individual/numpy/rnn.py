@@ -25,12 +25,6 @@ class Network(FFNN, BaseRNN):
         act_vec = np.empty((num_weights, num_samples, self.n_nodes), dtype=float)
 
         for i in range(sample_length):
-            # set input nodes
-            # input activation for each weight is the same (due to broadcasting)
-            act_vec[..., :self.n_in] = x[:, i, :]
-            act_vec[..., self.n_in] = 1  # bias is one
-
-
             if i > 0:  # not the first iteration
                 # propagate signal through time
 
@@ -43,6 +37,11 @@ class Network(FFNN, BaseRNN):
 
             else:
                 recurrent_sum = None
+
+            # set input nodes
+            # input activation for each weight is the same (due to broadcasting)
+            act_vec[..., :self.n_in] = x[:, i, :]
+            act_vec[..., self.n_in] = 1  # bias is one
 
             # propagate signal through all layers
             for active_nodes in self.layers():
