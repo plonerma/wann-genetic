@@ -174,7 +174,7 @@ class Environment(ParamTree):
         logging.info(f'Saving data at {p}.')
 
         logging.debug('Loading training dataset')
-        self.task.load_training()
+        self.task.load_training(env=self)
 
         # log used parameters
         params_toml = toml.dumps(self.params)

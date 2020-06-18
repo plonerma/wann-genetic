@@ -206,7 +206,7 @@ class Report:
     def run_evaluations(self, num_weights=100, num_samples=1000):
         env = self.env
         env.load_hof()
-        env.task.load_test()
+        env.task.load_test(env=env)
 
         express_inds(env, env.hall_of_fame)
 

@@ -5,13 +5,13 @@ import numpy as np
 class Task:
     is_recurrent = False
 
-    def load_training(self):
-        self.load()
+    def load_training(self, env=None):
+        self.load(env=env)
 
-    def load_test(self):
-        self.load(test=True)
+    def load_test(self, env=None):
+        self.load(env=env, test=True)
 
-    def load(self, test=False):
+    def load(self, env=None, test=False):
         pass
 
     def get_data(self):
@@ -38,7 +38,7 @@ class ClassificationTask(Task):
         else:
             return self._y_labels
 
-    def load(self, test=False):
+    def load(self, test=False, env=None):
         if (not test and self.x is None) or (test and self.test_x is None):
             d = self.load_func(test=test)
 
