@@ -14,7 +14,7 @@ class Task:
     def load(self, env=None, test=False):
         pass
 
-    def get_data(self):
+    def get_data(self, samples, test=False):
         raise NotImplementedError()
 
 
