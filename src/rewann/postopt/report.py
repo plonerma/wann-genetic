@@ -237,7 +237,7 @@ class Report:
                     ind.measurements[f'{k}.{fname}'] = func(v)
 
             m.update({
-                'y_true': y_true,
+                'y_true': y_true[~np.isnan(y_true)],
                 'weight': weights,
             })
             ind.raw_measurements = m
