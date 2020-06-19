@@ -4,6 +4,8 @@ from .image import mnist_256, digit_raw
 
 from .rnn import EchoTask, AddingTask, CopyTask
 
+from .name_origin import NameOriginTask
+
 
 def load_iris(test=False):
     from sklearn import datasets
@@ -24,8 +26,9 @@ available_tasks = {
     'echo': EchoTask(),
     'adding': AddingTask(),
     'copy': CopyTask(),
+    'name_origin': NameOriginTask(),
 }
 
 
 def select_task(task_name):
-    return available_tasks.get(task_name, available_tasks.get('iris'))
+    return available_tasks[task_name]
