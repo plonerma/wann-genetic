@@ -21,9 +21,9 @@ available_tasks = {
                     n_in=64, n_out=10,
                     load_func=digit_raw),
 
-    'echo20': EchoTask(20),
-    'adding': AddingTask(8),
-    'copy10': CopyTask(10)
+    'echo': EchoTask(),
+    'adding': AddingTask(),
+    'copy': CopyTask(),
 }
 
 

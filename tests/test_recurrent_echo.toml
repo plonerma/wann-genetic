@@ -2,7 +2,8 @@ experiment_name='pytest'
 debug=true
 
 [task]
-name='echo20'
+  name='echo'
+  sample_length=10
 
 [postopt]
   run_postopt=true

@@ -27,6 +27,10 @@
 
 [task]
   name = 'iris'
+  sample_order_seed = 0
+  test_portion = 0.2
+  sample_length = 10
+  num_categories = 8
 
 [storage]
   data_base_path='data'

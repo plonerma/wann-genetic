@@ -8,12 +8,15 @@ from .base import RecurrentTask
 class EchoTask(RecurrentTask):
     """(see :ref:`echo_task`)"""
 
-    def __init__(self, length, delay=1, dim=2):
+    def __init__(self, delay=1, dim=2):
         assert delay >= 0  # can't go back in time
         assert dim > 1  # (case 1 is trivial)
-        self.sample_length = length
         self.n_in = self.n_out = dim
         self.delay = delay
+
+    def load(self, *, env, test=False):
+        if ('task', 'sample_length') in env:
+            self.sample_length = env['task', 'sample_length']
 
     def get_data(self, samples, test=False):
         assert samples > 0
@@ -49,9 +52,11 @@ class AddingTask(RecurrentTask):
 
     n_in = 2
     n_out = 1
+    sample_length = 10
 
-    def __init__(self, length):
-        self.sample_length = length
+    def load(self, *, env, test=False):
+        if ('task', 'sample_length') in env:
+            self.sample_length = env['task', 'sample_length']
 
     def get_data(self, samples, test=False):
         T = self.sample_length
@@ -86,10 +91,18 @@ class CopyTask(RecurrentTask):
     rep_seq_len = 10  # length of the sequence to be reproduced
     num_categories = 8
 
-    def __init__(self, T=10):
-        self.T = T
+    def __init__(self):
         self.n_in = self.num_categories + 2
         self.n_out = self.num_categories + 2
+
+    def load(self, *, env, test=False):
+        if ('task', 'sample_length') in env:
+            self.T = env['task', 'sample_length']
+
+        if ('task', 'num_categories') in env:
+            self.num_categories = env['task', 'num_categories']
+            self.n_in = self.num_categories + 2
+            self.n_out = self.num_categories + 2
 
     def get_data(self, samples=100, test=False):
         T = self.T
