@@ -1,9 +1,9 @@
-from rewann.individual import IndividualBase
+from rewann.individual import IndividualBase, RecurrentIndividualBase
 
 
 class Individual(IndividualBase):
     from .ffnn import Network as Phenotype
 
 
-class RecurrentIndividual(IndividualBase):
+class RecurrentIndividual(RecurrentIndividualBase):
     from .rnn import Network as Phenotype

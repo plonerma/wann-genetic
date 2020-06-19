@@ -60,6 +60,9 @@ class Network(FFNN, BaseRNN):
         valid = np.all(~np.isnan(act_vec), axis=-1)
         act_vec[~valid, :] = np.nan
 
-        logging.debug(y_raw)
+        if y_true is not None:
+            valid = ~np.isnan(y_true)
+            y_true = y_true[valid]
+            y_raw = y_raw[:, valid, :]
 
         return self.measurements_from_output(y_raw, y_true, measures)

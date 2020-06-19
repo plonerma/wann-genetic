@@ -5,7 +5,8 @@ import pandas as pd
 import os
 
 from rewann import Individual, RecurrentIndividual
-from rewann.individual.torch import Individual as TorchIndividual
+
+
 from rewann.tasks import select_task
 
 from rewann import GeneticAlgorithm
@@ -54,16 +55,15 @@ class Environment(ParamTree):
         self.task = select_task(self['task', 'name'])
 
         # choose adequate type of individuals
-        if self.task.is_recurrent:
-            if self['config', 'backend'].lower() == 'torch':
-                logging.warning('Torch RNN not implemented yet. '
-                                'Falling back on numpy.')
-            self.ind_class = RecurrentIndividual
+        if self['config', 'backend'].lower() == 'torch':
+            import rewann.individual.torch as backend
         else:
-            if self['config', 'backend'].lower() == 'torch':
-                self.ind_class = TorchIndividual
-            else:
-                self.ind_class = Individual
+            import rewann.individual.numpy as backend
+        
+        if self.task.is_recurrent:
+            self.ind_class = backend.RecurrentIndividual
+        else:
+            self.ind_class = backend.Individual
 
         # only use enabeld activations functions
         funcs = self.ind_class.Phenotype.available_act_functions

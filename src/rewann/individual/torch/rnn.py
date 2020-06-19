@@ -106,4 +106,9 @@ class Network(BaseRNN, TorchFFNN):
 
             y_raw[:, :, i, :] = state[..., -self.n_out:]
 
+        if y_true is not None:
+            valid = ~np.isnan(y_true)
+            y_true = y_true[valid]
+            y_raw = y_raw[:, valid, :]
+
         return self.measurements_from_output(y_raw, y_true, measures)
