@@ -289,7 +289,7 @@ class BaseRNN(BaseFFNN):
 
         conn_mat = np.zeros((n_nodes, n_nodes), dtype=bool)   # connectivity
 
-        recurrent = get_array_field(edges, 'recurrent', False)
+        recurrent = edges['recurrent']
 
         # only use feed forward edges for topological sorting
         conn_mat[edges[~recurrent]['src'], edges[~recurrent]['dest']] = True
