@@ -114,6 +114,7 @@ class Report:
 
         if 'predictions' in data:
             del data['predictions']
+        if 'y_true' in data:
             del data['y_true']
 
         measurements = pd.DataFrame(data=data)
