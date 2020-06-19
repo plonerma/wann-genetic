@@ -66,6 +66,14 @@ class NameOriginTask(RecurrentTask, ClassificationTask):
             # select random subset of available data
             selection = np.random.rand(len(languages[lang])) < (1-test_portion)
 
+            assert selection.size >= 2
+
+            if not np.any(selection):
+                selection[np.random.randint(selection.size)] = True
+            elif np.all(selection):
+                selection[np.random.randint(selection.size)] = True
+
+
             if test:
                 # use the other part
                 selection = ~selection
