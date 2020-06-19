@@ -106,7 +106,7 @@ class Network(BaseFFNN):
             y_prob[~np.isfinite(y_prob)] = 0
 
             return_values['log_loss'] = np.array([
-                sklearn.metrics.log_loss(y_true, prob)
+                sklearn.metrics.log_loss(y_true, prob, labels=np.arange(self.n_out))
                 for prob in y_prob
             ])
 
