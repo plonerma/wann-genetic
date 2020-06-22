@@ -76,5 +76,6 @@
     probability = 0.2
 
   # will be ignored if task does not require recurrence
-  [mutation.add_recurrent_edge]
+  [mutation.new_recurrent_edge]
     probability = 0.3
+    strategy='any' # other option: loops_only ('any' creates loops as well)

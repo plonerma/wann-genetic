@@ -227,35 +227,51 @@ def change_edge_sign(ind, env, innov):
     )
 
 
-def add_recurrent_edge(ind, env, innov):
+def add_recurrent_edge_any(ind, env, innov):
     """Add a recurrent edge to the genes (only enabled on recurrent tasks)."""
     network = ind.network
-    src_options, dest_options = np.where(network.recurrent_weight_matrix == 0)
 
-    if len(src_options) == 0:
+    # no point in introducing loops at input nodes
+    mat = network.recurrent_weight_matrix[network.offset:, network.offset:]
+
+    # nodes without a loop are valid candidates
+    options, = np.where(mat.diagonal() == 0)
+
+    if len(options) == 0:
         return None  # We can't introduce another edge
 
-    i_options = np.arange(len(src_options))
-    np.random.shuffle(i_options)
+    np.random.shuffle(options)
 
-    for i in i_options:
-        src = src_options[i]
-        dest = dest_options[i]
+    for node in options:
+        node_id = network.nodes['id'][node]
 
-        if src >= network.offset:
-            src = network.nodes['id'][src - network.offset]
-        dest = network.nodes['id'][dest]
-
+        # check whether edge already exists (must be disabled then)
         e = ind.genes.edges
-        matches = e['recurrent'] & (e['src'] == src) & (e['dest'] == dest)
+        matches = e['recurrent'] & (e['src'] == node_id) & (e['dest'] == node_id)
         if np.any(matches):
             continue
 
         return ind.genes.__class__(
-            edges=np.append(ind.genes.edges, new_edge(env, innov, ind, src, dest, recurrent=True)),
+            edges=np.append(ind.genes.edges, new_edge(env, innov, ind, node_id, node_id, recurrent=True)),
             nodes=ind.genes.nodes,
             n_in=ind.genes.n_in, n_out=ind.genes.n_out
         )
+
+
+def add_recurrent_edge_loops_only(ind, env, innov):
+    """Add a recurrent edge to the genes (only enabled on recurrent tasks).
+
+    This variation will only produce recurrent loops and will not connect two
+    different nodes."""
+    network = ind.network
+
+
+def add_recurrent_edge(ind, env, innov):
+    """Add a new recurrent edge based on the strategy selected in experiment parameters."""
+    return {
+        'any': add_recurrent_edge_any,
+        'loops_only': add_recurrent_edge_loops_only
+    }[env['mutation', 'new_recurrent_edge', 'strategy']](ind, env, innov)
 
 
 # Genetic Operations
@@ -267,7 +283,7 @@ def mutation(ind, env, innov):
         ('reenable_edge', reenable_edge),
         ('change_activation', change_activation),
         ('change_edge_sign', change_edge_sign),  # might be disabled
-        ('add_recurrent_edge', add_recurrent_edge),  # might be disabled
+        ('new_recurrent_edge', add_recurrent_edge),  # might be disabled
     ], dtype=[('name', 'U32'), ('func', object)])
 
     # get probabilities from params
