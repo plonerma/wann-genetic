@@ -59,7 +59,7 @@ class Environment(ParamTree):
             import rewann.individual.torch as backend
         else:
             import rewann.individual.numpy as backend
-        
+
         if self.task.is_recurrent:
             self.ind_class = backend.RecurrentIndividual
         else:
@@ -67,9 +67,9 @@ class Environment(ParamTree):
 
         # only use enabeld activations functions
         funcs = self.ind_class.Phenotype.available_act_functions
-        enabled_acts = self['population', 'enabled_activation_functions']
+        enabled_acts = self['population', 'enabled_activation_funcs']
 
-        if self['population', 'enabled_activation_functions'] != 'all':
+        if self['population', 'enabled_activation_funcs'] != 'all':
             self.ind_class.Phenotype.available_act_functions = [
                 funcs[i] for i in enabled_acts
             ]
@@ -95,7 +95,7 @@ class Environment(ParamTree):
 
     def sample_weights(self, n=None):
         if n is None:
-            n = self['sampling']['num_weight_samples_per_iteration']
+            n = self['sampling']['num_weights_per_iteration']
 
         dist = self['sampling', 'distribution'].lower()
 

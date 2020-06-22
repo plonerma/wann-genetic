@@ -24,7 +24,7 @@ def update_hall_of_fame(env, pop):
     # make sure elite is properly evaluated
 
     n_evals = env['sampling', 'hof_evaluation_iterations']
-    eval_size = env['sampling', 'num_weight_samples_per_iteration']
+    eval_size = env['sampling', 'num_weights_per_iteration']
 
     required_evaluations = [
         max(0, n_evals - int(ind.measurements['n_evaluations'] / eval_size))
@@ -76,7 +76,7 @@ def evaluate_inds(env, pop, weights, test=False, measures=['log_loss'], n_sample
     measures : [str]
         Which measurements to get from the network.
     n_samples : int, optional
-        How many samples to use. Defaults to sampling/num_training_samples_per_iteration
+        How many samples to use. Defaults to sampling/num_samples_per_iteration
 
     Returns
     --------
@@ -87,7 +87,7 @@ def evaluate_inds(env, pop, weights, test=False, measures=['log_loss'], n_sample
     express_inds(env, pop)
 
     if n_samples is None:
-        n_samples = env['sampling', 'num_training_samples_per_iteration']
+        n_samples = env['sampling', 'num_samples_per_iteration']
 
     x, y_true = env.task.get_data(test=test, samples=n_samples)
 

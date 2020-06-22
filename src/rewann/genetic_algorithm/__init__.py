@@ -76,7 +76,7 @@ class GeneticAlgorithm:
 
         elif initial == 'full':
             self.population = list()
-            prob_enabled = env['population', 'initial_enabled_edge_probability']
+            prob_enabled = env['population', 'initial_enabled_edge_prob']
             for i in range(env['population', 'size']):
                 self.population.append(
                     env.ind_class.full_initial(

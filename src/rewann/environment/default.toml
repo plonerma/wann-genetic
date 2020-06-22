@@ -21,8 +21,8 @@
   upper_bound=2
   mean=0
   sigma=1
-  num_weight_samples_per_iteration=1
-  num_training_samples_per_iteration=-1 # all
+  num_weights_per_iteration=1
+  num_samples_per_iteration=-1 # all
   hof_evaluation_iterations = 20
 
 [task]
@@ -35,19 +35,17 @@
 [storage]
   data_base_path='data'
   log_filename='execution.log'
-  # if the confusion_matrices are required during inspection, they can still be calculated
-  include_prediction_records=false
   commit_elite_freq=-1 # never
   commit_metrics_freq=10
 
 [population]
   num_generations = 20
   size = 64
-  initial_enabled_edge_probability = 0.05
+  initial_enabled_edge_prob = 0.05
   initial_genes='full'
   hof_size=10
   enable_edge_signs=false
-  enabled_activation_functions='all'
+  enabled_activation_funcs='all'
 
 [selection]
   use_tournaments = true
@@ -77,5 +75,5 @@
 
   # will be ignored if task does not require recurrence
   [mutation.new_recurrent_edge]
-    probability = 0.3
+    probability = 0.2
     strategy='any' # other option: loops_only ('any' creates loops as well)
