@@ -49,7 +49,7 @@ class NameOriginTask(RecurrentTask, ClassificationTask):
         if no_files:
             raise RuntimeError('Data not found.')
 
-        all_languages = list(languages.keys())
+        all_languages = sorted(list(languages.keys()))
 
         assert len(all_languages) == self.n_out
 
