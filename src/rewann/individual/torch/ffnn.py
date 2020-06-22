@@ -65,7 +65,15 @@ class Network(BaseFFNN):
     available_act_functions = [
         ('relu', torch.relu),
         ('sigmoid', torch.sigmoid),
-        ('tanh', torch.tanh)
+        ('tanh', torch.tanh),
+        ('gaussian (standard)', lambda x: torch.exp(-torch.square(x) / 2.0)),
+        ('step', lambda t: (t > 0.0) * 1.0),
+        ('identity', lambda x: x),
+        ('inverse', torch.neg),
+        ('squared', torch.square),
+        ('abs', torch.abs),
+        ('cos', torch.cos),
+        ('sin', torch.sin),
     ]
 
     def __init__(self, *args, **kwargs):
