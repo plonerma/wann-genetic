@@ -1,5 +1,5 @@
-ReWann
-======
+Genetic Search for WANNs
+========================
 
 .. toctree::
    :maxdepth: 2
