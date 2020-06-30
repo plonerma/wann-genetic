@@ -115,7 +115,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">weight_matrix</span><span class="p">,</span> <span class="n">conn_mat</span><span class="p">,</span>
                  <span class="n">hidden_layers</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">params</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">=</span> <span class="n">n_in</span> <span class="c1"># without bias</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">=</span> <span class="n">n_in</span>  <span class="c1"># without bias</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span> <span class="o">=</span> <span class="n">n_out</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight_matrix</span> <span class="o">=</span> <span class="n">weight_matrix</span>
@@ -166,7 +166,7 @@
         <span class="c1"># reorder hidden nodes</span>
         <span class="n">hidden_node_order</span><span class="p">,</span> <span class="n">hidden_layers</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sort_hidden_nodes</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">[</span><span class="n">genes</span><span class="o">.</span><span class="n">n_static</span><span class="p">:,</span> <span class="n">genes</span><span class="o">.</span><span class="n">n_static</span><span class="p">:])</span>
 
-        <span class="n">indices_in</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># includes bias</span>
+        <span class="n">indices_in</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># includes bias</span>
         <span class="n">indices_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>  <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_out</span><span class="p">]</span>
         <span class="n">indices_hid</span> <span class="o">=</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_out</span> <span class="o">+</span> <span class="n">hidden_node_order</span>
 
@@ -186,7 +186,7 @@
             <span class="n">n_in</span><span class="o">=</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span><span class="p">,</span>
             <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span>
             <span class="n">weight_matrix</span><span class="o">=</span><span class="n">w_matrix</span><span class="p">,</span>
-            <span class="n">conn_mat</span><span class="o">=</span><span class="n">conn_mat</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">conn_mat</span><span class="o">=</span><span class="p">(</span><span class="n">conn_mat</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">),</span>
             <span class="n">hidden_layers</span><span class="o">=</span><span class="n">hidden_layers</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -194,7 +194,7 @@
         <span class="sd">&quot;&quot;&quot;Get layers of nodes (a hierachical sorting).</span>
 
 <span class="sd">        Nodes in layer :math:`i` will not have any incoming edges from nodes in</span>
-<span class="sd">        layers :math:`\ge i`.</span>
+<span class="sd">        layers :math:`\\ge i`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -262,10 +262,10 @@
         <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="n">num_sorted_nodes</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">)):</span> <span class="c1"># maximum number of steps</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">)):</span>  <span class="c1"># maximum number of steps</span>
 
             <span class="c1"># look at all nodes with no blocking edges</span>
-            <span class="n">next_nodes</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">blocking_edges</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">next_nodes</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">blocking_edges</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
             <span class="c1"># If there are no new nodes to look at,</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">next_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -281,7 +281,7 @@
             <span class="k">if</span> <span class="n">latest_possible</span><span class="p">:</span>
                 <span class="n">unblocked_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">[:,</span> <span class="n">next_nodes</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">unblocked_edges</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">[</span><span class="n">next_nodes</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">unblocked_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">conn_mat</span><span class="p">[</span><span class="n">next_nodes</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
             <span class="c1"># unblock edges</span>
             <span class="n">blocking_edges</span> <span class="o">=</span> <span class="n">blocking_edges</span> <span class="o">-</span> <span class="n">unblocked_edges</span>
@@ -327,7 +327,7 @@
 
         <span class="n">conn_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_nodes</span><span class="p">,</span> <span class="n">n_nodes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>   <span class="c1"># connectivity</span>
 
-        <span class="n">recurrent</span> <span class="o">=</span> <span class="n">get_array_field</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;recurrent&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">recurrent</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="s1">&#39;recurrent&#39;</span><span class="p">]</span>
 
         <span class="c1"># only use feed forward edges for topological sorting</span>
         <span class="n">conn_mat</span><span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="o">~</span><span class="n">recurrent</span><span class="p">][</span><span class="s1">&#39;src&#39;</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="o">~</span><span class="n">recurrent</span><span class="p">][</span><span class="s1">&#39;dest&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -336,7 +336,7 @@
         <span class="n">hidden_conn_mat</span> <span class="o">=</span> <span class="n">conn_mat</span><span class="p">[</span><span class="n">genes</span><span class="o">.</span><span class="n">n_static</span><span class="p">:,</span> <span class="n">genes</span><span class="o">.</span><span class="n">n_static</span><span class="p">:]</span>
         <span class="n">hidden_node_order</span><span class="p">,</span> <span class="n">hidden_layers</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">sort_hidden_nodes</span><span class="p">(</span><span class="n">hidden_conn_mat</span><span class="p">)</span>
 
-        <span class="n">indices_in</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># includes bias</span>
+        <span class="n">indices_in</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># includes bias</span>
         <span class="n">indices_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>  <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_out</span><span class="p">]</span>
         <span class="n">indices_hid</span> <span class="o">=</span> <span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_out</span> <span class="o">+</span> <span class="n">hidden_node_order</span>
 
@@ -360,7 +360,7 @@
             <span class="n">n_in</span><span class="o">=</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span><span class="p">,</span>
             <span class="n">nodes</span><span class="o">=</span><span class="n">nodes</span><span class="p">,</span>
             <span class="n">weight_matrix</span><span class="o">=</span><span class="n">ff_w_mat</span><span class="p">,</span>
-            <span class="n">conn_mat</span><span class="o">=</span><span class="n">conn_mat</span><span class="o">!=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">conn_mat</span><span class="o">=</span> <span class="p">(</span><span class="n">conn_mat</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">),</span>
             <span class="n">hidden_layers</span><span class="o">=</span><span class="n">hidden_layers</span><span class="p">,</span>
             <span class="n">recurrent_weight_matrix</span><span class="o">=</span><span class="n">re_w_mat</span><span class="p">,</span>
         <span class="p">)</span></div></div>

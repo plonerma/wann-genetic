@@ -25,9 +25,6 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
           <a href="mutation_types.html" title="Mutation Types"
              accesskey="N">next</a> |</li>
         <li class="right" >
@@ -44,10 +41,16 @@
             
   <div class="section" id="parameters">
 <h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
-<p>All configuration of the evolutionary process is stored in the experiment specification file using the <a class="reference external" href="https://github.com/toml-lang/toml">TOML</a> format.</p>
-<p>If a parameter has not been defined in the experiment specification file, the algorithm will fall back to parameters found in <code class="file docutils literal notranslate"><span class="pre">rewann/environment/default.toml</span></code>.</p>
-<p>Using a base and a series spec file, series of experiments with varying hyper parameters can be generated (refer to <a class="reference internal" href="experiment_series.html"><span class="doc">Generating Series of Experiments</span></a>).</p>
-<p>The following sections give an overview over the available configuration fields (this is subject to change):</p>
+<p>All configuration of the evolutionary process is stored in the experiment
+specification file using the <a class="reference external" href="https://github.com/toml-lang/toml">TOML</a>
+format.</p>
+<p>If a parameter has not been defined in the experiment specification file, the
+algorithm will fall back to parameters found in
+<code class="file docutils literal notranslate"><span class="pre">rewann/environment/default.toml</span></code>.</p>
+<p>Using a base and a series spec file, series of experiments with varying hyper
+parameters can be generated (refer to <a class="reference internal" href="experiment_series.html"><span class="doc">Generating Series of Experiments</span></a>).</p>
+<p>The following sections give an overview over the available configuration fields
+(this is subject to change):</p>
 <table class="colwidths-given docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 35%" />
@@ -61,9 +64,10 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">experiment_name</span></code></p></td>
-<td><p>‘&lt;task_name&gt;_run’</p></td>
-<td><p>Name of the execution (in series of experiments the name is a combination of the selected variants)</p></td>
+<tr class="row-even"><td><p>experiment_name</p></td>
+<td><p><em>task_name</em></p></td>
+<td><p>Name of the execution (in series of experiments the name
+is a combination of the selected variants)</p></td>
 </tr>
 </tbody>
 </table>
@@ -86,9 +90,10 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<tr class="row-even"><td><p>name</p></td>
 <td><p>‘iris’</p></td>
-<td><p>Task to train on (available tasks are defined in <code class="docutils literal notranslate"><span class="pre">rewann.tasks</span></code>).</p></td>
+<td><p>Task to train on (available tasks are defined in
+<code class="docutils literal notranslate"><span class="pre">rewann.tasks</span></code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -108,43 +113,51 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">seed</span></code></p></td>
+<tr class="row-even"><td><p>seed</p></td>
 <td><p>0</p></td>
 <td><p>Initial seed for random number generator</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">post_init_seed</span></code></p></td>
+<tr class="row-odd"><td><p>post_init_seed</p></td>
 <td><p>false</p></td>
-<td><p>If not false, set seed after initial population was generated (used to determine how much influence the initial pop has).</p></td>
+<td><p>If not false, set seed after initial population was
+generated (used to determine how much influence the
+initial pop has).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distribution</span></code></p></td>
+<tr class="row-even"><td><p>distribution</p></td>
 <td><p>‘uniform’</p></td>
 <td><p>Distribution to use for weight sampling.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lower_bound</span></code></p></td>
+<tr class="row-odd"><td><p>lower_bound</p></td>
 <td><p>-2</p></td>
-<td><p>Lower bound of uniform distribution (if any other distribution is used, this param is ignored).</p></td>
+<td><p>Lower bound of uniform distribution (if any other
+distribution is used, this param is ignored).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">upper_bound</span></code></p></td>
+<tr class="row-even"><td><p>upper_bound</p></td>
 <td><p>2</p></td>
 <td><p>Upper bound of uniform distribution</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mean</span></code></p></td>
+<tr class="row-odd"><td><p>mean</p></td>
 <td><p>0</p></td>
-<td><p>Mean used for the normal and log normal distribution (ignored if an uniform distribution is used).</p></td>
+<td><p>Mean used for the normal and log normal distribution
+(ignored if an uniform distribution is used).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sigma</span></code></p></td>
+<tr class="row-even"><td><p>sigma</p></td>
 <td><p>1</p></td>
 <td><p>Sigma used for the normal and log normal distribution.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_weight_samples_per_iteration</span></code></p></td>
+<tr class="row-odd"><td><p>num_weights_per_iteration</p></td>
 <td><p>1</p></td>
-<td><p>Number of weights to use for evaluation within one iteratiion (or generation).</p></td>
+<td><p>Number of weights to use for evaluation within one
+iteratiion (or generation).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_training_samples_per_iteration</span></code></p></td>
-<td><p>-1</p></td>
-<td><p>Number of training samples to use for one evaluation (a random subset is generated) - if a negative number is provided, all training samples are used (this is not a valid option when training on tasks that generate samples).</p></td>
+<tr class="row-even"><td><p>num_samples_per_iteration</p></td>
+<td><p>1</p></td>
+<td><p>Number of training samples to use for one evaluation (a
+random subset is generated) - if a negative number is
+provided, all training samples are used (this is not a
+valid option when training on synthetic tasks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hof_evaluation_iterations</span></code></p></td>
+<tr class="row-odd"><td><p>hof_evaluation_iterations</p></td>
 <td><p>20</p></td>
 <td></td>
 </tr>
@@ -166,33 +179,36 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_generations</span></code></p></td>
+<tr class="row-even"><td><p>num_generations</p></td>
 <td><p>20</p></td>
 <td><p>Number of iterations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">size</span></code></p></td>
+<tr class="row-odd"><td><p>size</p></td>
 <td><p>64</p></td>
 <td><p>Size of the population</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">initial_genes</span></code></p></td>
+<tr class="row-even"><td><p>initial_genes</p></td>
 <td><p>‘full’</p></td>
-<td><p>‘empty’: individuals start without any edges; ‘full’: all input nodes are connected to all output nodes</p></td>
+<td><p>‘empty’: individuals start without any edges; ‘full’: all
+input nodes are connected to all output nodes</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initial_enabled_edge_probability</span></code></p></td>
+<tr class="row-odd"><td><p>initial_enabled_edge_prob</p></td>
 <td><p>0.05</p></td>
-<td><p>If initial individuals are full: probability that any edge is enabled</p></td>
+<td><p>If initial individuals are full: probability that any edge
+is enabled.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_size</span></code></p></td>
+<tr class="row-even"><td><p>hof_size</p></td>
 <td><p>10</p></td>
 <td><p>Size of the <cite>hall of fame</cite></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">enable_edge_signs</span></code></p></td>
+<tr class="row-odd"><td><p>enable_edge_signs</p></td>
 <td><p>false</p></td>
 <td><p>Edges will have sign +1 or -1</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">enabled_activation_functions</span></code></p></td>
+<tr class="row-even"><td><p>enabled_activation_funcs</p></td>
 <td><p>‘all’</p></td>
-<td><p>Which activation functions to use: either ‘all’ or list of activation function indices</p></td>
+<td><p>Which activation functions to use: either ‘all’ or list of
+activation function indices</p></td>
 </tr>
 </tbody>
 </table>
@@ -212,32 +228,42 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_tournaments</span></code></p></td>
+<tr class="row-even"><td><p>use_tournaments</p></td>
 <td><p>true</p></td>
-<td><p>Whether to use tournament selection (alternative is to just do ranking: in this case every individual can only have one offspring)</p></td>
+<td><p>Whether to use tournament selection (alternative is to
+just do ranking: in this case every individual can only
+have one offspring)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">elite_ratio</span></code></p></td>
+<tr class="row-odd"><td><p>elite_ratio</p></td>
 <td><p>0.1</p></td>
-<td><p>Ratio of the population to treat as elite (will survive the generation)</p></td>
+<td><p>Ratio of the population to treat as elite (will survive
+the generation)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">culling_ratio</span></code></p></td>
+<tr class="row-even"><td><p>culling_ratio</p></td>
 <td><p>0.2</p></td>
-<td><p>Don’t use the worst 20% of the population for further variations</p></td>
+<td><p>Don’t use the worst of the population for further mutation</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tournament_size</span></code></p></td>
+<tr class="row-odd"><td><p>tournament_size</p></td>
 <td><p>5</p></td>
 <td><p>Size of the tournaments in tournament selection</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">objectives</span></code></p></td>
-<td><p>[‘-log_loss.min’, ‘-log_loss.mean’, ‘-n_hidden’]</p></td>
-<td><p>Objectives to optimize for (is treated as maximization problem - if you want to minimize an objective, add prefix ‘-‘’)</p></td>
+<tr class="row-even"><td><p>objectives</p></td>
+<td><p>[‘-log_loss.min’,
+‘-log_loss.mean’,
+‘-n_hidden’]</p></td>
+<td><p>Objectives to optimize for (is treated as maximization
+problem - if you want to minimize an objective, add
+prefix ‘-‘’)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">recorded_metrics</span></code></p></td>
-<td><p>[‘accuracy’, ‘kappa’, ‘log_loss’]</p></td>
-<td><p>Names of the measures stored for each individual during training and later reported on</p></td>
+<tr class="row-odd"><td><p>recorded_metrics</p></td>
+<td><p>[‘accuracy’,
+‘kappa’,
+‘log_loss’]</p></td>
+<td><p>Names of the measures stored for each individual during
+training and later reported on</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hof_metric</span></code></p></td>
-<td><p>‘accuracy.mean’</p></td>
+<tr class="row-even"><td><p>hof_metric</p></td>
+<td><p>accuracy.mean</p></td>
 <td><p>Measure that controls the entry into the hall of fame</p></td>
 </tr>
 </tbody>
@@ -266,12 +292,12 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<tr class="row-even"><td><p>probability</p></td>
 <td><p>0.20</p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strategy</span></code></p></td>
-<td><p>‘layer_agnostic’</p></td>
+<tr class="row-odd"><td><p>probability</p></td>
+<td><p>layer_agnostic</p></td>
 <td><p>Either ‘layer_agnostic’ or ‘layer_based’</p></td>
 </tr>
 </tbody>
@@ -292,7 +318,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<tr class="row-even"><td><p>probability</p></td>
 <td><p>0.25</p></td>
 <td></td>
 </tr>
@@ -314,7 +340,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<tr class="row-even"><td><p>probability</p></td>
 <td><p>0.05</p></td>
 <td></td>
 </tr>
@@ -336,7 +362,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<tr class="row-even"><td><p>probability</p></td>
 <td><p>0.5</p></td>
 <td></td>
 </tr>
@@ -345,7 +371,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </div>
 <div class="section" id="mutation-change-edge-sign">
 <h3>mutation.change_edge_sign<a class="headerlink" href="#mutation-change-edge-sign" title="Permalink to this headline">¶</a></h3>
-<p>This mutation type will be ignored if edges signs are disabled.</p>
+<p><em>This mutation type will be ignored if edges signs are disabled.</em></p>
 <table class="colwidths-given docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 35%" />
@@ -359,7 +385,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
+<tr class="row-even"><td><p>probability</p></td>
 <td><p>0.2</p></td>
 <td></td>
 </tr>
@@ -368,7 +394,7 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </div>
 <div class="section" id="mutation-add-recurrent-edge">
 <h3>mutation.add_recurrent_edge<a class="headerlink" href="#mutation-add-recurrent-edge" title="Permalink to this headline">¶</a></h3>
-<p>This mutation type will be ignored if task does not require recurrence</p>
+<p><em>This mutation type will be ignored if task does not require recurrence.</em></p>
 <table class="colwidths-given docutils align-default" style="width: 100%">
 <colgroup>
 <col style="width: 35%" />
@@ -382,9 +408,13 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">probability</span></code></p></td>
-<td><p>0.3</p></td>
+<tr class="row-even"><td><p>probability</p></td>
+<td><p>0.2</p></td>
 <td></td>
+</tr>
+<tr class="row-odd"><td><p>strategy</p></td>
+<td><p>any</p></td>
+<td><p>Either ‘loops_only’ or ‘any’</p></td>
 </tr>
 </tbody>
 </table>
@@ -405,21 +435,23 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">run_postopt</span></code></p></td>
+<tr class="row-even"><td><p>run_postopt</p></td>
 <td><p>true</p></td>
 <td><p>Do post optimization evaluation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compile_report</span></code></p></td>
+<tr class="row-odd"><td><p>compile_report</p></td>
 <td><p>true</p></td>
 <td><p>Compile a report with statistical data and figures.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_weights</span></code></p></td>
+<tr class="row-even"><td><p>num_weights</p></td>
 <td><p>100</p></td>
-<td><p>Number of weights to use during post optimization evaluation.</p></td>
+<td><p>Number of weights to use during post optimization
+evaluation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_samples</span></code></p></td>
+<tr class="row-odd"><td><p>num_samples</p></td>
 <td><p>1000</p></td>
-<td><p>Number of samples to use during post optimization evaluation.</p></td>
+<td><p>Number of test samples to use during post optimization
+evaluation.</p></td>
 </tr>
 </tbody>
 </table>
@@ -439,13 +471,17 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">num_worker</span></code></p></td>
-<td><p>true</p></td>
+<tr class="row-even"><td><p>num_workers</p></td>
+<td><p>1</p></td>
 <td><p>Number of parallel processes to use.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">debug</span></code></p></td>
-<td><p>true</p></td>
+<tr class="row-odd"><td><p>debug</p></td>
+<td></td>
 <td><p>Set log level to debug.</p></td>
+</tr>
+<tr class="row-even"><td><p>backend</p></td>
+<td><p>numpy</p></td>
+<td><p>Either ‘numpy’ or ‘torch’.</p></td>
 </tr>
 </tbody>
 </table>
@@ -465,21 +501,23 @@ The probability of all enabled mutation types will be normalized to a sum of one
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data_base_path</span></code></p></td>
-<td><p>‘data’</p></td>
-<td><p>Directory that should hold produced data for multiple experiments</p></td>
+<tr class="row-even"><td><p>data_base_path</p></td>
+<td><p>data</p></td>
+<td><p>Directory that should hold produced data for multiple
+experiments.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_filename</span></code></p></td>
-<td><p>‘execution.log’</p></td>
+<tr class="row-odd"><td><p>log_filename</p></td>
+<td><p>execution.log</p></td>
 <td><p>Filename of log output</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">commit_elite_freq</span></code></p></td>
+<tr class="row-even"><td><p>commit_elite_freq</p></td>
 <td><p>-1</p></td>
-<td><p>Frequency of writing the elite to the data.hdf5 file - if -1 only the hall of fame will be recorded</p></td>
+<td><p>Frequency of writing the elite to the data.hdf5 file - if
+-1 only the hall of fame will be recorded.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">commit_metrics_freq</span></code></p></td>
+<tr class="row-odd"><td><p>commit_metrics_freq</p></td>
 <td><p>10</p></td>
-<td><p>Frequency of storing generation metrics</p></td>
+<td><p>Frequency of storing generation metrics.</p></td>
 </tr>
 </tbody>
 </table>
@@ -518,9 +556,6 @@ The probability of all enabled mutation types will be normalized to a sum of one
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="mutation_types.html" title="Mutation Types"
              >next</a> |</li>

@@ -12,6 +12,14 @@ Iris
 MNIST
 ......
 
+.. figure:: _static/mnist_gen_metrics_accuracy.mean.svg
+   :height: 200pt
+   :alt: Convergence on MNIST
+
+   Convergence on MNIST
+
+
+
 Recurrent Tasks
 ---------------
 

@@ -59,12 +59,13 @@
 <p>Takes care of process pool, reporting, and experiment parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Dictionary containing the parameters or a path to a parameters spec file.</p>
+<dd class="field-odd"><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Dictionary containing the parameters or a path to a parameters spec
+file.</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt id="rewann.environment.environment.Environment.default_params">
-<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'backend': 'numpy', 'debug': True, 'num_workers': 1}, 'mutation': {'add_recurrent_edge': {'probability': 0.3}, 'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_functions': 'all', 'hof_size': 10, 'initial_enabled_edge_probability': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_training_samples_per_iteration': -1, 'num_weight_samples_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'include_prediction_records': False, 'log_filename': 'execution.log'}, 'task': {'name': 'iris'}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'backend': 'numpy', 'debug': True, 'num_workers': 1}, 'mutation': {'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'new_recurrent_edge': {'probability': 0.2, 'strategy': 'any'}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_funcs': 'all', 'hof_size': 10, 'initial_enabled_edge_prob': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_samples_per_iteration': -1, 'num_weights_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'log_filename': 'execution.log'}, 'task': {'name': 'iris', 'num_categories': 8, 'sample_length': 10, 'sample_order_seed': 0, 'test_portion': 0.2}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -207,7 +208,7 @@ samples).</p>
 <code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.setup_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up parameters.</p>
 <p>Based on default parameters create complete tree of parameters, get a new
-subdirectory to write in, and derive objectives tuples from the parameters.+</p>
+subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -282,7 +283,7 @@ subdirectory to write in, and derive objectives tuples from the parameters.+</p>
 <li><p><strong>weights</strong> (<em>np.ndarray</em>) – Sampled weights.</p></li>
 <li><p><strong>test</strong> (<em>bool.optional</em>) – If true, test sampels are used.</p></li>
 <li><p><strong>measures</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>]</em>) – Which measurements to get from the network.</p></li>
-<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – How many samples to use. Defaults to sampling/num_training_samples_per_iteration</p></li>
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – How many samples to use. Defaults to sampling/num_samples_per_iteration</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -489,7 +490,7 @@ loading the complete individuals.</p></li>
 <code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#setup_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.setup_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up parameters.</p>
 <p>Based on default parameters create complete tree of parameters, get a new
-subdirectory to write in, and derive objectives tuples from the parameters.+</p>
+subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py function">

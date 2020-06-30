@@ -96,9 +96,11 @@
 </li>
       <li><a href="rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge">add_recurrent_edge() (in module rewann.genetic_algorithm.genetic_operations)</a>
 </li>
-      <li><a href="rewann.tasks.html#rewann.tasks.rnn.AddingTask">AddingTask (class in rewann.tasks.rnn)</a>
+      <li><a href="rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_any">add_recurrent_edge_any() (in module rewann.genetic_algorithm.genetic_operations)</a>
 </li>
-      <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.Network.apply">apply() (rewann.individual.torch.rnn.Network method)</a>
+      <li><a href="rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_loops_only">add_recurrent_edge_loops_only() (in module rewann.genetic_algorithm.genetic_operations)</a>
+</li>
+      <li><a href="rewann.tasks.html#rewann.tasks.rnn.AddingTask">AddingTask (class in rewann.tasks.rnn)</a>
 </li>
       <li><a href="rewann.individual.numpy.html#rewann.individual.numpy.ffnn.apply_act_function">apply_act_function() (in module rewann.individual.numpy.ffnn)</a>
 </li>
@@ -110,8 +112,6 @@
 
       <ul>
         <li><a href="rewann.individual.torch.html#rewann.individual.torch.ffnn.Network.available_act_functions">(rewann.individual.torch.ffnn.Network attribute)</a>
-</li>
-        <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.Network.available_act_functions">(rewann.individual.torch.rnn.Network attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -263,8 +263,6 @@
 </li>
         <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.ReConcatLayer.forward">(rewann.individual.torch.rnn.ReConcatLayer method)</a>
 </li>
-        <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.ReWannModule.forward">(rewann.individual.torch.rnn.ReWannModule method)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -331,6 +329,8 @@
 </li>
         <li><a href="rewann.individual.torch.html#rewann.individual.torch.ffnn.Network.get_measurements">(rewann.individual.torch.ffnn.Network method)</a>
 </li>
+        <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.Network.get_measurements">(rewann.individual.torch.rnn.Network method)</a>
+</li>
       </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.evaluation_util.get_objective_values">get_objective_values() (in module rewann.environment.evaluation_util)</a>
 </li>
@@ -394,6 +394,12 @@
 
       <ul>
         <li><a href="rewann.tasks.html#rewann.tasks.base.Task.load">(rewann.tasks.base.Task method)</a>
+</li>
+        <li><a href="rewann.tasks.html#rewann.tasks.rnn.AddingTask.load">(rewann.tasks.rnn.AddingTask method)</a>
+</li>
+        <li><a href="rewann.tasks.html#rewann.tasks.rnn.CopyTask.load">(rewann.tasks.rnn.CopyTask method)</a>
+</li>
+        <li><a href="rewann.tasks.html#rewann.tasks.rnn.EchoTask.load">(rewann.tasks.rnn.EchoTask method)</a>
 </li>
       </ul></li>
       <li><a href="rewann.environment.html#rewann.environment.util.load_gen">load_gen() (in module rewann.environment.util)</a>
@@ -636,11 +642,13 @@
 </li>
         <li><a href="rewann.individual.torch.html#rewann.individual.torch.Individual.Phenotype">(rewann.individual.torch.Individual attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="rewann.postopt.html#rewann.postopt.report.plot_gen_lines">plot_gen_lines() (in module rewann.postopt.report)</a>
+        <li><a href="rewann.individual.torch.html#rewann.individual.torch.RecurrentIndividual.Phenotype">(rewann.individual.torch.RecurrentIndividual attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.postopt.html#rewann.postopt.report.plot_gen_lines">plot_gen_lines() (in module rewann.postopt.report)</a>
+</li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.plot_gen_quartiles">plot_gen_quartiles() (in module rewann.postopt.report)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.pool_map">pool_map() (rewann.environment.environment.Environment method)</a>
@@ -672,7 +680,11 @@
       <li><a href="rewann.individual.html#rewann.individual.genes.RecurrentGenes">RecurrentGenes (class in rewann.individual.genes)</a>
 </li>
       <li><a href="rewann.individual.numpy.html#rewann.individual.numpy.RecurrentIndividual">RecurrentIndividual (class in rewann.individual.numpy)</a>
+
+      <ul>
+        <li><a href="rewann.individual.torch.html#rewann.individual.torch.RecurrentIndividual">(class in rewann.individual.torch)</a>
 </li>
+      </ul></li>
       <li><a href="rewann.individual.html#rewann.individual.individual_base.RecurrentIndividualBase">RecurrentIndividualBase (class in rewann.individual.individual_base)</a>
 </li>
       <li><a href="rewann.tasks.html#rewann.tasks.base.RecurrentTask">RecurrentTask (class in rewann.tasks.base)</a>
@@ -778,6 +790,8 @@
         <li><a href="rewann.individual.numpy.html#module-rewann.individual.numpy">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.individual.numpy.ffnn
 
@@ -785,8 +799,6 @@
         <li><a href="rewann.individual.numpy.html#module-rewann.individual.numpy.ffnn">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     rewann.individual.numpy.rnn
 
@@ -913,8 +925,6 @@
         <li><a href="rewann.html#module-rewann.util">module</a>
 </li>
       </ul></li>
-      <li><a href="rewann.individual.torch.html#rewann.individual.torch.rnn.ReWannModule">ReWannModule (class in rewann.individual.torch.rnn)</a>
-</li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.run">run() (rewann.environment.environment.Environment method)</a>
 </li>
       <li><a href="rewann.postopt.html#rewann.postopt.report.Report.run_evaluations">run_evaluations() (rewann.postopt.report.Report method)</a>
@@ -927,6 +937,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.tasks.html#rewann.tasks.rnn.AddingTask.sample_length">sample_length (rewann.tasks.rnn.AddingTask attribute)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.sample_weights">sample_weights() (rewann.environment.environment.Environment method)</a>
 </li>
       <li><a href="rewann.environment.html#rewann.environment.environment.Environment.seed">seed() (rewann.environment.environment.Environment method)</a>
@@ -953,10 +965,10 @@
 </li>
       <li><a href="rewann.environment.html#rewann.environment.util.TimeStore.stop">stop() (rewann.environment.util.TimeStore method)</a>
 </li>
-      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_data">store_data() (rewann.environment.environment.Environment method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="rewann.environment.html#rewann.environment.environment.Environment.store_data">store_data() (rewann.environment.environment.Environment method)</a>
+</li>
       <li><a href="rewann.environment.html#rewann.environment.util.store_gen">store_gen() (in module rewann.environment.util)</a>
 
       <ul>

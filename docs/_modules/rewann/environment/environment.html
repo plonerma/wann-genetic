@@ -41,17 +41,18 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">rewann</span> <span class="kn">import</span> <span class="n">Individual</span><span class="p">,</span> <span class="n">RecurrentIndividual</span>
-<span class="kn">from</span> <span class="nn">rewann.individual.torch</span> <span class="kn">import</span> <span class="n">Individual</span> <span class="k">as</span> <span class="n">TorchIndividual</span>
+
+
 <span class="kn">from</span> <span class="nn">rewann.tasks</span> <span class="kn">import</span> <span class="n">select_task</span>
 
 <span class="kn">from</span> <span class="nn">rewann</span> <span class="kn">import</span> <span class="n">GeneticAlgorithm</span>
 
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">get_version</span><span class="p">,</span> <span class="n">TimeStore</span>
 
-<span class="kn">from</span> <span class="nn">.evaluation_util</span> <span class="kn">import</span> <span class="n">get_objective_values</span><span class="p">,</span> <span class="n">update_hall_of_fame</span><span class="p">,</span> <span class="n">make_measurements</span>
+<span class="kn">from</span> <span class="nn">.evaluation_util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_objective_values</span><span class="p">,</span> <span class="n">update_hall_of_fame</span><span class="p">,</span>
+                              <span class="n">make_measurements</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">rewann.util</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 <span class="kn">from</span> <span class="nn">rewann.postopt</span> <span class="kn">import</span> <span class="n">Report</span>
@@ -65,13 +66,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    params : dict or str</span>
-<span class="sd">        Dictionary containing the parameters or a path to a parameters spec file.</span>
+<span class="sd">        Dictionary containing the parameters or a path to a parameters spec</span>
+<span class="sd">        file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">default_params</span><span class="p">,</span> <span class="n">setup_params</span><span class="p">,</span> <span class="n">open_data</span><span class="p">,</span>
-                       <span class="n">store_gen</span><span class="p">,</span> <span class="n">store_gen_metrics</span><span class="p">,</span> <span class="n">load_pop</span><span class="p">,</span> <span class="n">load_gen_metrics</span><span class="p">,</span>
+                       <span class="n">store_gen</span><span class="p">,</span> <span class="n">store_gen_metrics</span><span class="p">,</span> <span class="n">load_gen_metrics</span><span class="p">,</span>
                        <span class="n">stored_populations</span><span class="p">,</span> <span class="n">stored_indiv_measurements</span><span class="p">,</span>
-                       <span class="n">store_hof</span><span class="p">,</span> <span class="n">load_hof</span><span class="p">,</span>
+                       <span class="n">store_hof</span><span class="p">,</span> <span class="n">load_hof</span><span class="p">,</span> <span class="n">load_pop</span><span class="p">,</span>
                        <span class="n">load_indiv_measurements</span><span class="p">,</span>
                        <span class="n">env_path</span><span class="p">)</span>
 
@@ -82,34 +84,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_file</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">hall_of_fame</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-
-        <span class="n">use_test_samples</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># choose task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">select_task</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">])</span>
 
         <span class="c1"># choose adequate type of individuals</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">is_recurrent</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Torch RNN not implemented yet. Falling back on numpy.&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">RecurrentIndividual</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">rewann.individual.torch</span> <span class="k">as</span> <span class="nn">backend</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;torch&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">TorchIndividual</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">Individual</span>
+            <span class="kn">import</span> <span class="nn">rewann.individual.numpy</span> <span class="k">as</span> <span class="nn">backend</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">recorded_measures</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;recorded_metrics&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">is_recurrent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">RecurrentIndividual</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">Individual</span>
 
         <span class="c1"># only use enabeld activations functions</span>
         <span class="n">funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Phenotype</span><span class="o">.</span><span class="n">available_act_functions</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_functions&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">enabled_acts</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_funcs&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_funcs&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">Phenotype</span><span class="o">.</span><span class="n">available_act_functions</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enabled_activation_functions&#39;</span><span class="p">]</span>
+                <span class="n">funcs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">enabled_acts</span>
             <span class="p">]</span>
 
 <div class="viewcode-block" id="Environment.seed"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.seed">[docs]</a>    <span class="k">def</span> <span class="nf">seed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -127,12 +127,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">elite_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Size of the elite (:math:`population\ size * elite\ ratio`).&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;elite_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]))</span>
+        <span class="sd">&quot;&quot;&quot;Size of the elite (:math:`population\\ size * elite\\ ratio`).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;elite_ratio&#39;</span><span class="p">]</span>
+                            <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="Environment.sample_weights"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.sample_weights">[docs]</a>    <span class="k">def</span> <span class="nf">sample_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">n</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">][</span><span class="s1">&#39;num_weight_samples_per_iteration&#39;</span><span class="p">]</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">][</span><span class="s1">&#39;num_weights_per_iteration&#39;</span><span class="p">]</span>
 
         <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;distribution&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
@@ -140,25 +141,25 @@
             <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
-            <span class="n">l</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;lower_bound&#39;</span><span class="p">]</span>
-            <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;upper_bound&#39;</span><span class="p">]</span>
-            <span class="k">assert</span> <span class="n">l</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;lower_bound&#39;</span><span class="p">]</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;upper_bound&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;lognormal&#39;</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
-            <span class="k">assert</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">mu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">lognormal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">lognormal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">dist</span> <span class="o">==</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
-            <span class="k">assert</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;sigma&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">mu</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Distribution </span><span class="si">{</span><span class="n">dist</span><span class="si">}</span><span class="s1"> not implemented.&#39;</span><span class="p">)</span>
@@ -181,7 +182,6 @@
                 <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="Environment.pool_map"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.pool_map">[docs]</a>    <span class="k">def</span> <span class="nf">pool_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pool</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="nb">iter</span><span class="p">)</span>
@@ -193,7 +193,7 @@
 <span class="sd">        samples).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">log_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;log_filename&#39;</span><span class="p">])</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check log (&#39;</span><span class="si">{</span><span class="n">log_path</span><span class="si">}</span><span class="s2">&#39;) for details.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Check log (&#39;</span><span class="si">{</span><span class="n">log_path</span><span class="si">}</span><span class="s2">&#39;) for details.&quot;</span><span class="p">)</span>
 
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 
@@ -212,19 +212,20 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saving data at </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Loading training dataset&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">load_training</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">load_training</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1"># log used parameters</span>
         <span class="n">params_toml</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running experiments with the following parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">params_toml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running experiments with the following parameters:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params_toml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_path</span><span class="p">(</span><span class="s1">&#39;params.toml&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
-            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;is_report&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># mark stored params as part of a report</span>
+            <span class="c1"># mark stored params as part of a report</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;is_report&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">toml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span></div>
-
 
 <div class="viewcode-block" id="Environment.run"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Run optization and post optimization (if enabled).&quot;&quot;&quot;</span>
@@ -268,7 +269,10 @@
 
             <span class="n">make_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
 
-            <span class="n">obj_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">get_objective_values</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">pop</span><span class="p">])</span>
+            <span class="n">obj_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+                <span class="n">get_objective_values</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">objectives</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">pop</span>
+            <span class="p">])</span>
 
             <span class="n">alg</span><span class="o">.</span><span class="n">tell</span><span class="p">(</span><span class="n">obj_values</span><span class="p">)</span>
 
@@ -287,18 +291,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">store_hof</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Environment.post_optimization"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.post_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">post_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run_evaluations</span><span class="p">(</span> <span class="c1"># run evaluations on test data</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run_evaluations</span><span class="p">(</span>  <span class="c1"># run evaluations on test data</span>
             <span class="n">num_weights</span><span class="o">=</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;num_weights&#39;</span><span class="p">],</span>
-            <span class="n">num_samples</span><span class="o">=</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;num_samples&#39;</span><span class="p">]</span> <span class="c1"># all</span>
+            <span class="n">num_samples</span><span class="o">=</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;num_samples&#39;</span><span class="p">]</span>  <span class="c1"># all</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;postopt&#39;</span><span class="p">,</span> <span class="s1">&#39;compile_report&#39;</span><span class="p">]:</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span> <span class="c1"># plot metrics, derive stats</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>  <span class="c1"># plot metrics, derive stats</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">compile_stats</span><span class="p">()</span> <span class="c1"># at least derive and store stats</span></div>
+            <span class="n">r</span><span class="o">.</span><span class="n">compile_stats</span><span class="p">()</span>  <span class="c1"># at least derive and store stats</span></div>
 
 <div class="viewcode-block" id="Environment.store_data"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.Environment.store_data">[docs]</a>    <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">pop</span><span class="p">,</span> <span class="n">dt</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">gen_metrics</span><span class="p">,</span> <span class="n">indiv_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_metrics</span><span class="p">(</span><span class="n">gen</span><span class="o">=</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">,</span> <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+        <span class="n">gen_metrics</span><span class="p">,</span> <span class="n">indiv_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_metrics</span><span class="p">(</span>
+            <span class="n">gen</span><span class="o">=</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">,</span> <span class="n">return_indiv_measurements</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
 
         <span class="n">metric</span><span class="p">,</span> <span class="n">metric_sign</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hof_metric</span>
         <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;MAX&quot;</span> <span class="k">if</span> <span class="n">metric_sign</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;MIN&quot;</span><span class="p">)</span>
@@ -309,10 +314,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gen_metrics</span><span class="p">)</span>
 
         <span class="n">commit_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;commit_elite_freq&#39;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="n">commit_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gen</span> <span class="o">%</span> <span class="n">commit_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">store_gen</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">elite_size</span><span class="p">],</span> <span class="n">indiv_metrics</span><span class="o">=</span><span class="n">indiv_metrics</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_gen</span><span class="p">(</span>
+                <span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="n">pop</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">elite_size</span><span class="p">],</span>
+                <span class="n">indiv_metrics</span><span class="o">=</span><span class="n">indiv_metrics</span><span class="p">)</span>
 
         <span class="n">commit_freq</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;commit_metrics_freq&#39;</span><span class="p">]</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="n">commit_freq</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">gen</span> <span class="o">%</span> <span class="n">commit_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">store_gen_metrics</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">))</span></div>
 
@@ -324,7 +334,7 @@
 <span class="sd">        The statistical key metrics include:</span>
 
 <span class="sd">        `Q_{0, 4}`</span>
-<span class="sd">            The quartiles :math:`\{1, 2, 3\}` as well as the minimum and</span>
+<span class="sd">            The quartiles :math:`\\{1, 2, 3\\}` as well as the minimum and</span>
 <span class="sd">            maximum :math:`(0,4)`.</span>
 <span class="sd">        `MEAN`, `STD`</span>
 <span class="sd">            Mean and standard deviation.</span>
@@ -395,7 +405,7 @@
 <div class="viewcode-block" id="run_experiment"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.run_experiment">[docs]</a><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Execute an experiment (see :doc:`cli`).&quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
-    
+
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Post Optimization&#39;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path to experiment specification&#39;</span><span class="p">)</span>

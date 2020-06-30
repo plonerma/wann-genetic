@@ -36,26 +36,25 @@
           <div class="body" role="main">
             
   <h1>Source code for rewann.tools.compare_experiments</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">toml</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
 
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">.experiment_series</span> <span class="kn">import</span> <span class="n">ExperimentSeries</span>
+
 
 <div class="viewcode-block" id="load_series_stats"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.compare_experiments.load_series_stats">[docs]</a><span class="k">def</span> <span class="nf">load_series_stats</span><span class="p">(</span><span class="n">spec_path</span><span class="p">,</span> <span class="n">dir_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="o">.</span><span class="n">from_spec_file</span><span class="p">(</span><span class="n">spec_path</span><span class="p">)</span>
     <span class="n">spec</span><span class="o">.</span><span class="n">discover_data_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">assemble_stats</span><span class="p">()</span></div>
 
+
 <div class="viewcode-block" id="mean_comparison"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.compare_experiments.mean_comparison">[docs]</a><span class="k">def</span> <span class="nf">mean_comparison</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">group_var</span><span class="p">,</span> <span class="n">group_values</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="s1">&#39;mean accuracy&#39;</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">group_values</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">v1</span> <span class="o">==</span> <span class="n">v2</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">v1</span> <span class="o">==</span> <span class="n">v2</span><span class="p">:</span>
+            <span class="k">continue</span>
+
         <span class="n">g1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">v1</span><span class="p">][</span><span class="n">measure</span><span class="p">]</span>
         <span class="n">g2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">v2</span><span class="p">][</span><span class="n">measure</span><span class="p">]</span>
 
@@ -64,7 +63,7 @@
 
         <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_var</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s2"> is significantly (</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">) better than </span><span class="si">{</span><span class="n">group_var</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

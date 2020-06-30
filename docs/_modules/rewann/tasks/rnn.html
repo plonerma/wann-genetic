@@ -39,20 +39,23 @@
   <h1>Source code for rewann.tasks.rnn</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Module containig basic recurrent toy tasks.&quot;&quot;&quot;</span>
 
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">RecurrentTask</span>
 
+
 <div class="viewcode-block" id="EchoTask"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.EchoTask">[docs]</a><span class="k">class</span> <span class="nc">EchoTask</span><span class="p">(</span><span class="n">RecurrentTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;(see :ref:`echo_task`)&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">delay</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="c1"># can&#39;t go back in time</span>
-        <span class="k">assert</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="c1"># (case 1 is trivial)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span> <span class="o">=</span> <span class="n">length</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">delay</span> <span class="o">&gt;=</span> <span class="mi">0</span>  <span class="c1"># can&#39;t go back in time</span>
+        <span class="k">assert</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># (case 1 is trivial)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span> <span class="o">=</span> <span class="n">dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span>
+
+<div class="viewcode-block" id="EchoTask.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.EchoTask.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EchoTask.get_data"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.EchoTask.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">samples</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -70,7 +73,7 @@
 
         <span class="c1"># one hot encoding</span>
         <span class="c1"># source: https://stackoverflow.com/a/36960495</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">x_class</span><span class="p">[</span><span class="o">...</span><span class="p">,</span><span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">x_class</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
@@ -88,15 +91,17 @@
 
     <span class="n">n_in</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">n_out</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">sample_length</span> <span class="o">=</span> <span class="mi">10</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span> <span class="o">=</span> <span class="n">length</span>
+<div class="viewcode-block" id="AddingTask.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.AddingTask.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="AddingTask.get_data"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.AddingTask.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># marker</span>
-        <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span> <span class="c1"># value</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># marker</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">T</span><span class="p">))</span>  <span class="c1"># value</span>
 
         <span class="n">half</span> <span class="o">=</span> <span class="n">T</span><span class="o">//</span><span class="mi">2</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">half</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">samples</span><span class="p">)</span>
@@ -104,8 +109,8 @@
 
         <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
 
-        <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># set marker for a</span>
-        <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># set marker for b</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># set marker for a</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># set marker for b</span>
 
         <span class="n">values_a</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">values_b</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">sample</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
@@ -125,10 +130,18 @@
     <span class="n">rep_seq_len</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># length of the sequence to be reproduced</span>
     <span class="n">num_categories</span> <span class="o">=</span> <span class="mi">8</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">+</span> <span class="mi">2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">+</span> <span class="mi">2</span>
+
+<div class="viewcode-block" id="CopyTask.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.CopyTask.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_length&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;num_categories&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="s1">&#39;num_categories&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_categories</span> <span class="o">+</span> <span class="mi">2</span></div>
 
 <div class="viewcode-block" id="CopyTask.get_data"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.rnn.CopyTask.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span>
@@ -151,9 +164,9 @@
 
         <span class="c1"># input starts with sequence</span>
         <span class="n">x</span><span class="p">[:,</span>   <span class="p">:</span><span class="n">L</span><span class="p">,</span>      <span class="p">:]</span> <span class="o">=</span> <span class="n">onehot_sequence</span>
-        <span class="n">x</span><span class="p">[:,</span> <span class="n">L</span> <span class="p">:</span><span class="o">-</span><span class="p">(</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># T-1 empty fields</span>
-        <span class="n">x</span><span class="p">[:,</span> <span class="o">-</span><span class="p">(</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>    <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># delimiter</span>
-        <span class="n">x</span><span class="p">[:,</span> <span class="o">-</span><span class="n">L</span><span class="p">:,</span>       <span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># L empty fields</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="n">L</span> <span class="p">:</span><span class="o">-</span><span class="p">(</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># T-1 empty fields</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="o">-</span><span class="p">(</span><span class="n">L</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>    <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># delimiter</span>
+        <span class="n">x</span><span class="p">[:,</span> <span class="o">-</span><span class="n">L</span><span class="p">:,</span>       <span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># L empty fields</span>
 
         <span class="c1"># expected output data</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span> <span class="n">T</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">L</span><span class="p">))</span>

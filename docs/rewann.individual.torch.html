@@ -105,7 +105,7 @@ registered hooks while the latter silently ignores them.</p>
 </div>
 <dl class="py attribute">
 <dt id="rewann.individual.torch.ffnn.Network.available_act_functions">
-<code class="sig-name descname">available_act_functions</code><em class="property"> = [('relu', &lt;built-in method relu of type object&gt;), ('sigmoid', &lt;built-in method sigmoid of type object&gt;), ('tanh', &lt;built-in method tanh of type object&gt;)]</em><a class="headerlink" href="#rewann.individual.torch.ffnn.Network.available_act_functions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">available_act_functions</code><em class="property"> = [('relu', &lt;built-in method relu of type object&gt;), ('sigmoid', &lt;built-in method sigmoid of type object&gt;), ('tanh', &lt;built-in method tanh of type object&gt;), ('gaussian (standard)', &lt;function Network.&lt;lambda&gt;&gt;), ('step', &lt;function Network.&lt;lambda&gt;&gt;), ('identity', &lt;function Network.&lt;lambda&gt;&gt;), ('inverse', &lt;built-in method neg of type object&gt;), ('squared', &lt;built-in method square of type object&gt;), ('abs', &lt;built-in method abs of type object&gt;), ('cos', &lt;built-in method cos of type object&gt;), ('sin', &lt;built-in method sin of type object&gt;)]</em><a class="headerlink" href="#rewann.individual.torch.ffnn.Network.available_act_functions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -126,20 +126,15 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="py class">
 <dt id="rewann.individual.torch.rnn.Network">
 <em class="property">class </em><code class="sig-prename descclassname">rewann.individual.torch.rnn.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch/rnn.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.rnn.Network" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="rewann.individual.html#rewann.individual.network_base.BaseRNN" title="rewann.individual.network_base.BaseRNN"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.network_base.BaseRNN</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="rewann.individual.html#rewann.individual.network_base.BaseRNN" title="rewann.individual.network_base.BaseRNN"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.network_base.BaseRNN</span></code></a>, <a class="reference internal" href="#rewann.individual.torch.ffnn.Network" title="rewann.individual.torch.ffnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.torch.ffnn.Network</span></code></a></p>
 <p>Torch implmentation of a Recurrent Neural Network</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="torch_network.html"><span class="doc">Torch Implementation of WANNs</span></a>.</p>
 </div>
 <dl class="py method">
-<dt id="rewann.individual.torch.rnn.Network.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">func</span><span class="o">=</span><span class="default_value">'softmax'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch/rnn.html#Network.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.rnn.Network.apply" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="rewann.individual.torch.rnn.Network.available_act_functions">
-<code class="sig-name descname">available_act_functions</code><em class="property"> = [('relu', &lt;built-in method relu of type object&gt;), ('sigmoid', &lt;built-in method sigmoid of type object&gt;), ('tanh', &lt;built-in method tanh of type object&gt;)]</em><a class="headerlink" href="#rewann.individual.torch.rnn.Network.available_act_functions" title="Permalink to this definition">¶</a></dt>
+<dt id="rewann.individual.torch.rnn.Network.get_measurements">
+<code class="sig-name descname">get_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y_true</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">measures</span><span class="o">=</span><span class="default_value">['predictions']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch/rnn.html#Network.get_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.rnn.Network.get_measurements" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -165,26 +160,6 @@ registered hooks while the latter silently ignores them.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt id="rewann.individual.torch.rnn.ReWannModule">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.individual.torch.rnn.</code><code class="sig-name descname">ReWannModule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">prop_steps</span></em>, <em class="sig-param"><span class="n">ff_weight_mat</span></em>, <em class="sig-param"><span class="n">re_weight_mat</span></em>, <em class="sig-param"><span class="n">node_act_funcs</span></em>, <em class="sig-param"><span class="n">all_act_funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch/rnn.html#ReWannModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.rnn.ReWannModule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<dl class="py method">
-<dt id="rewann.individual.torch.rnn.ReWannModule.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch/rnn.html#ReWannModule.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.rnn.ReWannModule.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-rewann.individual.torch">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rewann.individual.torch" title="Permalink to this headline">¶</a></h2>
@@ -196,6 +171,18 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="rewann.individual.torch.Individual.Phenotype">
 <code class="sig-name descname">Phenotype</code><a class="headerlink" href="#rewann.individual.torch.Individual.Phenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#rewann.individual.torch.ffnn.Network" title="rewann.individual.torch.ffnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.torch.ffnn.Network</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="rewann.individual.torch.RecurrentIndividual">
+<em class="property">class </em><code class="sig-prename descclassname">rewann.individual.torch.</code><code class="sig-name descname">RecurrentIndividual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">birth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mutations</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/individual/torch.html#RecurrentIndividual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.individual.torch.RecurrentIndividual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rewann.individual.html#rewann.individual.individual_base.RecurrentIndividualBase" title="rewann.individual.individual_base.RecurrentIndividualBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.individual_base.RecurrentIndividualBase</span></code></a></p>
+<dl class="py attribute">
+<dt id="rewann.individual.torch.RecurrentIndividual.Phenotype">
+<code class="sig-name descname">Phenotype</code><a class="headerlink" href="#rewann.individual.torch.RecurrentIndividual.Phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#rewann.individual.torch.rnn.Network" title="rewann.individual.torch.rnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.individual.torch.rnn.Network</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

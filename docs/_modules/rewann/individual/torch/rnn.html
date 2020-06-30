@@ -38,8 +38,10 @@
             
   <h1>Source code for rewann.individual.torch.rnn</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">.ffnn</span> <span class="kn">import</span> <span class="n">MultiActivationModule</span>
+<span class="kn">from</span> <span class="nn">.ffnn</span> <span class="kn">import</span> <span class="n">MultiActivationModule</span><span class="p">,</span> <span class="n">Network</span> <span class="k">as</span> <span class="n">TorchFFNN</span>
 
 <span class="kn">from</span> <span class="nn">rewann.individual.network_base</span> <span class="kn">import</span> <span class="n">BaseRNN</span>
 
@@ -57,52 +59,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">MultiActivationModule</span><span class="p">(</span><span class="n">node_act_funcs</span><span class="p">,</span> <span class="n">all_act_funcs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ReConcatLayer.forward"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.ReConcatLayer.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">last_X</span> <span class="o">=</span> <span class="nb">input</span>
 
-        <span class="n">linear</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_weight</span><span class="p">),</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">last_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">re_weight</span><span class="p">)</span>
+        <span class="n">x_partial</span><span class="p">,</span> <span class="n">last_x</span> <span class="o">=</span> <span class="nb">input</span>
+
+        <span class="n">linear</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x_partial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ff_weight</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">last_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">re_weight</span><span class="p">)</span>
         <span class="p">)</span>
 
         <span class="n">linear</span> <span class="o">=</span> <span class="n">linear</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
         <span class="n">inner_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">linear</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">inner_out</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">last_X</span></div></div>
+
+        <span class="n">x_partial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x_partial</span><span class="p">,</span> <span class="n">inner_out</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x_partial</span><span class="p">,</span> <span class="n">last_x</span></div></div>
 
 
-<div class="viewcode-block" id="ReWannModule"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.ReWannModule">[docs]</a><span class="k">class</span> <span class="nc">ReWannModule</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">prop_steps</span><span class="p">,</span> <span class="n">ff_weight_mat</span><span class="p">,</span> <span class="n">re_weight_mat</span><span class="p">,</span> <span class="n">node_act_funcs</span><span class="p">,</span> <span class="n">all_act_funcs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
-
-        <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-
-        <span class="n">shift</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># start of layer</span>
-        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">prop_steps</span><span class="p">:</span>
-            <span class="c1"># indices of nodes in layer</span>
-            <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="n">shift</span>
-
-            <span class="c1"># connections from prior nodes to nodes in layer</span>
-            <span class="n">ff_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">ff_weight_mat</span><span class="p">[:</span><span class="n">offset</span> <span class="o">+</span> <span class="n">shift</span><span class="p">,</span> <span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-            <span class="n">re_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">re_weight_mat</span><span class="p">[:,</span> <span class="n">indices</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-
-            <span class="c1"># activation funcs of nodes in layer</span>
-            <span class="n">funcs</span> <span class="o">=</span> <span class="n">node_act_funcs</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
-
-            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReConcatLayer</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span><span class="p">,</span>
-                <span class="n">ff_weight</span><span class="o">=</span><span class="n">ff_weight</span><span class="p">,</span> <span class="n">re_weight</span><span class="o">=</span><span class="n">re_weight</span><span class="p">,</span>
-                <span class="n">node_act_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span> <span class="n">all_act_funcs</span><span class="o">=</span><span class="n">all_act_funcs</span><span class="p">))</span>
-
-            <span class="n">shift</span> <span class="o">+=</span> <span class="n">step</span>
-
-        <span class="c1"># set up the network</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ReWannModule.forward"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.ReWannModule.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div></div>
-
-<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="n">BaseRNN</span><span class="p">):</span>
+<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="n">BaseRNN</span><span class="p">,</span> <span class="n">TorchFFNN</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Torch implmentation of a Recurrent Neural Network</span>
 
 <span class="sd">    .. seealso::</span>
@@ -110,54 +84,73 @@
 <span class="sd">        :doc:`torch_network`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">available_act_functions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">)</span>
-    <span class="p">]</span>
-
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">WannModule</span><span class="p">(</span>
-            <span class="n">offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">prop_steps</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">propagation_steps</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n_out</span><span class="p">]]),</span>
-            <span class="n">weight_mat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_matrix</span><span class="p">,</span>
-            <span class="n">node_act_funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">],</span>
-            <span class="n">all_act_funcs</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_act_functions</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">all_act_funcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_act_functions</span><span class="p">]</span>
+
+        <span class="c1"># prepare ConcatLayers</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">include_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="c1"># connections from prior nodes to nodes in layer</span>
+            <span class="n">ff_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_matrix</span><span class="p">[:</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="n">indices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">re_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recurrent_weight_matrix</span><span class="p">[:,</span> <span class="n">indices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+            <span class="c1"># activation funcs of nodes in layer</span>
+            <span class="n">funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">][</span><span class="n">indices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
+
+            <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReConcatLayer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span><span class="p">,</span>
+                <span class="n">ff_weight</span><span class="o">=</span><span class="n">ff_weight</span><span class="p">,</span>
+                <span class="n">re_weight</span><span class="o">=</span><span class="n">re_weight</span><span class="p">,</span>
+                <span class="n">node_act_funcs</span><span class="o">=</span><span class="n">funcs</span><span class="p">,</span>
+                <span class="n">all_act_funcs</span><span class="o">=</span><span class="n">all_act_funcs</span><span class="p">))</span>
+
+        <span class="c1"># set up the network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">)</span>
 
         <span class="c1"># share memory with all workers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">share_memory</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Network.apply"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.Network.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="c1"># multiple one dimensional input arrays</span>
+<div class="viewcode-block" id="Network.get_measurements"><a class="viewcode-back" href="../../../../rewann.individual.torch.html#rewann.individual.torch.rnn.Network.get_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">get_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y_true</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">]):</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">num_samples</span><span class="p">,</span> <span class="n">sample_length</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">num_weights</span><span class="p">,</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">shape</span>
 
+        <span class="c1"># outputs in each sequence step is stored</span>
+        <span class="n">y_raw</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_weights</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">sample_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_out</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># calculate model output</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">shared_weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shared_weight</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
 
-            <span class="c1"># add bias to x</span>
-            <span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">bias</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_weights</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_nodes</span><span class="p">)</span>
 
-            <span class="c1"># expand x for the weights</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sample_length</span><span class="p">):</span>
+                <span class="n">x_partial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+                <span class="c1"># add bias to x</span>
+                <span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">x_partial</span><span class="o">.</span><span class="n">size</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+                <span class="n">x_partial</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x_partial</span><span class="p">,</span> <span class="n">bias</span><span class="p">],</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="c1"># expand x for the weights</span>
+                <span class="n">x_partial</span> <span class="o">=</span> <span class="n">x_partial</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># if any node is nan, we cant rely on the result</span>
-        <span class="n">valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">y</span><span class="p">[</span><span class="o">~</span><span class="n">valid</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+                <span class="n">state</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">((</span><span class="n">x_partial</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
 
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_out</span><span class="p">:]</span>
+            <span class="n">y_raw</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_out</span><span class="p">:]</span>
 
-        <span class="k">if</span> <span class="n">func</span> <span class="o">==</span> <span class="s1">&#39;argmax&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">func</span> <span class="o">==</span> <span class="s1">&#39;softmax&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">softmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">y</span></div></div>
+        <span class="k">if</span> <span class="n">y_true</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+            <span class="n">y_true</span> <span class="o">=</span> <span class="n">y_true</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+            <span class="n">y_raw</span> <span class="o">=</span> <span class="n">y_raw</span><span class="p">[:,</span> <span class="n">valid</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">measurements_from_output</span><span class="p">(</span><span class="n">y_raw</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">measures</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

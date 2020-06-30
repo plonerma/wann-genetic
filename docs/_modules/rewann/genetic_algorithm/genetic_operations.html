@@ -50,9 +50,9 @@
     <span class="n">enabled</span> <span class="o">=</span> <span class="n">get_array_field</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">recurrent</span> <span class="o">=</span> <span class="n">get_array_field</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;recurrent&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-
     <span class="n">options</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">enabled</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">recurrent</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">edge_to_disable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
@@ -90,13 +90,15 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="new_edge"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.new_edge">[docs]</a><span class="k">def</span> <span class="nf">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">recurrent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span>
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dest</span>
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="k">if</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">][</span><span class="s1">&#39;enable_edge_signs&#39;</span><span class="p">]:</span>
-        <span class="n">e</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">e</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">e</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -105,6 +107,7 @@
 
     <span class="n">e</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">innov</span><span class="o">.</span><span class="n">next_edge_id</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">e</span></div>
+
 
 <div class="viewcode-block" id="add_edge_layer_based"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_edge_layer_based">[docs]</a><span class="k">def</span> <span class="nf">add_edge_layer_based</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Layer-based edge introduction strategy.</span>
@@ -136,13 +139,12 @@
 
         <span class="k">for</span> <span class="n">dest</span> <span class="ow">in</span> <span class="n">dest_options</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">conn_matrix</span><span class="p">[</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span> <span class="o">-</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">]:</span>
-                <span class="k">continue</span> <span class="c1"># connection already exists</span>
+                <span class="k">continue</span>  <span class="c1"># connection already exists</span>
 
             <span class="k">if</span> <span class="n">src</span> <span class="o">&gt;=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">:</span>
                 <span class="n">src</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">src</span> <span class="o">-</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
 
             <span class="n">dest</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">dest</span> <span class="o">-</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
-
 
             <span class="k">return</span> <span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
                 <span class="n">edges</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)),</span>
@@ -164,26 +166,21 @@
 
     <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">reachability_matrix</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
-
     <span class="n">n_paths</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">n_paths</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reachability_matrix</span><span class="p">):</span>
         <span class="n">n_paths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reachability_matrix</span><span class="p">)</span>
         <span class="n">reachability_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">reachability_matrix</span><span class="p">,</span> <span class="n">reachability_matrix</span><span class="p">)</span>
-
 
     <span class="c1"># edges are possible where src can not be reached from dest and there is no</span>
     <span class="c1"># direct connection from src to dest</span>
     <span class="n">possible_edges</span> <span class="o">=</span> <span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">conn_matrix</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span>
     <span class="n">possible_edges</span><span class="p">[</span><span class="n">hidden</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">possible_edges</span><span class="p">[</span><span class="n">hidden</span><span class="p">],</span> <span class="p">(</span><span class="n">reachability_matrix</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
-    <span class="c1"># Disallow edges from output and to inputs</span>
-    <span class="c1">#possible_edges[network.offset:, :] = False</span>
-    <span class="c1">#possible_edges[:, :-network.n_out] = False</span>
-
     <span class="c1"># only the edges that are possible are relevant</span>
     <span class="n">src_options</span><span class="p">,</span> <span class="n">dest_options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">possible_edges</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># We can&#39;t introduce another edge</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># We can&#39;t introduce another edge</span>
 
     <span class="c1"># select one of the edes (with equal probabilities)</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">src_options</span><span class="p">))</span>
@@ -200,6 +197,7 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="add_edge"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_edge">[docs]</a><span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a new edge based on the strategy selected in experiment parameters.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
@@ -207,13 +205,15 @@
         <span class="s1">&#39;layer_agnostic&#39;</span><span class="p">:</span> <span class="n">add_edge_layer_agnostic</span>
     <span class="p">}[</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;mutation&#39;</span><span class="p">,</span> <span class="s1">&#39;new_edge&#39;</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">]](</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="reenable_edge"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.reenable_edge">[docs]</a><span class="k">def</span> <span class="nf">reenable_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Reenable one currently disabled edge.&quot;&quot;&quot;</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
 
     <span class="c1"># Choose an disabled edge</span>
     <span class="n">options</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span> <span class="c1"># Make sure one exists</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Make sure one exists</span>
 
     <span class="n">edge_to_enable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
@@ -223,6 +223,7 @@
         <span class="n">edges</span><span class="o">=</span><span class="n">edges</span><span class="p">,</span> <span class="n">nodes</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span>
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="change_activation"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.change_activation">[docs]</a><span class="k">def</span> <span class="nf">change_activation</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Change the activation of one node.&quot;&quot;&quot;</span>
@@ -235,7 +236,9 @@
 
     <span class="c1"># choose one of all but the current act funcs</span>
     <span class="n">new_act</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">n_act_funcs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">new_act</span> <span class="o">&gt;=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">selected_node</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]:</span> <span class="n">new_act</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">new_act</span> <span class="o">&gt;=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">selected_node</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]:</span>
+        <span class="n">new_act</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="n">nodes</span><span class="p">[</span><span class="n">selected_node</span><span class="p">][</span><span class="s1">&#39;func&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_act</span>
 
@@ -244,12 +247,14 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="change_edge_sign"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.change_edge_sign">[docs]</a><span class="k">def</span> <span class="nf">change_edge_sign</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Change the sign of one edge (can be disabled in params; see :doc:`params`).&quot;&quot;&quot;</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
     <span class="c1"># Choose an enabled edge</span>
     <span class="n">options</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="s1">&#39;sign&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">edge_to_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
@@ -260,33 +265,52 @@
         <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="add_recurrent_edge"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+
+<div class="viewcode-block" id="add_recurrent_edge_any"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_any">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge_any</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add a recurrent edge to the genes (only enabled on recurrent tasks).&quot;&quot;&quot;</span>
     <span class="n">network</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span>
-    <span class="n">src_options</span><span class="p">,</span> <span class="n">dest_options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">recurrent_weight_matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># We can&#39;t introduce another edge</span>
+    <span class="c1"># no point in introducing loops at input nodes</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">recurrent_weight_matrix</span><span class="p">[</span><span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">:,</span> <span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">:]</span>
 
-    <span class="n">i_options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">src_options</span><span class="p">))</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">i_options</span><span class="p">)</span>
+    <span class="c1"># nodes without a loop are valid candidates</span>
+    <span class="n">options</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_options</span><span class="p">:</span>
-        <span class="n">src</span> <span class="o">=</span> <span class="n">src_options</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">dest</span> <span class="o">=</span> <span class="n">dest_options</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># We can&#39;t introduce another edge</span>
 
-        <span class="k">if</span> <span class="n">src</span> <span class="o">&gt;=</span> <span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">:</span>
-            <span class="n">src</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">src</span> <span class="o">-</span> <span class="n">network</span><span class="o">.</span><span class="n">offset</span><span class="p">]</span>
-        <span class="n">dest</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">dest</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+        <span class="n">node_id</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">]</span>
+
+        <span class="c1"># check whether edge already exists (must be disabled then)</span>
         <span class="n">e</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;recurrent&#39;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">src</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">dest</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span> <span class="k">continue</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;recurrent&#39;</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">node_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;dest&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">node_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">matches</span><span class="p">):</span>
+            <span class="k">continue</span>
 
         <span class="k">return</span> <span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
-            <span class="n">edges</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">recurrent</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
+            <span class="n">edges</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">edges</span><span class="p">,</span> <span class="n">new_edge</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">recurrent</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
             <span class="n">nodes</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span>
             <span class="n">n_in</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">n_out</span><span class="o">=</span><span class="n">ind</span><span class="o">.</span><span class="n">genes</span><span class="o">.</span><span class="n">n_out</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_recurrent_edge_loops_only"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_loops_only">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge_loops_only</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a recurrent edge to the genes (only enabled on recurrent tasks).</span>
+
+<span class="sd">    This variation will only produce recurrent loops and will not connect two</span>
+<span class="sd">    different nodes.&quot;&quot;&quot;</span>
+    <span class="n">network</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="n">network</span></div>
+
+
+<div class="viewcode-block" id="add_recurrent_edge"><a class="viewcode-back" href="../../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge">[docs]</a><span class="k">def</span> <span class="nf">add_recurrent_edge</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a new recurrent edge based on the strategy selected in experiment parameters.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;any&#39;</span><span class="p">:</span> <span class="n">add_recurrent_edge_any</span><span class="p">,</span>
+        <span class="s1">&#39;loops_only&#39;</span><span class="p">:</span> <span class="n">add_recurrent_edge_loops_only</span>
+    <span class="p">}[</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;mutation&#39;</span><span class="p">,</span> <span class="s1">&#39;new_recurrent_edge&#39;</span><span class="p">,</span> <span class="s1">&#39;strategy&#39;</span><span class="p">]](</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">)</span></div>
 
 
 <span class="c1"># Genetic Operations</span>
@@ -297,8 +321,8 @@
         <span class="p">(</span><span class="s1">&#39;new_node&#39;</span><span class="p">,</span> <span class="n">add_node</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;reenable_edge&#39;</span><span class="p">,</span> <span class="n">reenable_edge</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;change_activation&#39;</span><span class="p">,</span> <span class="n">change_activation</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;change_edge_sign&#39;</span><span class="p">,</span> <span class="n">change_edge_sign</span><span class="p">),</span> <span class="c1"># might be disabled</span>
-        <span class="p">(</span><span class="s1">&#39;add_recurrent_edge&#39;</span><span class="p">,</span> <span class="n">add_recurrent_edge</span><span class="p">),</span> <span class="c1"># might be disabled</span>
+        <span class="p">(</span><span class="s1">&#39;change_edge_sign&#39;</span><span class="p">,</span> <span class="n">change_edge_sign</span><span class="p">),</span>  <span class="c1"># might be disabled</span>
+        <span class="p">(</span><span class="s1">&#39;new_recurrent_edge&#39;</span><span class="p">,</span> <span class="n">add_recurrent_edge</span><span class="p">),</span>  <span class="c1"># might be disabled</span>
     <span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;U32&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">)])</span>
 
     <span class="c1"># get probabilities from params</span>
@@ -329,7 +353,7 @@
     <span class="c1"># apply functions until one actually generates a mutation</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">permutated_mutation_functions</span><span class="p">:</span>
         <span class="n">new_genes</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">innov</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">new_genes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># mutation was successful</span>
+        <span class="k">if</span> <span class="n">new_genes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># mutation was successful</span>
 
             <span class="n">child</span> <span class="o">=</span> <span class="n">ind</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span>
                 <span class="n">genes</span><span class="o">=</span><span class="n">new_genes</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">innov</span><span class="o">.</span><span class="n">next_ind_id</span><span class="p">(),</span>

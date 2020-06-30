@@ -81,7 +81,21 @@ original implementation.</p>
 <dl class="py function">
 <dt id="rewann.genetic_algorithm.genetic_operations.add_recurrent_edge">
 <code class="sig-prename descclassname">rewann.genetic_algorithm.genetic_operations.</code><code class="sig-name descname">add_recurrent_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">innov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/genetic_algorithm/genetic_operations.html#add_recurrent_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new recurrent edge based on the strategy selected in experiment parameters.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_any">
+<code class="sig-prename descclassname">rewann.genetic_algorithm.genetic_operations.</code><code class="sig-name descname">add_recurrent_edge_any</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">innov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/genetic_algorithm/genetic_operations.html#add_recurrent_edge_any"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_any" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a recurrent edge to the genes (only enabled on recurrent tasks).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_loops_only">
+<code class="sig-prename descclassname">rewann.genetic_algorithm.genetic_operations.</code><code class="sig-name descname">add_recurrent_edge_loops_only</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">innov</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/genetic_algorithm/genetic_operations.html#add_recurrent_edge_loops_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.genetic_algorithm.genetic_operations.add_recurrent_edge_loops_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a recurrent edge to the genes (only enabled on recurrent tasks).</p>
+<p>This variation will only produce recurrent loops and will not connect two
+different nodes.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -124,7 +138,7 @@ original implementation.</p>
 
 <dl class="py function">
 <dt id="rewann.genetic_algorithm.ranking.dominates">
-<code class="sig-prename descclassname">rewann.genetic_algorithm.ranking.</code><code class="sig-name descname">dominates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">objectives</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/genetic_algorithm/ranking.html#dominates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.genetic_algorithm.ranking.dominates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rewann.genetic_algorithm.ranking.</code><code class="sig-name descname">dominates</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">objectives</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">i</span></em>, <em class="sig-param"><span class="n">j</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/genetic_algorithm/ranking.html#dominates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.genetic_algorithm.ranking.dominates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pareto dominance</p>
 <p><span class="math notranslate nohighlight">\(i\)</span> dominates <span class="math notranslate nohighlight">\(j\)</span> if it is just as good as <span class="math notranslate nohighlight">\(j\)</span> in all
 objective and at least slightly better in one.</p>
@@ -157,7 +171,7 @@ objectives to be maximized.</p></li>
 an ordering according to the objectives.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -60,13 +60,14 @@
 <span class="n">default_params_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_directory</span><span class="p">,</span> <span class="s1">&#39;default.toml&#39;</span><span class="p">)</span>
 <span class="n">default_params</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">default_params_path</span><span class="p">)</span>
 
+
 <div class="viewcode-block" id="get_version"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.get_version">[docs]</a><span class="k">def</span> <span class="nf">get_version</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">metadata</span><span class="o">.</span><span class="n">version</span><span class="p">(</span><span class="s1">&#39;rewann&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="derive_path"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.derive_path">[docs]</a><span class="k">def</span> <span class="nf">derive_path</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set experiment data path based on experiment name, data, and available names.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;experiment_path&#39;</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;experiment_path&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">env</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;experiment_name&#39;</span><span class="p">]</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="s1">&#39;data_base_path&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;./&#39;</span>
         <span class="n">date</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
@@ -75,12 +76,15 @@
         <span class="n">env</span><span class="p">[</span><span class="s1">&#39;experiment_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">dropwhile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">,</span> <span class="n">paths</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;experiment_path&#39;</span><span class="p">]</span></div>
 
+
 <div class="viewcode-block" id="env_path"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.env_path">[docs]</a><span class="k">def</span> <span class="nf">env_path</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get path string relative to experiment subdirectory.&quot;&quot;&quot;</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;experiment_path&#39;</span><span class="p">],</span> <span class="o">*</span><span class="n">parts</span><span class="p">)</span>
     <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>  <span class="c1"># make sure dir exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>  <span class="c1"># make sure dir exists</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">p</span></div>
+
 
 <div class="viewcode-block" id="open_data"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.open_data">[docs]</a><span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">open_data</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
@@ -95,7 +99,6 @@
     <span class="k">yield</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span>
     <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<span class="c1"># Storing and retrieving individuals</span>
 
 <div class="viewcode-block" id="ind_key"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.ind_key">[docs]</a><span class="k">def</span> <span class="nf">ind_key</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Key in hdf data file for individual with id i.&quot;&quot;&quot;</span>
@@ -103,7 +106,9 @@
     <span class="n">digits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span></div>
 
+
 <span class="n">inds_group_key</span> <span class="o">=</span> <span class="s1">&#39;individuals&#39;</span>
+
 
 <div class="viewcode-block" id="store_ind"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.store_ind">[docs]</a><span class="k">def</span> <span class="nf">store_ind</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Store an individual in the hdf5 data file.&quot;&quot;&quot;</span>
@@ -127,6 +132,7 @@
 
     <span class="k">return</span> <span class="n">data</span></div>
 
+
 <div class="viewcode-block" id="load_ind"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_ind">[docs]</a><span class="k">def</span> <span class="nf">load_ind</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load individual with id i from the hdf5 data file.&quot;&quot;&quot;</span>
     <span class="n">inds_group</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="p">[</span><span class="n">inds_group_key</span><span class="p">]</span>
@@ -134,6 +140,7 @@
     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Individual </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is not stored in data.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ind_from_hdf</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="ind_from_hdf"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.ind_from_hdf">[docs]</a><span class="k">def</span> <span class="nf">ind_from_hdf</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create individual from h5py dataset.&quot;&quot;&quot;</span>
@@ -152,7 +159,6 @@
         <span class="n">mutations</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mutations&#39;</span><span class="p">)[()],</span>
     <span class="p">)</span></div>
 
-<span class="c1"># storing and retrieving a generation</span>
 
 <div class="viewcode-block" id="make_index"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.make_index">[docs]</a><span class="k">def</span> <span class="nf">make_index</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Utility for retrieving pandas dataframes.</span>
@@ -171,7 +177,9 @@
     <span class="n">digits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;num_generations&#39;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="n">digits</span><span class="p">)</span></div>
 
+
 <span class="n">gens_group_key</span> <span class="o">=</span> <span class="s1">&#39;generations&#39;</span>
+
 
 <div class="viewcode-block" id="store_gen"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.store_gen">[docs]</a><span class="k">def</span> <span class="nf">store_gen</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">population</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indiv_measurements</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Store a generation in the hdf5 data file.</span>
@@ -205,12 +213,14 @@
         <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
         <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="store_pop"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.store_pop">[docs]</a><span class="k">def</span> <span class="nf">store_pop</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen_data</span><span class="p">,</span> <span class="n">population</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Store a list of individuals in the hdf5 data file.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">population</span><span class="p">:</span>
         <span class="n">store_ind</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">ind</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">population</span><span class="p">]</span></div>
+
 
 <div class="viewcode-block" id="load_gen"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_gen">[docs]</a><span class="k">def</span> <span class="nf">load_gen</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load a generations metadata from the hdf5 data file.</span>
@@ -227,6 +237,7 @@
         <span class="k">return</span> <span class="n">gens_group</span><span class="p">[</span><span class="n">gen_key</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">gen</span></div>
 
+
 <div class="viewcode-block" id="load_pop"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_pop">[docs]</a><span class="k">def</span> <span class="nf">load_pop</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">ids_only</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load a generations population from the hdf5 data file.</span>
 
@@ -239,13 +250,14 @@
 <span class="sd">        loading the complete individuals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="n">load_gen</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;individuals&#39;</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;individuals&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">inds</span> <span class="o">=</span> <span class="n">gen</span><span class="p">[</span><span class="s1">&#39;individuals&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">ids_only</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">inds</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">load_ind</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inds</span><span class="p">]</span></div>
+
 
 <div class="viewcode-block" id="store_hof"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.store_hof">[docs]</a><span class="k">def</span> <span class="nf">store_hof</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Store the hall of fame in the hdf5 data file.&quot;&quot;&quot;</span>
@@ -257,9 +269,10 @@
     <span class="n">ids</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">hall_of_fame</span><span class="p">):]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
     <span class="k">if</span> <span class="s1">&#39;hall_of_fame&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="p">:</span>
-        <span class="n">hof_data</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;hall_of_fame&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;hall_of_fame&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="p">[</span><span class="s1">&#39;/hall_of_fame&#39;</span><span class="p">][</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">ids</span></div>
+
 
 <div class="viewcode-block" id="load_hof"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_hof">[docs]</a><span class="k">def</span> <span class="nf">load_hof</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load the hall of fame from the hdf5 data file.&quot;&quot;&quot;</span>
@@ -273,7 +286,7 @@
 <div class="viewcode-block" id="load_indiv_measurements"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_indiv_measurements">[docs]</a><span class="k">def</span> <span class="nf">load_indiv_measurements</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load the measurements for the individuals of a generation.&quot;&quot;&quot;</span>
     <span class="n">gen</span> <span class="o">=</span> <span class="n">load_gen</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">gen</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;indiv_measurements&#39;</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;indiv_measurements&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="c1"># https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">gen</span><span class="p">[</span><span class="s1">&#39;indiv_measurements&#39;</span><span class="p">]</span>
@@ -282,10 +295,12 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
+
 <div class="viewcode-block" id="stored_generations"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.stored_generations">[docs]</a><span class="k">def</span> <span class="nf">stored_generations</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of generations that metadata are available for.&quot;&quot;&quot;</span>
     <span class="n">gens_group</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="p">[</span><span class="n">gens_group_key</span><span class="p">]</span>
     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">gens_group</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
 
 <div class="viewcode-block" id="stored_populations"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.stored_populations">[docs]</a><span class="k">def</span> <span class="nf">stored_populations</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of generations that populations are available for.&quot;&quot;&quot;</span>
@@ -294,6 +309,7 @@
         <span class="n">gen</span> <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="n">stored_generations</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;individuals&#39;</span> <span class="ow">in</span> <span class="n">gens_group</span><span class="p">[</span><span class="n">gen</span><span class="p">]]</span></div>
 
+
 <div class="viewcode-block" id="stored_indiv_measurements"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.stored_indiv_measurements">[docs]</a><span class="k">def</span> <span class="nf">stored_indiv_measurements</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a list of generations that individuals measurements are available for.&quot;&quot;&quot;</span>
     <span class="n">gens_group</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">data_file</span><span class="p">[</span><span class="n">gens_group_key</span><span class="p">]</span>
@@ -301,19 +317,22 @@
         <span class="n">gen</span> <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="n">stored_generations</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;indiv_measurements&#39;</span> <span class="ow">in</span> <span class="n">gens_group</span><span class="p">[</span><span class="n">gen</span><span class="p">]]</span></div>
 
+
 <div class="viewcode-block" id="store_gen_metrics"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.store_gen_metrics">[docs]</a><span class="k">def</span> <span class="nf">store_gen_metrics</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">metrics</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Store generation metrics from metrics.json.&quot;&quot;&quot;</span>
     <span class="n">metrics</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">env_path</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;metrics.json&#39;</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="load_gen_metrics"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.load_gen_metrics">[docs]</a><span class="k">def</span> <span class="nf">load_gen_metrics</span><span class="p">(</span><span class="n">env</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load generation metrics from metrics.json.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">env_path</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;metrics.json&#39;</span><span class="p">))</span></div>
 
+
 <div class="viewcode-block" id="setup_params"><a class="viewcode-back" href="../../../rewann.environment.html#rewann.environment.environment.setup_params">[docs]</a><span class="k">def</span> <span class="nf">setup_params</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Set up parameters.</span>
 
 <span class="sd">    Based on default parameters create complete tree of parameters, get a new</span>
-<span class="sd">    subdirectory to write in, and derive objectives tuples from the parameters.+</span>
+<span class="sd">    subdirectory to write in, and derive objectives tuples from the parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># set up params based on path or dict and default parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>

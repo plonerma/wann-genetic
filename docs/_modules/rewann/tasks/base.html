@@ -40,23 +40,26 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+
 <div class="viewcode-block" id="Task"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task">[docs]</a><span class="k">class</span> <span class="nc">Task</span><span class="p">:</span>
     <span class="n">is_recurrent</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Task.load_training"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load_training">[docs]</a>    <span class="k">def</span> <span class="nf">load_training</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Task.load_training"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load_training">[docs]</a>    <span class="k">def</span> <span class="nf">load_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Task.load_test"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load_test">[docs]</a>    <span class="k">def</span> <span class="nf">load_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Task.load_test"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load_test">[docs]</a>    <span class="k">def</span> <span class="nf">load_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Task.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Task.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Task.get_data"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Task.get_data"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.Task.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
 
 <div class="viewcode-block" id="RecurrentTask"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.RecurrentTask">[docs]</a><span class="k">class</span> <span class="nc">RecurrentTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
     <span class="n">is_recurrent</span> <span class="o">=</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="ClassificationTask"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.ClassificationTask">[docs]</a><span class="k">class</span> <span class="nc">ClassificationTask</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">,</span> <span class="n">_y_labels</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
@@ -74,7 +77,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_labels</span>
 
-<div class="viewcode-block" id="ClassificationTask.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.ClassificationTask.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ClassificationTask.load"><a class="viewcode-back" href="../../../rewann.tasks.html#rewann.tasks.base.ClassificationTask.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">test</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">test</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_func</span><span class="p">(</span><span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
 

@@ -62,7 +62,7 @@
 
 <dl class="py method">
 <dt id="rewann.tasks.base.ClassificationTask.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#ClassificationTask.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.ClassificationTask.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#ClassificationTask.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.ClassificationTask.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -109,7 +109,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt id="rewann.tasks.base.Task.get_data">
-<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.get_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.get_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -119,17 +119,17 @@
 
 <dl class="py method">
 <dt id="rewann.tasks.base.Task.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="rewann.tasks.base.Task.load_test">
-<code class="sig-name descname">load_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load_test" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_test</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load_test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load_test" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="rewann.tasks.base.Task.load_training">
-<code class="sig-name descname">load_training</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load_training" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_training</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/base.html#Task.load_training"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.base.Task.load_training" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -175,13 +175,18 @@ source: <a class="reference external" href="https://github.com/vsvinayak/mnist-h
 <p>Module containig basic recurrent toy tasks.</p>
 <dl class="py class">
 <dt id="rewann.tasks.rnn.AddingTask">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">AddingTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#AddingTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.AddingTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">AddingTask</code><a class="reference internal" href="_modules/rewann/tasks/rnn.html#AddingTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.AddingTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rewann.tasks.base.RecurrentTask" title="rewann.tasks.base.RecurrentTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.tasks.base.RecurrentTask</span></code></a></p>
 <p>As described in “Unitary Evolution Recurrent Neural Networks”</p>
 <p>(see <a class="reference internal" href="tasks.html#adding-task"><span class="std std-ref">Adding Task</span></a>)</p>
 <dl class="py method">
 <dt id="rewann.tasks.rnn.AddingTask.get_data">
 <code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#AddingTask.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.AddingTask.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.tasks.rnn.AddingTask.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#AddingTask.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.AddingTask.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -194,11 +199,16 @@ source: <a class="reference external" href="https://github.com/vsvinayak/mnist-h
 <code class="sig-name descname">n_out</code><em class="property"> = 1</em><a class="headerlink" href="#rewann.tasks.rnn.AddingTask.n_out" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="rewann.tasks.rnn.AddingTask.sample_length">
+<code class="sig-name descname">sample_length</code><em class="property"> = 10</em><a class="headerlink" href="#rewann.tasks.rnn.AddingTask.sample_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt id="rewann.tasks.rnn.CopyTask">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">CopyTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#CopyTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.CopyTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">CopyTask</code><a class="reference internal" href="_modules/rewann/tasks/rnn.html#CopyTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.CopyTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rewann.tasks.base.RecurrentTask" title="rewann.tasks.base.RecurrentTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.tasks.base.RecurrentTask</span></code></a></p>
 <p>As described in “Unitary Evolution Recurrent Neural Networks”</p>
 <p>(see <a class="reference internal" href="tasks.html#copy-task"><span class="std std-ref">Copy Task</span></a>)</p>
@@ -210,6 +220,11 @@ source: <a class="reference external" href="https://github.com/vsvinayak/mnist-h
 <dl class="py method">
 <dt id="rewann.tasks.rnn.CopyTask.get_data">
 <code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#CopyTask.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.CopyTask.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.tasks.rnn.CopyTask.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#CopyTask.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.CopyTask.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -226,12 +241,17 @@ source: <a class="reference external" href="https://github.com/vsvinayak/mnist-h
 
 <dl class="py class">
 <dt id="rewann.tasks.rnn.EchoTask">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">EchoTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">dim</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#EchoTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.EchoTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">rewann.tasks.rnn.</code><code class="sig-name descname">EchoTask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">dim</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#EchoTask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.EchoTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#rewann.tasks.base.RecurrentTask" title="rewann.tasks.base.RecurrentTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.tasks.base.RecurrentTask</span></code></a></p>
 <p>(see <a class="reference internal" href="tasks.html#echo-task"><span class="std std-ref">Echo Task</span></a>)</p>
 <dl class="py method">
 <dt id="rewann.tasks.rnn.EchoTask.get_data">
 <code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#EchoTask.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.EchoTask.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="rewann.tasks.rnn.EchoTask.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/tasks/rnn.html#EchoTask.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.tasks.rnn.EchoTask.load" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

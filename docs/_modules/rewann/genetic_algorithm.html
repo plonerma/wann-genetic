@@ -59,7 +59,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">start_id</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edge_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 0 are initial edges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 0 are initial edges</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">individual_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -75,6 +75,7 @@
 
 <div class="viewcode-block" id="InnovationRecord.edge_exists"><a class="viewcode-back" href="../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.InnovationRecord.edge_exists">[docs]</a>    <span class="k">def</span> <span class="nf">edge_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span></div></div>
+
 
 <div class="viewcode-block" id="GeneticAlgorithm"><a class="viewcode-back" href="../../rewann.genetic_algorithm.html#rewann.genetic_algorithm.GeneticAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">GeneticAlgorithm</span><span class="p">:</span>
     <span class="n">population</span> <span class="o">=</span> <span class="kc">None</span>
@@ -106,19 +107,18 @@
         <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
 
         <span class="n">initial</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_genes&#39;</span><span class="p">]</span>
-        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;sampling&#39;</span><span class="p">,</span> <span class="s1">&#39;num_training_samples_per_iteration&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;empty&#39;</span><span class="p">:</span>
             <span class="n">base_ind</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">empty_initial</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">)</span>
-            <span class="n">express_inds</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="p">[</span><span class="n">base_ind</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_ind</span><span class="p">]</span><span class="o">*</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]</span>
 
         <span class="k">elif</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-            <span class="n">prob_enabled</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_enabled_edge_probability&#39;</span><span class="p">]</span>
+            <span class="n">prob_enabled</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_enabled_edge_prob&#39;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">full_initial</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">,</span>
+                    <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">full_initial</span><span class="p">(</span>
+                        <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">,</span>
                         <span class="nb">id</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">prob_enabled</span><span class="o">=</span><span class="n">prob_enabled</span><span class="p">,</span>  <span class="c1"># disable some edges</span>
                         <span class="n">negative_edges_allowed</span><span class="o">=</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enable_edge_signs&#39;</span><span class="p">]))</span>
 
@@ -144,7 +144,7 @@
 
         <span class="k">if</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;use_tournaments&#39;</span><span class="p">]:</span>
             <span class="n">participants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="o">-</span> <span class="n">culling_size</span><span class="p">,</span> <span class="c1"># last `culling_size` individuals are ignored</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="o">-</span> <span class="n">culling_size</span><span class="p">,</span>  <span class="c1"># last `culling_size` individuals are ignored</span>
                 <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">num_places_left</span><span class="p">,</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;tournament_size&#39;</span><span class="p">]))</span>
 
             <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">participants</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>

@@ -47,7 +47,6 @@
 <span class="kn">from</span> <span class="nn">.experiment_series</span> <span class="kn">import</span> <span class="n">ExperimentSeries</span>
 
 
-
 <div class="viewcode-block" id="generate_experiments"><a class="viewcode-back" href="../../../rewann.tools.html#rewann.tools.cli.generate_experiments">[docs]</a><span class="k">def</span> <span class="nf">generate_experiments</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Generate a series of experiments &quot;</span>
                             <span class="s2">&quot;based on specification and base parameters for &quot;</span>
@@ -61,7 +60,8 @@
 
     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
 
-    <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="o">.</span><span class="n">from_spec_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span><span class="o">.</span><span class="n">create_experiment_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">)</span></div>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="o">.</span><span class="n">from_spec_file</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span>
+    <span class="n">spec</span><span class="o">.</span><span class="n">create_experiment_files</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">build_dir</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
