@@ -7,7 +7,7 @@ setup(
     packages=find_packages(src_dir),
     package_dir={'': src_dir},
     author='Max Ploner',
-    version='0.1b.1',
+    version='0.1.0',
     author_email='wann_genetic@maxploner.de',
     #scripts=['src/wann_genetic/cli/inspect_run', 'src/wann_genetic/cli/inspect_run.py'],
     entry_points={
