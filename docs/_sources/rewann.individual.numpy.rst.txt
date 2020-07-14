@@ -1,21 +1,21 @@
-rewann.individual.numpy package
+wann_genetic.individual.numpy package
 ===============================
 
 Submodules
 ----------
 
-rewann.individual.numpy.ffnn module
+wann_genetic.individual.numpy.ffnn module
 -----------------------------------
 
-.. automodule:: rewann.individual.numpy.ffnn
+.. automodule:: wann_genetic.individual.numpy.ffnn
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.individual.numpy.rnn module
+wann_genetic.individual.numpy.rnn module
 ----------------------------------
 
-.. automodule:: rewann.individual.numpy.rnn
+.. automodule:: wann_genetic.individual.numpy.rnn
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ rewann.individual.numpy.rnn module
 Module contents
 ---------------
 
-.. automodule:: rewann.individual.numpy
+.. automodule:: wann_genetic.individual.numpy
    :members:
    :undoc-members:
    :show-inheritance:

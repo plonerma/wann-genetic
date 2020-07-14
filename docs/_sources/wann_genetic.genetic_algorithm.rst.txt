@@ -1,19 +1,19 @@
-wann_genetic.genetic\_algorithm package
-=================================
+wann\_genetic.genetic\_algorithm package
+========================================
 
 Submodules
 ----------
 
-wann_genetic.genetic\_algorithm.genetic\_operations module
-----------------------------------------------------
+wann\_genetic.genetic\_algorithm.genetic\_operations module
+-----------------------------------------------------------
 
 .. automodule:: wann_genetic.genetic_algorithm.genetic_operations
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.genetic\_algorithm.ranking module
-----------------------------------------
+wann\_genetic.genetic\_algorithm.ranking module
+-----------------------------------------------
 
 .. automodule:: wann_genetic.genetic_algorithm.ranking
    :members:

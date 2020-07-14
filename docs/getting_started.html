@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Getting Started &#8212; ReWann 0.1b.1 documentation</title>
+    <title>Getting Started &#8212; WANN (genetic) 0.1b.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -25,12 +25,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="example_report.html" title="Report iris_run"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Genetic Search for WANNs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,7 +47,7 @@
 <p>This guide is supposed to provide all the information required to run first experiments. For generating series of experiments see <a class="reference internal" href="experiment_series.html"><span class="doc">Generating Series of Experiments</span></a>.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>rewann</cite> package can be install from the repository via pip. It is recommended to install the package in a virtual environment as the installation will add binaries to the system path (see <a class="reference internal" href="cli.html"><span class="doc">Command Line Interfaces</span></a>). Make sure to create the environment with python3.</p>
+<p>The <cite>wann_genetic</cite> package can be install from the repository via pip. It is recommended to install the package in a virtual environment as the installation will add binaries to the system path (see <a class="reference internal" href="cli.html"><span class="doc">Command Line Interfaces</span></a>). Make sure to create the environment with python3.</p>
 <div class="section" id="installation-with-virtualenv">
 <h3>Installation with virtualenv<a class="headerlink" href="#installation-with-virtualenv" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the virtual environment</span>
@@ -54,7 +57,7 @@ python3 -m virtualenv -p python3 venv
 . venv/bin/activate
 
 <span class="c1"># install the package</span>
-pip install git+ssh://git@github.com/plonerma/rewann.git
+pip install git+ssh://git@github.com/plonerma/wann_genetic.git
 </pre></div>
 </div>
 </div>
@@ -94,7 +97,7 @@ Parameters that are not set in the spec file will take on default values. For a 
   <span class="n">num_samples</span><span class="o">=</span><span class="mi">-1</span>
 </pre></div>
 </div>
-<p>Store this file (eg. in <cite>iris.toml</cite>) and invoke rewann execution of the experiment via:</p>
+<p>Store this file (eg. in <cite>iris.toml</cite>) and invoke wann_genetic execution of the experiment via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>run_experiment iris.toml
 </pre></div>
 </div>
@@ -182,12 +185,15 @@ Parameters that are not set in the spec file will take on default values. For a 
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="example_report.html" title="Report iris_run"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Genetic Search for WANNs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

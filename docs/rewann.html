@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann package &#8212; ReWann 0.1b.1 documentation</title>
+    <title>wann_genetic package &#8212; WANN (genetic) 0.1b.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,9 +14,7 @@
     <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="rewann.environment package" href="rewann.environment.html" />
-    <link rel="prev" title="API" href="modules.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,14 +25,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="rewann.environment.html" title="rewann.environment package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="modules.html" title="API"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">API</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -43,133 +34,59 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="rewann-package">
-<h1>rewann package<a class="headerlink" href="#rewann-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="wann-genetic-package">
+<h1>wann_genetic package<a class="headerlink" href="#wann-genetic-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rewann.environment.html">rewann.environment package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.environment.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.environment.html#module-rewann.environment.environment">rewann.environment.environment module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.environment.html#module-rewann.environment.evaluation_util">rewann.environment.evaluation_util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.environment.html#module-rewann.environment.util">rewann.environment.util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.environment.html#module-rewann.environment">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rewann.genetic_algorithm.html">rewann.genetic_algorithm package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.genetic_algorithm.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.genetic_algorithm.html#module-rewann.genetic_algorithm.genetic_operations">rewann.genetic_algorithm.genetic_operations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.genetic_algorithm.html#module-rewann.genetic_algorithm.ranking">rewann.genetic_algorithm.ranking module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.genetic_algorithm.html#module-rewann.genetic_algorithm">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rewann.individual.html">rewann.individual package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rewann.individual.numpy.html">rewann.individual.numpy package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.numpy.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.numpy.html#module-rewann.individual.numpy.ffnn">rewann.individual.numpy.ffnn module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.numpy.html#module-rewann.individual.numpy.rnn">rewann.individual.numpy.rnn module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.numpy.html#module-rewann.individual.numpy">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="rewann.individual.torch.html">rewann.individual.torch package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.torch.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.torch.html#module-rewann.individual.torch.ffnn">rewann.individual.torch.ffnn module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.torch.html#module-rewann.individual.torch.rnn">rewann.individual.torch.rnn module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.individual.torch.html#module-rewann.individual.torch">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.genes">rewann.individual.genes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.individual_base">rewann.individual.individual_base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.network_base">rewann.individual.network_base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual.util">rewann.individual.util module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.individual.html#module-rewann.individual">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rewann.postopt.html">rewann.postopt package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.postopt.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rewann.postopt.vis.html">rewann.postopt.vis package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="rewann.postopt.vis.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.postopt.vis.html#module-rewann.postopt.vis.vis_network">rewann.postopt.vis.vis_network module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rewann.postopt.vis.html#module-rewann.postopt.vis">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.postopt.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.postopt.html#module-rewann.postopt.report">rewann.postopt.report module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.postopt.html#module-rewann.postopt">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rewann.tasks.html">rewann.tasks package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tasks.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tasks.html#module-rewann.tasks.base">rewann.tasks.base module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tasks.html#module-rewann.tasks.image">rewann.tasks.image module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tasks.html#module-rewann.tasks.rnn">rewann.tasks.rnn module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tasks.html#module-rewann.tasks">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rewann.tools.html">rewann.tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tools.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tools.html#module-rewann.tools.cli">rewann.tools.cli module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tools.html#module-rewann.tools.compare_experiments">rewann.tools.compare_experiments module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tools.html#module-rewann.tools.experiment_series">rewann.tools.experiment_series module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rewann.tools.html#module-rewann.tools">Module contents</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-rewann.util">
-<span id="rewann-util-module"></span><h2>rewann.util module<a class="headerlink" href="#module-rewann.util" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="rewann.util.ParamTree">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.util.</code><code class="sig-name descname">ParamTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict</span></em>, <em class="sig-param"><span class="o">/</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/util.html#ParamTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.ParamTree" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="wann-genetic-util-module">
+<h2>wann_genetic.util module<a class="headerlink" href="#wann-genetic-util-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-wann_genetic.util"></span><dl class="py class">
+<dt id="wann_genetic.util.ParamTree">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.util.</code><code class="sig-name descname">ParamTree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict</span></em>, <em class="sig-param"><span class="o">/</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/util.html#ParamTree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.util.ParamTree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.UserDict" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.UserDict</span></code></a></p>
 <p>Wraps a dict to allow access of fields via list of keys.</p>
 <dl class="py method">
-<dt id="rewann.util.ParamTree.params">
-<em class="property">property </em><code class="sig-name descname">params</code><a class="headerlink" href="#rewann.util.ParamTree.params" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.util.ParamTree.params">
+<em class="property">property </em><code class="sig-name descname">params</code><a class="headerlink" href="#wann_genetic.util.ParamTree.params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.util.ParamTree.update_params">
-<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/util.html#ParamTree.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.ParamTree.update_params" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.util.ParamTree.update_params">
+<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/util.html#ParamTree.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.util.ParamTree.update_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a nested update on the stored parameters.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.util.ParamTree.update_params_at">
-<code class="sig-name descname">update_params_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keys</span></em>, <em class="sig-param"><span class="n">update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/util.html#ParamTree.update_params_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.ParamTree.update_params_at" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.util.ParamTree.update_params_at">
+<code class="sig-name descname">update_params_at</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keys</span></em>, <em class="sig-param"><span class="n">update</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/util.html#ParamTree.update_params_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.util.ParamTree.update_params_at" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a nested update on the stored parameters starting at field referenced by keys.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.util.get_array_field">
-<code class="sig-prename descclassname">rewann.util.</code><code class="sig-name descname">get_array_field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/util.html#get_array_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.get_array_field" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.util.get_array_field">
+<code class="sig-prename descclassname">wann_genetic.util.</code><code class="sig-name descname">get_array_field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a></span></em>, <em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/util.html#get_array_field"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.util.get_array_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return field if it exists else return default value.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.util.nested_update">
-<code class="sig-prename descclassname">rewann.util.</code><code class="sig-name descname">nested_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.8)">collections.abc.MutableMapping</a></span></em>, <em class="sig-param"><span class="n">u</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.8)">collections.abc.MutableMapping</a><a class="reference internal" href="_modules/rewann/util.html#nested_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.util.nested_update" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.util.nested_update">
+<code class="sig-prename descclassname">wann_genetic.util.</code><code class="sig-name descname">nested_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.8)">collections.abc.MutableMapping</a></span></em>, <em class="sig-param"><span class="n">u</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping" title="(in Python v3.8)">collections.abc.MutableMapping</a><a class="reference internal" href="_modules/wann_genetic/util.html#nested_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.util.nested_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update nested parameters.</p>
 <p>Source:
 <a class="reference external" href="https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth#3233356">https://stackoverflow.com/questions/3232943/update-value-of-a-nested-dictionary-of-varying-depth#3233356</a></p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-rewann">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rewann" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-wann_genetic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wann_genetic" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -179,12 +96,6 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="modules.html"
-                        title="previous chapter">API</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="rewann.environment.html"
-                        title="next chapter">rewann.environment package</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -208,14 +119,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="rewann.environment.html" title="rewann.environment package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="modules.html" title="API"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

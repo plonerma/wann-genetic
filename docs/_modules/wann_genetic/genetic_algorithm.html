@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>wann_genetic.genetic_algorithm &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for wann_genetic.genetic_algorithm</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Implementation of an evolutionary algorithm&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.genetic_operations</span> <span class="kn">import</span> <span class="n">mutation</span>
+<span class="kn">from</span> <span class="nn">.ranking</span> <span class="kn">import</span> <span class="n">rank_individuals</span>
+
+
+<div class="viewcode-block" id="InnovationRecord"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord">[docs]</a><span class="k">class</span> <span class="nc">InnovationRecord</span><span class="p">(</span><span class="nb">set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Keeps track of edge and node counts.</span>
+
+<span class="sd">    Edge ids need to be tracked if crossover should ever be implemented.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="InnovationRecord.empty"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord.empty">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">start_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize empty innovation record.</span>
+
+<span class="sd">        start_id : ids of new nodes (hidden) start at start_id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">node_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="n">start_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 0 are initial edges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">individual_counter</span> <span class="o">=</span> <span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InnovationRecord.next_ind_id"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord.next_ind_id">[docs]</a>    <span class="k">def</span> <span class="nf">next_ind_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">individual_counter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InnovationRecord.next_edge_id"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord.next_edge_id">[docs]</a>    <span class="k">def</span> <span class="nf">next_edge_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_counter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InnovationRecord.next_node_id"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord.next_node_id">[docs]</a>    <span class="k">def</span> <span class="nf">next_node_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_counter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InnovationRecord.edge_exists"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.InnovationRecord.edge_exists">[docs]</a>    <span class="k">def</span> <span class="nf">edge_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="GeneticAlgorithm"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">GeneticAlgorithm</span><span class="p">:</span>
+    <span class="n">population</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">hall_of_fame</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
+
+        <span class="c1"># first hidden id after ins, bias, &amp; outs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">innov</span> <span class="o">=</span> <span class="n">InnovationRecord</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GeneticAlgorithm.ask"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_initial_pop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evolve_population</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span></div>
+
+<div class="viewcode-block" id="GeneticAlgorithm.tell"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.tell">[docs]</a>    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rank_population</span><span class="p">(</span><span class="n">obj_values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GeneticAlgorithm.rank_population"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.rank_population">[docs]</a>    <span class="k">def</span> <span class="nf">rank_population</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_values</span><span class="p">):</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">rank_individuals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="n">obj_values</span><span class="p">,</span> <span class="n">return_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GeneticAlgorithm.create_initial_pop"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.create_initial_pop">[docs]</a>    <span class="k">def</span> <span class="nf">create_initial_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create initial population based on parameters.&quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
+
+        <span class="n">initial</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_genes&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;empty&#39;</span><span class="p">:</span>
+            <span class="n">base_ind</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">empty_initial</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_ind</span><span class="p">]</span><span class="o">*</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">initial</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="n">prob_enabled</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_enabled_edge_prob&#39;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">env</span><span class="o">.</span><span class="n">ind_class</span><span class="o">.</span><span class="n">full_initial</span><span class="p">(</span>
+                        <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_in</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">n_out</span><span class="p">,</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">prob_enabled</span><span class="o">=</span><span class="n">prob_enabled</span><span class="p">,</span>  <span class="c1"># disable some edges</span>
+                        <span class="n">negative_edges_allowed</span><span class="o">=</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;enable_edge_signs&#39;</span><span class="p">]))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown initial genes type </span><span class="si">{</span><span class="n">initial</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GeneticAlgorithm.evolve_population"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.evolve_population">[docs]</a>    <span class="k">def</span> <span class="nf">evolve_population</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply tournaments if enabled, and mutate surivers.</span>
+
+<span class="sd">        Population is assumed to be ordered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
+        <span class="n">pop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+
+        <span class="n">pop_size</span> <span class="o">=</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;population&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">]</span>
+        <span class="n">culling_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;culling_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pop_size</span><span class="p">))</span>
+
+        <span class="c1"># Elitism (best `elite_size` individual surive without mutation)</span>
+        <span class="n">new_pop</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[:</span><span class="n">env</span><span class="o">.</span><span class="n">elite_size</span><span class="p">]</span>
+
+        <span class="n">num_places_left</span> <span class="o">=</span> <span class="n">pop_size</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_pop</span><span class="p">)</span>
+        <span class="n">winner</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;use_tournaments&#39;</span><span class="p">]:</span>
+            <span class="n">participants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span> <span class="o">-</span> <span class="n">culling_size</span><span class="p">,</span>  <span class="c1"># last `culling_size` individuals are ignored</span>
+                <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">num_places_left</span><span class="p">,</span> <span class="n">env</span><span class="p">[</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;tournament_size&#39;</span><span class="p">]))</span>
+
+            <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">participants</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">winner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_places_left</span><span class="p">)</span>
+
+        <span class="c1"># Breed child population</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">winner</span><span class="p">:</span>
+            <span class="c1"># Mutation only: take only fittest parent</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="k">assert</span> <span class="n">child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">new_pop</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">new_pop</span></div>
+
+<div class="viewcode-block" id="GeneticAlgorithm.mutate"><a class="viewcode-back" href="../../wann_genetic.genetic_algorithm.html#wann_genetic.genetic_algorithm.GeneticAlgorithm.mutate">[docs]</a>    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">individual</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">mutation</span><span class="p">(</span><span class="n">individual</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">innov</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

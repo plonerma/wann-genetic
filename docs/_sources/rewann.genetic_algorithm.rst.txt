@@ -1,21 +1,21 @@
-rewann.genetic\_algorithm package
+wann_genetic.genetic\_algorithm package
 =================================
 
 Submodules
 ----------
 
-rewann.genetic\_algorithm.genetic\_operations module
+wann_genetic.genetic\_algorithm.genetic\_operations module
 ----------------------------------------------------
 
-.. automodule:: rewann.genetic_algorithm.genetic_operations
+.. automodule:: wann_genetic.genetic_algorithm.genetic_operations
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.genetic\_algorithm.ranking module
+wann_genetic.genetic\_algorithm.ranking module
 ----------------------------------------
 
-.. automodule:: rewann.genetic_algorithm.ranking
+.. automodule:: wann_genetic.genetic_algorithm.ranking
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ rewann.genetic\_algorithm.ranking module
 Module contents
 ---------------
 
-.. automodule:: rewann.genetic_algorithm
+.. automodule:: wann_genetic.genetic_algorithm
    :members:
    :undoc-members:
    :show-inheritance:

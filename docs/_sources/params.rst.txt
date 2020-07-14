@@ -7,7 +7,7 @@ format.
 
 If a parameter has not been defined in the experiment specification file, the
 algorithm will fall back to parameters found in
-:file:`rewann/environment/default.toml`.
+:file:`wann_genetic/environment/default.toml`.
 
 Using a base and a series spec file, series of experiments with varying hyper
 parameters can be generated (refer to :doc:`experiment_series`).
@@ -41,7 +41,7 @@ task
   | Parameter                 | Default     | Description                                                |
   +===========================+=============+============================================================+
   | name                      | 'iris'      | Task to train on (available tasks are defined in           |
-  |                           |             | ``rewann.tasks``).                                         |
+  |                           |             | ``wann_genetic.tasks``).                                         |
   +---------------------------+-------------+------------------------------------------------------------+
 
 

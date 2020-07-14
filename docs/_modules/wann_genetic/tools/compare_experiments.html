@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>wann_genetic.tools.compare_experiments &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for wann_genetic.tools.compare_experiments</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+
+
+<span class="kn">from</span> <span class="nn">.experiment_series</span> <span class="kn">import</span> <span class="n">ExperimentSeries</span>
+
+
+<div class="viewcode-block" id="load_series_stats"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.compare_experiments.load_series_stats">[docs]</a><span class="k">def</span> <span class="nf">load_series_stats</span><span class="p">(</span><span class="n">spec_path</span><span class="p">,</span> <span class="n">dir_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">ExperimentSeries</span><span class="o">.</span><span class="n">from_spec_file</span><span class="p">(</span><span class="n">spec_path</span><span class="p">)</span>
+    <span class="n">spec</span><span class="o">.</span><span class="n">discover_data_dir</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spec</span><span class="o">.</span><span class="n">assemble_stats</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="mean_comparison"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.compare_experiments.mean_comparison">[docs]</a><span class="k">def</span> <span class="nf">mean_comparison</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">group_var</span><span class="p">,</span> <span class="n">group_values</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="s1">&#39;mean accuracy&#39;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">group_values</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">v1</span> <span class="o">==</span> <span class="n">v2</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">g1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">v1</span><span class="p">][</span><span class="n">measure</span><span class="p">]</span>
+        <span class="n">g2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_var</span><span class="p">]</span> <span class="o">==</span> <span class="n">v2</span><span class="p">][</span><span class="n">measure</span><span class="p">]</span>
+
+        <span class="c1"># greater-than test</span>
+        <span class="n">t</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_var</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v1</span><span class="si">}</span><span class="s2"> is significantly (</span><span class="si">{</span><span class="n">p</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">) better than </span><span class="si">{</span><span class="n">group_var</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

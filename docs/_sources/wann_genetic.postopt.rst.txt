@@ -1,5 +1,5 @@
-wann_genetic.postopt package
-======================
+wann\_genetic.postopt package
+=============================
 
 Subpackages
 -----------
@@ -12,8 +12,8 @@ Subpackages
 Submodules
 ----------
 
-wann_genetic.postopt.report module
-----------------------------
+wann\_genetic.postopt.report module
+-----------------------------------
 
 .. automodule:: wann_genetic.postopt.report
    :members:

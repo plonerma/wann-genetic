@@ -1,5 +1,5 @@
-wann_genetic.individual package
-=========================
+wann\_genetic.individual package
+================================
 
 Subpackages
 -----------
@@ -13,32 +13,32 @@ Subpackages
 Submodules
 ----------
 
-wann_genetic.individual.genes module
-------------------------------
+wann\_genetic.individual.genes module
+-------------------------------------
 
 .. automodule:: wann_genetic.individual.genes
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.individual.individual\_base module
------------------------------------------
+wann\_genetic.individual.individual\_base module
+------------------------------------------------
 
 .. automodule:: wann_genetic.individual.individual_base
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.individual.network\_base module
---------------------------------------
+wann\_genetic.individual.network\_base module
+---------------------------------------------
 
 .. automodule:: wann_genetic.individual.network_base
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.individual.util module
------------------------------
+wann\_genetic.individual.util module
+------------------------------------
 
 .. automodule:: wann_genetic.individual.util
    :members:

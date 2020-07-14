@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>wann_genetic.individual.torch package &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="wann_genetic.postopt package" href="wann_genetic.postopt.html" />
+    <link rel="prev" title="wann_genetic.individual.numpy package" href="wann_genetic.individual.numpy.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="wann_genetic.postopt.html" title="wann_genetic.postopt package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="wann_genetic.individual.numpy.html" title="wann_genetic.individual.numpy package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="wann_genetic.html" >wann_genetic package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="wann_genetic.individual.html" accesskey="U">wann_genetic.individual package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="wann-genetic-individual-torch-package">
+<h1>wann_genetic.individual.torch package<a class="headerlink" href="#wann-genetic-individual-torch-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-wann_genetic.individual.torch.ffnn">
+<span id="wann-genetic-individual-torch-ffnn-module"></span><h2>wann_genetic.individual.torch.ffnn module<a class="headerlink" href="#module-wann_genetic.individual.torch.ffnn" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.ffnn.ConcatLayer">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.ffnn.</code><code class="sig-name descname">ConcatLayer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shared_weight</span></em>, <em class="sig-param"><span class="n">connections</span></em>, <em class="sig-param"><span class="n">node_act_funcs</span></em>, <em class="sig-param"><span class="n">all_act_funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#ConcatLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.ConcatLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Contatenates output of the active nodes and prior nodes.</p>
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.ffnn.ConcatLayer.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#ConcatLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.ConcatLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.ffnn.MultiActivationModule">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.ffnn.</code><code class="sig-name descname">MultiActivationModule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_act_funcs</span></em>, <em class="sig-param"><span class="n">all_act_funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#MultiActivationModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.MultiActivationModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Applies multiple elementwise activation functions to a tensor.</p>
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.ffnn.MultiActivationModule.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#MultiActivationModule.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.MultiActivationModule.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.ffnn.Network">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.ffnn.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wann_genetic.individual.html#wann_genetic.individual.network_base.BaseFFNN" title="wann_genetic.individual.network_base.BaseFFNN"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.network_base.BaseFFNN</span></code></a></p>
+<p>Torch implmentation of a Feed Forward Neural Network</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="torch_network.html"><span class="doc">Torch Implementation of WANNs</span></a>.</p>
+</div>
+<dl class="py attribute">
+<dt id="wann_genetic.individual.torch.ffnn.Network.available_act_functions">
+<code class="sig-name descname">available_act_functions</code><em class="property"> = [('relu', &lt;built-in method relu of type object&gt;), ('sigmoid', &lt;built-in method sigmoid of type object&gt;), ('tanh', &lt;built-in method tanh of type object&gt;), ('gaussian (standard)', &lt;function Network.&lt;lambda&gt;&gt;), ('step', &lt;function Network.&lt;lambda&gt;&gt;), ('identity', &lt;function Network.&lt;lambda&gt;&gt;), ('inverse', &lt;built-in method neg of type object&gt;), ('squared', &lt;built-in method square of type object&gt;), ('abs', &lt;built-in method abs of type object&gt;), ('cos', &lt;built-in method cos of type object&gt;), ('sin', &lt;built-in method sin of type object&gt;)]</em><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.Network.available_act_functions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.ffnn.Network.get_measurements">
+<code class="sig-name descname">get_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y_true</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">measures</span><span class="o">=</span><span class="default_value">['predictions']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#Network.get_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.Network.get_measurements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.ffnn.Network.measurements_from_output">
+<code class="sig-name descname">measurements_from_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y_raw</span></em>, <em class="sig-param"><span class="n">y_true</span></em>, <em class="sig-param"><span class="n">measures</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/ffnn.html#Network.measurements_from_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.ffnn.Network.measurements_from_output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wann_genetic.individual.torch.rnn">
+<span id="wann-genetic-individual-torch-rnn-module"></span><h2>wann_genetic.individual.torch.rnn module<a class="headerlink" href="#module-wann_genetic.individual.torch.rnn" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.rnn.Network">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.rnn.</code><code class="sig-name descname">Network</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/rnn.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.rnn.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wann_genetic.individual.html#wann_genetic.individual.network_base.BaseRNN" title="wann_genetic.individual.network_base.BaseRNN"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.network_base.BaseRNN</span></code></a>, <a class="reference internal" href="#wann_genetic.individual.torch.ffnn.Network" title="wann_genetic.individual.torch.ffnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.torch.ffnn.Network</span></code></a></p>
+<p>Torch implmentation of a Recurrent Neural Network</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="torch_network.html"><span class="doc">Torch Implementation of WANNs</span></a>.</p>
+</div>
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.rnn.Network.get_measurements">
+<code class="sig-name descname">get_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y_true</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">measures</span><span class="o">=</span><span class="default_value">['predictions']</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/rnn.html#Network.get_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.rnn.Network.get_measurements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.rnn.ReConcatLayer">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.rnn.</code><code class="sig-name descname">ReConcatLayer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">shared_weight</span></em>, <em class="sig-param"><span class="n">ff_weight</span></em>, <em class="sig-param"><span class="n">re_weight</span></em>, <em class="sig-param"><span class="n">node_act_funcs</span></em>, <em class="sig-param"><span class="n">all_act_funcs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/rnn.html#ReConcatLayer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.rnn.ReConcatLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Contatenates output of the active nodes and prior nodes (recurrent).</p>
+<dl class="py method">
+<dt id="wann_genetic.individual.torch.rnn.ReConcatLayer.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch/rnn.html#ReConcatLayer.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.rnn.ReConcatLayer.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-wann_genetic.individual.torch">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wann_genetic.individual.torch" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.Individual">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.</code><code class="sig-name descname">Individual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">birth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mutations</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch.html#Individual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.Individual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wann_genetic.individual.html#wann_genetic.individual.individual_base.IndividualBase" title="wann_genetic.individual.individual_base.IndividualBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.individual_base.IndividualBase</span></code></a></p>
+<dl class="py attribute">
+<dt id="wann_genetic.individual.torch.Individual.Phenotype">
+<code class="sig-name descname">Phenotype</code><a class="headerlink" href="#wann_genetic.individual.torch.Individual.Phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#wann_genetic.individual.torch.ffnn.Network" title="wann_genetic.individual.torch.ffnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.torch.ffnn.Network</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="wann_genetic.individual.torch.RecurrentIndividual">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.individual.torch.</code><code class="sig-name descname">RecurrentIndividual</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">genes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">network</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">birth</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mutations</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/individual/torch.html#RecurrentIndividual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.individual.torch.RecurrentIndividual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="wann_genetic.individual.html#wann_genetic.individual.individual_base.RecurrentIndividualBase" title="wann_genetic.individual.individual_base.RecurrentIndividualBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.individual_base.RecurrentIndividualBase</span></code></a></p>
+<dl class="py attribute">
+<dt id="wann_genetic.individual.torch.RecurrentIndividual.Phenotype">
+<code class="sig-name descname">Phenotype</code><a class="headerlink" href="#wann_genetic.individual.torch.RecurrentIndividual.Phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#wann_genetic.individual.torch.rnn.Network" title="wann_genetic.individual.torch.rnn.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.individual.torch.rnn.Network</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="wann_genetic.individual.numpy.html"
+                        title="previous chapter">wann_genetic.individual.numpy package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="wann_genetic.postopt.html"
+                        title="next chapter">wann_genetic.postopt package</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="wann_genetic.postopt.html" title="wann_genetic.postopt package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="wann_genetic.individual.numpy.html" title="wann_genetic.individual.numpy package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="wann_genetic.html" >wann_genetic package</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="wann_genetic.individual.html" >wann_genetic.individual package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Max Ploner.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

@@ -1,13 +1,13 @@
-rewann.postopt.vis package
+wann_genetic.postopt.vis package
 ==========================
 
 Submodules
 ----------
 
-rewann.postopt.vis.vis\_network module
+wann_genetic.postopt.vis.vis\_network module
 --------------------------------------
 
-.. automodule:: rewann.postopt.vis.vis_network
+.. automodule:: wann_genetic.postopt.vis.vis_network
    :members:
    :undoc-members:
    :show-inheritance:
@@ -16,7 +16,7 @@ rewann.postopt.vis.vis\_network module
 Module contents
 ---------------
 
-.. automodule:: rewann.postopt.vis
+.. automodule:: wann_genetic.postopt.vis
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,5 +1,5 @@
-wann_genetic package
-==============
+wann\_genetic package
+=====================
 
 Subpackages
 -----------
@@ -17,8 +17,8 @@ Subpackages
 Submodules
 ----------
 
-wann_genetic.util module
-------------------
+wann\_genetic.util module
+-------------------------
 
 .. automodule:: wann_genetic.util
    :members:

@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>rewann.environment package &#8212; ReWann 0.1b.1 documentation</title>
+    <title>wann_genetic.environment package &#8212; WANN (genetic) 0.1b.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,9 +14,7 @@
     <script src="_static/language_data.js"></script>
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="rewann.genetic_algorithm package" href="rewann.genetic_algorithm.html" />
-    <link rel="prev" title="rewann package" href="rewann.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,15 +25,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="rewann.genetic_algorithm.html" title="rewann.genetic_algorithm package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="rewann.html" title="rewann package"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="rewann.html" accesskey="U">rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,17 +34,17 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="rewann-environment-package">
-<h1>rewann.environment package<a class="headerlink" href="#rewann-environment-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="wann-genetic-environment-package">
+<h1>wann_genetic.environment package<a class="headerlink" href="#wann-genetic-environment-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-rewann.environment.environment">
-<span id="rewann-environment-environment-module"></span><h2>rewann.environment.environment module<a class="headerlink" href="#module-rewann.environment.environment" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="rewann.environment.environment.Environment">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.environment.environment.</code><code class="sig-name descname">Environment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="rewann.html#rewann.util.ParamTree" title="rewann.util.ParamTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">rewann.util.ParamTree</span></code></a></p>
+<div class="section" id="wann-genetic-environment-environment-module">
+<h2>wann_genetic.environment.environment module<a class="headerlink" href="#wann-genetic-environment-environment-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-wann_genetic.environment.environment"></span><dl class="py class">
+<dt id="wann_genetic.environment.environment.Environment">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.environment.environment.</code><code class="sig-name descname">Environment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rewann.html#wann_genetic.util.ParamTree" title="wann_genetic.util.ParamTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">wann_genetic.util.ParamTree</span></code></a></p>
 <p>Environment for executing training and post training evaluations.</p>
 <p>Takes care of process pool, reporting, and experiment parameters.</p>
 <dl class="field-list simple">
@@ -64,48 +54,48 @@ file.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="rewann.environment.environment.Environment.default_params">
-<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'backend': 'numpy', 'debug': True, 'num_workers': 1}, 'mutation': {'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'new_recurrent_edge': {'probability': 0.2, 'strategy': 'any'}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_funcs': 'all', 'hof_size': 10, 'initial_enabled_edge_prob': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_samples_per_iteration': -1, 'num_weights_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'log_filename': 'execution.log'}, 'task': {'name': 'iris', 'num_categories': 8, 'sample_length': 10, 'sample_order_seed': 0, 'test_portion': 0.2}}</em><a class="headerlink" href="#rewann.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.default_params">
+<code class="sig-name descname">default_params</code><em class="property"> = {'config': {'backend': 'numpy', 'debug': True, 'num_workers': 1}, 'mutation': {'change_activation': {'probability': 0.5}, 'change_edge_sign': {'probability': 0.2}, 'new_edge': {'probability': 0.2, 'strategy': 'layer_agnostic'}, 'new_node': {'probability': 0.25}, 'new_recurrent_edge': {'probability': 0.2, 'strategy': 'any'}, 'reenable_edge': {'probability': 0.05}}, 'population': {'enable_edge_signs': False, 'enabled_activation_funcs': 'all', 'hof_size': 10, 'initial_enabled_edge_prob': 0.05, 'initial_genes': 'full', 'num_generations': 20, 'size': 64}, 'postopt': {'compile_report': True, 'num_samples': 1000, 'num_weights': 100, 'run_postopt': True}, 'sampling': {'distribution': 'uniform', 'hof_evaluation_iterations': 20, 'lower_bound': -2, 'mean': 0, 'num_samples_per_iteration': -1, 'num_weights_per_iteration': 1, 'post_init_seed': False, 'seed': 0, 'sigma': 1, 'upper_bound': 2}, 'selection': {'culling_ratio': 0.2, 'elite_ratio': 0.1, 'hof_metric': 'accuracy.mean', 'objectives': ['-log_loss.min', '-log_loss.mean', '-n_hidden'], 'recorded_metrics': ['accuracy', 'kappa', 'log_loss'], 'tournament_size': 5, 'use_tournaments': True}, 'storage': {'commit_elite_freq': -1, 'commit_metrics_freq': 10, 'data_base_path': 'data', 'log_filename': 'execution.log'}, 'task': {'name': 'iris', 'num_categories': 8, 'sample_length': 10, 'sample_order_seed': 0, 'test_portion': 0.2}}</em><a class="headerlink" href="#wann_genetic.environment.environment.Environment.default_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.elite_size">
-<em class="property">property </em><code class="sig-name descname">elite_size</code><a class="headerlink" href="#rewann.environment.environment.Environment.elite_size" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.elite_size">
+<em class="property">property </em><code class="sig-name descname">elite_size</code><a class="headerlink" href="#wann_genetic.environment.environment.Environment.elite_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Size of the elite (<span class="math notranslate nohighlight">\(population\ size * elite\ ratio\)</span>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.env_path">
-<code class="sig-name descname">env_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">parts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.env_path" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.env_path">
+<code class="sig-name descname">env_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">parts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.env_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get path string relative to experiment subdirectory.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.load_gen_metrics">
-<code class="sig-name descname">load_gen_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.load_gen_metrics">
+<code class="sig-name descname">load_gen_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.load_gen_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load generation metrics from metrics.json.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.load_hof">
-<code class="sig-name descname">load_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_hof" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.load_hof">
+<code class="sig-name descname">load_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.load_hof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the hall of fame from the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.load_indiv_measurements">
-<code class="sig-name descname">load_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.load_indiv_measurements">
+<code class="sig-name descname">load_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.load_indiv_measurements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the measurements for the individuals of a generation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.load_pop">
-<code class="sig-name descname">load_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">ids_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.load_pop" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.load_pop">
+<code class="sig-name descname">load_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">ids_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.load_pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a generations population from the hdf5 data file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>rewann.Environment</em>) – </p></li>
+<li><p><strong>env</strong> (<em>wann_genetic.Environment</em>) – </p></li>
 <li><p><strong>gen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – </p></li>
 <li><p><strong>ids_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Only return the ids of the individuals in this generation instead of
 loading the complete individuals.</p></li>
@@ -115,8 +105,8 @@ loading the complete individuals.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.open_data">
-<code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.open_data" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.open_data">
+<code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.open_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open hdf5-file that contains the evolved individuals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -126,18 +116,18 @@ loading the complete individuals.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.optimize">
-<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.optimize" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.optimize">
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.optimize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.pool_map">
-<code class="sig-name descname">pool_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">iter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.pool_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.pool_map" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.pool_map">
+<code class="sig-name descname">pool_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em>, <em class="sig-param"><span class="n">iter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.pool_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.pool_map" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.population_metrics">
-<code class="sig-name descname">population_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">gen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">return_indiv_measurements</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.population_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.population_metrics" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.population_metrics">
+<code class="sig-name descname">population_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">gen</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">return_indiv_measurements</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.population_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.population_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get available measurements for all individuals in the population and
 calculate statistical key metrics.</p>
 <p>The statistical key metrics include:</p>
@@ -153,7 +143,7 @@ maximum <span class="math notranslate nohighlight">\((0,4)\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>population</strong> (<em>[</em><em>rewann.Individual</em><em>]</em>) – List of individuals that constitute the population.</p></li>
+<li><p><strong>population</strong> (<em>[</em><em>wann_genetic.Individual</em><em>]</em>) – List of individuals that constitute the population.</p></li>
 <li><p><strong>gen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Current generation index (required for caluclating the individuals
 age).</p></li>
 <li><p><strong>return_indiv_measurements</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to return the individual measurements as well.</p></li>
@@ -170,24 +160,24 @@ metrics and a list of individual measurements).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.post_optimization">
-<code class="sig-name descname">post_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.post_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.post_optimization" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.post_optimization">
+<code class="sig-name descname">post_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.post_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.post_optimization" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.run" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run optization and post optimization (if enabled).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.sample_weights">
-<code class="sig-name descname">sample_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.sample_weights" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.sample_weights">
+<code class="sig-name descname">sample_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.sample_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.sample_weights" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.seed">
-<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.seed" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.seed">
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.seed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set seed to <cite>seed</cite> or from parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -197,39 +187,39 @@ metrics and a list of individual measurements).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.setup_optimization">
-<code class="sig-name descname">setup_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.setup_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.setup_optimization" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.setup_optimization">
+<code class="sig-name descname">setup_optimization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.setup_optimization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.setup_optimization" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup everything that is required for training (eg. loading test
 samples).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.setup_params">
-<code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.setup_params" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.setup_params">
+<code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.setup_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up parameters.</p>
 <p>Based on default parameters create complete tree of parameters, get a new
 subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.setup_pool">
-<code class="sig-name descname">setup_pool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.setup_pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.setup_pool" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.setup_pool">
+<code class="sig-name descname">setup_pool</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.setup_pool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.setup_pool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup process pool.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.store_data">
-<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#Environment.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.Environment.store_data" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.store_data">
+<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#Environment.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.Environment.store_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.store_gen">
-<code class="sig-name descname">store_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">population</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indiv_measurements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_gen" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.store_gen">
+<code class="sig-name descname">store_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">population</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indiv_measurements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.store_gen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a generation in the hdf5 data file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>population</strong> (<em>[</em><em>rewann.Individual</em><em>]</em><em>, </em><em>optional</em>) – List of individuals to store for this generation.</p></li>
+<li><p><strong>population</strong> (<em>[</em><em>wann_genetic.Individual</em><em>]</em><em>, </em><em>optional</em>) – List of individuals to store for this generation.</p></li>
 <li><p><strong>indiv_measurements</strong> – Individuals measurements to store for this generation.</p></li>
 </ul>
 </dd>
@@ -237,48 +227,48 @@ subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.store_gen_metrics">
-<code class="sig-name descname">store_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metrics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.store_gen_metrics">
+<code class="sig-name descname">store_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metrics</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.store_gen_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store generation metrics from metrics.json.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.store_hof">
-<code class="sig-name descname">store_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.store_hof" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.store_hof">
+<code class="sig-name descname">store_hof</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.store_hof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the hall of fame in the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.stored_indiv_measurements">
-<code class="sig-name descname">stored_indiv_measurements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.stored_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.stored_indiv_measurements">
+<code class="sig-name descname">stored_indiv_measurements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.stored_indiv_measurements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of generations that individuals measurements are available for.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.environment.Environment.stored_populations">
-<code class="sig-name descname">stored_populations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rewann.environment.environment.Environment.stored_populations" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.Environment.stored_populations">
+<code class="sig-name descname">stored_populations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#wann_genetic.environment.environment.Environment.stored_populations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of generations that populations are available for.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.environment.run_experiment">
-<code class="sig-prename descclassname">rewann.environment.environment.</code><code class="sig-name descname">run_experiment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/environment.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.environment.run_experiment" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.environment.run_experiment">
+<code class="sig-prename descclassname">wann_genetic.environment.environment.</code><code class="sig-name descname">run_experiment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/environment.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.environment.run_experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Execute an experiment (see <a class="reference internal" href="cli.html"><span class="doc">Command Line Interfaces</span></a>).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-rewann.environment.evaluation_util">
-<span id="rewann-environment-evaluation-util-module"></span><h2>rewann.environment.evaluation_util module<a class="headerlink" href="#module-rewann.environment.evaluation_util" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="rewann.environment.evaluation_util.evaluate_inds">
-<code class="sig-prename descclassname">rewann.environment.evaluation_util.</code><code class="sig-name descname">evaluate_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">measures</span><span class="o">=</span><span class="default_value">['log_loss']</span></em>, <em class="sig-param"><span class="n">n_samples</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evaluation_util.html#evaluate_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evaluation_util.evaluate_inds" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="wann-genetic-environment-evaluation-util-module">
+<h2>wann_genetic.environment.evaluation_util module<a class="headerlink" href="#wann-genetic-environment-evaluation-util-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-wann_genetic.environment.evaluation_util"></span><dl class="py function">
+<dt id="wann_genetic.environment.evaluation_util.evaluate_inds">
+<code class="sig-prename descclassname">wann_genetic.environment.evaluation_util.</code><code class="sig-name descname">evaluate_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">weights</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">measures</span><span class="o">=</span><span class="default_value">['log_loss']</span></em>, <em class="sig-param"><span class="n">n_samples</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/evaluation_util.html#evaluate_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.evaluation_util.evaluate_inds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use the process pool to evaluate a list of individuals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>rewann.Environment</em>) – Environment to use for process pool, weight sampling, and task data.</p></li>
+<li><p><strong>env</strong> (<em>wann_genetic.Environment</em>) – Environment to use for process pool, weight sampling, and task data.</p></li>
 <li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of individuals to evaluate</p></li>
 <li><p><strong>weights</strong> (<em>np.ndarray</em>) – Sampled weights.</p></li>
 <li><p><strong>test</strong> (<em>bool.optional</em>) – If true, test sampels are used.</p></li>
@@ -296,28 +286,28 @@ subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.evaluation_util.express_inds">
-<code class="sig-prename descclassname">rewann.environment.evaluation_util.</code><code class="sig-name descname">express_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evaluation_util.html#express_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evaluation_util.express_inds" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.evaluation_util.express_inds">
+<code class="sig-prename descclassname">wann_genetic.environment.evaluation_util.</code><code class="sig-name descname">express_inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/evaluation_util.html#express_inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.evaluation_util.express_inds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Express inds that have not been expressed yet.</p>
 <p>Convert genes into neural network for all new individuals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>rewann.Environment</em>) – </p></li>
-<li><p><strong>pop</strong> (<em>[</em><em>rewann.Individual</em><em>]</em>) – </p></li>
+<li><p><strong>env</strong> (<em>wann_genetic.Environment</em>) – </p></li>
+<li><p><strong>pop</strong> (<em>[</em><em>wann_genetic.Individual</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.evaluation_util.get_objective_values">
-<code class="sig-prename descclassname">rewann.environment.evaluation_util.</code><code class="sig-name descname">get_objective_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">objectives</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evaluation_util.html#get_objective_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evaluation_util.get_objective_values" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.evaluation_util.get_objective_values">
+<code class="sig-prename descclassname">wann_genetic.environment.evaluation_util.</code><code class="sig-name descname">get_objective_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ind</span></em>, <em class="sig-param"><span class="n">objectives</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/evaluation_util.html#get_objective_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.evaluation_util.get_objective_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get measurements of an individual for the specified objectives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ind</strong> (<em>rewann.Individual</em>) – The individual to get the measurements for.</p></li>
+<li><p><strong>ind</strong> (<em>wann_genetic.Individual</em>) – The individual to get the measurements for.</p></li>
 <li><p><strong>objectives</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a>) – Tuple (metric_names, sign) that specifies the objectives.
 <cite>metric_names</cite> is a list of the measurements to get, sign specifies
 whether the objective is to be maximized (positive) or minimized
@@ -334,93 +324,93 @@ whether the objective is to be maximized (positive) or minimized
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.evaluation_util.make_measurements">
-<code class="sig-prename descclassname">rewann.environment.evaluation_util.</code><code class="sig-name descname">make_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evaluation_util.html#make_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evaluation_util.make_measurements" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.evaluation_util.make_measurements">
+<code class="sig-prename descclassname">wann_genetic.environment.evaluation_util.</code><code class="sig-name descname">make_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em>, <em class="sig-param"><span class="n">weights</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/evaluation_util.html#make_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.evaluation_util.make_measurements" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.evaluation_util.update_hall_of_fame">
-<code class="sig-prename descclassname">rewann.environment.evaluation_util.</code><code class="sig-name descname">update_hall_of_fame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/evaluation_util.html#update_hall_of_fame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.evaluation_util.update_hall_of_fame" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.evaluation_util.update_hall_of_fame">
+<code class="sig-prename descclassname">wann_genetic.environment.evaluation_util.</code><code class="sig-name descname">update_hall_of_fame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">pop</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/evaluation_util.html#update_hall_of_fame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.evaluation_util.update_hall_of_fame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the hall of fame.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-rewann.environment.util">
-<span id="rewann-environment-util-module"></span><h2>rewann.environment.util module<a class="headerlink" href="#module-rewann.environment.util" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="rewann.environment.util.TimeStore">
-<em class="property">class </em><code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">TimeStore</code><a class="reference internal" href="_modules/rewann/environment/util.html#TimeStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.TimeStore" title="Permalink to this definition">¶</a></dt>
+<div class="section" id="wann-genetic-environment-util-module">
+<h2>wann_genetic.environment.util module<a class="headerlink" href="#wann-genetic-environment-util-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-wann_genetic.environment.util"></span><dl class="py class">
+<dt id="wann_genetic.environment.util.TimeStore">
+<em class="property">class </em><code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">TimeStore</code><a class="reference internal" href="_modules/wann_genetic/environment/util.html#TimeStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.TimeStore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py attribute">
-<dt id="rewann.environment.util.TimeStore.dt">
-<code class="sig-name descname">dt</code><em class="property"> = None</em><a class="headerlink" href="#rewann.environment.util.TimeStore.dt" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.TimeStore.dt">
+<code class="sig-name descname">dt</code><em class="property"> = None</em><a class="headerlink" href="#wann_genetic.environment.util.TimeStore.dt" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.util.TimeStore.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#TimeStore.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.TimeStore.start" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.TimeStore.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#TimeStore.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.TimeStore.start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="rewann.environment.util.TimeStore.stop">
-<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#TimeStore.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.TimeStore.stop" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.TimeStore.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#TimeStore.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.TimeStore.stop" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="rewann.environment.util.TimeStore.t0">
-<code class="sig-name descname">t0</code><em class="property"> = None</em><a class="headerlink" href="#rewann.environment.util.TimeStore.t0" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.TimeStore.t0">
+<code class="sig-name descname">t0</code><em class="property"> = None</em><a class="headerlink" href="#wann_genetic.environment.util.TimeStore.t0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="rewann.environment.util.TimeStore.total">
-<code class="sig-name descname">total</code><em class="property"> = 0</em><a class="headerlink" href="#rewann.environment.util.TimeStore.total" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.TimeStore.total">
+<code class="sig-name descname">total</code><em class="property"> = 0</em><a class="headerlink" href="#wann_genetic.environment.util.TimeStore.total" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.derive_path">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">derive_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#derive_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.derive_path" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.derive_path">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">derive_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#derive_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.derive_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set experiment data path based on experiment name, data, and available names.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.env_path">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">env_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">parts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#env_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.env_path" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.env_path">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">env_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">parts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#env_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.env_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get path string relative to experiment subdirectory.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.gen_key">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">gen_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#gen_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.gen_key" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.gen_key">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">gen_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#gen_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.gen_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hdf5 key for generation i.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.get_version">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">get_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#get_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.get_version" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.get_version">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">get_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#get_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.get_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.ind_from_hdf">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">ind_from_hdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#ind_from_hdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.ind_from_hdf" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.ind_from_hdf">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">ind_from_hdf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#ind_from_hdf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.ind_from_hdf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create individual from h5py dataset.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.ind_key">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">ind_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#ind_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.ind_key" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.ind_key">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">ind_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#ind_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.ind_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Key in hdf data file for individual with id i.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_gen">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_gen" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_gen">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_gen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a generations metadata from the hdf5 data file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>rewann.Environment</em>) – </p></li>
+<li><p><strong>env</strong> (<em>wann_genetic.Environment</em>) – </p></li>
 <li><p><strong>gen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – </p></li>
 </ul>
 </dd>
@@ -428,37 +418,37 @@ whether the objective is to be maximized (positive) or minimized
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_gen_metrics">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_gen_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_gen_metrics">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_gen_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_gen_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load generation metrics from metrics.json.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_hof">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_hof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_hof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_hof" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_hof">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_hof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_hof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_hof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the hall of fame from the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_ind">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_ind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_ind" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_ind">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_ind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">i</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_ind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load individual with id i from the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_indiv_measurements">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_indiv_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_indiv_measurements">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_indiv_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_indiv_measurements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the measurements for the individuals of a generation.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.load_pop">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">load_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">ids_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#load_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.load_pop" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.load_pop">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">load_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">ids_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#load_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.load_pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a generations population from the hdf5 data file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>env</strong> (<em>rewann.Environment</em>) – </p></li>
+<li><p><strong>env</strong> (<em>wann_genetic.Environment</em>) – </p></li>
 <li><p><strong>gen</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – </p></li>
 <li><p><strong>ids_only</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a><em>, </em><em>optional</em>) – Only return the ids of the individuals in this generation instead of
 loading the complete individuals.</p></li>
@@ -468,15 +458,15 @@ loading the complete individuals.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.make_index">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">make_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#make_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.make_index" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.make_index">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">make_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">raw</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#make_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.make_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility for retrieving pandas dataframes.</p>
 <p>Source: <a class="reference external" href="https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95">https://gist.github.com/RobbieClarken/9ea7ceaaa3765f536d95</a></p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.open_data">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#open_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.open_data" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.open_data">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">open_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#open_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.open_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Open hdf5-file that contains the evolved individuals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -486,21 +476,21 @@ loading the complete individuals.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.setup_params">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#setup_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.setup_params" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.setup_params">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">setup_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">params</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#setup_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.setup_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up parameters.</p>
 <p>Based on default parameters create complete tree of parameters, get a new
 subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.store_gen">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">store_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">population</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indiv_measurements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#store_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.store_gen" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.store_gen">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">store_gen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen</span></em>, <em class="sig-param"><span class="n">population</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">indiv_measurements</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#store_gen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.store_gen" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a generation in the hdf5 data file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>population</strong> (<em>[</em><em>rewann.Individual</em><em>]</em><em>, </em><em>optional</em>) – List of individuals to store for this generation.</p></li>
+<li><p><strong>population</strong> (<em>[</em><em>wann_genetic.Individual</em><em>]</em><em>, </em><em>optional</em>) – List of individuals to store for this generation.</p></li>
 <li><p><strong>indiv_measurements</strong> – Individuals measurements to store for this generation.</p></li>
 </ul>
 </dd>
@@ -508,50 +498,50 @@ subdirectory to write in, and derive objectives tuples from the parameters.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.store_gen_metrics">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">store_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">metrics</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#store_gen_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.store_gen_metrics" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.store_gen_metrics">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">store_gen_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">metrics</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#store_gen_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.store_gen_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store generation metrics from metrics.json.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.store_hof">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">store_hof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#store_hof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.store_hof" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.store_hof">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">store_hof</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#store_hof"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.store_hof" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the hall of fame in the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.store_ind">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">store_ind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">ind</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#store_ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.store_ind" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.store_ind">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">store_ind</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">ind</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#store_ind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.store_ind" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store an individual in the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.store_pop">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">store_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen_data</span></em>, <em class="sig-param"><span class="n">population</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#store_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.store_pop" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.store_pop">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">store_pop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em>, <em class="sig-param"><span class="n">gen_data</span></em>, <em class="sig-param"><span class="n">population</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#store_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.store_pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a list of individuals in the hdf5 data file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.stored_generations">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">stored_generations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#stored_generations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.stored_generations" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.stored_generations">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">stored_generations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#stored_generations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.stored_generations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of generations that metadata are available for.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.stored_indiv_measurements">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">stored_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#stored_indiv_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.stored_indiv_measurements" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.stored_indiv_measurements">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">stored_indiv_measurements</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#stored_indiv_measurements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.stored_indiv_measurements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of generations that individuals measurements are available for.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="rewann.environment.util.stored_populations">
-<code class="sig-prename descclassname">rewann.environment.util.</code><code class="sig-name descname">stored_populations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rewann/environment/util.html#stored_populations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rewann.environment.util.stored_populations" title="Permalink to this definition">¶</a></dt>
+<dt id="wann_genetic.environment.util.stored_populations">
+<code class="sig-prename descclassname">wann_genetic.environment.util.</code><code class="sig-name descname">stored_populations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">env</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/environment/util.html#stored_populations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.environment.util.stored_populations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of generations that populations are available for.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-rewann.environment">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rewann.environment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-wann_genetic.environment">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-wann_genetic.environment" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -561,12 +551,6 @@ subdirectory to write in, and derive objectives tuples from the parameters.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="rewann.html"
-                        title="previous chapter">rewann package</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="rewann.genetic_algorithm.html"
-                        title="next chapter">rewann.genetic_algorithm package</a></p>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -590,15 +574,7 @@ subdirectory to write in, and derive objectives tuples from the parameters.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="rewann.genetic_algorithm.html" title="rewann.genetic_algorithm package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="rewann.html" title="rewann package"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">ReWann 0.1b.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="rewann.html" >rewann package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

@@ -4,14 +4,14 @@ Torch Implementation of WANNs
 Feed-Forward Neural Networks
 ----------------------------
 
-:class:`rewann.individual.torch_network.ConcatLayer` implements the basic building block of FF-WANNs: The input is fed to a multi activation block vis a linear layer (instead of using the bias of the linear layer, a bias node is used just like in the :doc:`numpy_network` - this makes the conversion from the genes easier). In the current implementation each existing activation function is calculated once on each node and not selected functions are removed via a mask. Finally, the output of the activation block is concatenated to the original input.
+:class:`wann_genetic.individual.torch_network.ConcatLayer` implements the basic building block of FF-WANNs: The input is fed to a multi activation block vis a linear layer (instead of using the bias of the linear layer, a bias node is used just like in the :doc:`numpy_network` - this makes the conversion from the genes easier). In the current implementation each existing activation function is calculated once on each node and not selected functions are removed via a mask. Finally, the output of the activation block is concatenated to the original input.
 
 
 .. figure:: _static/figure_concat_layer.svg
    :height: 300pt
    :alt: diagram of a concat layer
 
-   Diagram of :class:`rewann.individual.torch_network.ConcatLayer`
+   Diagram of :class:`wann_genetic.individual.torch_network.ConcatLayer`
 
 .. note::
 

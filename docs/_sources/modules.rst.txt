@@ -4,25 +4,25 @@ API
 .. toctree::
    :maxdepth: 4
 
-   rewann
+   wann_genetic
 
 
 
 Overview
 ---------
 
-.. autoclass:: rewann.Environment
+.. autoclass:: wann_genetic.Environment
    :noindex:
 
-.. autoclass:: rewann.Individual
+.. autoclass:: wann_genetic.Individual
    :noindex:
 
-.. autoclass:: rewann.Genes
+.. autoclass:: wann_genetic.Genes
    :noindex:
 
-.. autoclass:: rewann.individual.network_base.BaseFFNN
+.. autoclass:: wann_genetic.individual.network_base.BaseFFNN
    :members: sort_hidden_nodes,
    :noindex:
 
-.. autoclass:: rewann.tools.ExperimentSeries
+.. autoclass:: wann_genetic.tools.ExperimentSeries
    :noindex:

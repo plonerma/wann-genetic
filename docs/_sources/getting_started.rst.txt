@@ -7,7 +7,7 @@ This guide is supposed to provide all the information required to run first expe
 Installation
 ------------
 
-The `rewann` package can be install from the repository via pip. It is recommended to install the package in a virtual environment as the installation will add binaries to the system path (see :doc:`cli`). Make sure to create the environment with python3.
+The `wann_genetic` package can be install from the repository via pip. It is recommended to install the package in a virtual environment as the installation will add binaries to the system path (see :doc:`cli`). Make sure to create the environment with python3.
 
 
 Installation with virtualenv
@@ -24,7 +24,7 @@ Installation with virtualenv
   . venv/bin/activate
 
   # install the package
-  pip install git+ssh://git@github.com/plonerma/rewann.git
+  pip install git+ssh://git@github.com/plonerma/wann_genetic.git
 
 
 Execution of a first experiment
@@ -69,7 +69,7 @@ One simple available task is the *iris* task. A minimal specification could look
     num_samples=-1
 
 
-Store this file (eg. in `iris.toml`) and invoke rewann execution of the experiment via:
+Store this file (eg. in `iris.toml`) and invoke wann_genetic execution of the experiment via:
 
 .. highlight:: bash
 

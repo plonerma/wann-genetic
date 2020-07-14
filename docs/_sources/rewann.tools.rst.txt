@@ -1,29 +1,29 @@
-rewann.tools package
+wann_genetic.tools package
 ====================
 
 Submodules
 ----------
 
-rewann.tools.cli module
+wann_genetic.tools.cli module
 -----------------------
 
-.. automodule:: rewann.tools.cli
+.. automodule:: wann_genetic.tools.cli
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.tools.compare\_experiments module
+wann_genetic.tools.compare\_experiments module
 ----------------------------------------
 
-.. automodule:: rewann.tools.compare_experiments
+.. automodule:: wann_genetic.tools.compare_experiments
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.tools.experiment\_series module
+wann_genetic.tools.experiment\_series module
 --------------------------------------
 
-.. automodule:: rewann.tools.experiment_series
+.. automodule:: wann_genetic.tools.experiment_series
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +32,7 @@ rewann.tools.experiment\_series module
 Module contents
 ---------------
 
-.. automodule:: rewann.tools
+.. automodule:: wann_genetic.tools
    :members:
    :undoc-members:
    :show-inheritance:

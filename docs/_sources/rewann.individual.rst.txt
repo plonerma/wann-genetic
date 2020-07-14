@@ -1,4 +1,4 @@
-rewann.individual package
+wann_genetic.individual package
 =========================
 
 Subpackages
@@ -7,40 +7,40 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   rewann.individual.numpy
-   rewann.individual.torch
+   wann_genetic.individual.numpy
+   wann_genetic.individual.torch
 
 Submodules
 ----------
 
-rewann.individual.genes module
+wann_genetic.individual.genes module
 ------------------------------
 
-.. automodule:: rewann.individual.genes
+.. automodule:: wann_genetic.individual.genes
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.individual.individual\_base module
+wann_genetic.individual.individual\_base module
 -----------------------------------------
 
-.. automodule:: rewann.individual.individual_base
+.. automodule:: wann_genetic.individual.individual_base
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.individual.network\_base module
+wann_genetic.individual.network\_base module
 --------------------------------------
 
-.. automodule:: rewann.individual.network_base
+.. automodule:: wann_genetic.individual.network_base
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.individual.util module
+wann_genetic.individual.util module
 -----------------------------
 
-.. automodule:: rewann.individual.util
+.. automodule:: wann_genetic.individual.util
    :members:
    :undoc-members:
    :show-inheritance:
@@ -49,7 +49,7 @@ rewann.individual.util module
 Module contents
 ---------------
 
-.. automodule:: rewann.individual
+.. automodule:: wann_genetic.individual
    :members:
    :undoc-members:
    :show-inheritance:

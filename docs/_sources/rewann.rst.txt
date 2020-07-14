@@ -1,4 +1,4 @@
-rewann package
+wann_genetic package
 ==============
 
 Subpackages
@@ -7,20 +7,20 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   rewann.environment
-   rewann.genetic_algorithm
-   rewann.individual
-   rewann.postopt
-   rewann.tasks
-   rewann.tools
+   wann_genetic.environment
+   wann_genetic.genetic_algorithm
+   wann_genetic.individual
+   wann_genetic.postopt
+   wann_genetic.tasks
+   wann_genetic.tools
 
 Submodules
 ----------
 
-rewann.util module
+wann_genetic.util module
 ------------------
 
-.. automodule:: rewann.util
+.. automodule:: wann_genetic.util
    :members:
    :undoc-members:
    :show-inheritance:
@@ -29,7 +29,7 @@ rewann.util module
 Module contents
 ---------------
 
-.. automodule:: rewann
+.. automodule:: wann_genetic
    :members:
    :undoc-members:
    :show-inheritance:

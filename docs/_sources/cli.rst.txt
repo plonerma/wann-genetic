@@ -1,7 +1,7 @@
 Command Line Interfaces
 =======================
 
-On installation, rewann registers these CLI entry points (using the ``--help`` option displays usage).
+On installation, wann_genetic registers these CLI entry points (using the ``--help`` option displays usage).
 
 Running an experiment
 ---------------------

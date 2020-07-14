@@ -1,4 +1,4 @@
-rewann.postopt package
+wann_genetic.postopt package
 ======================
 
 Subpackages
@@ -7,15 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   rewann.postopt.vis
+   wann_genetic.postopt.vis
 
 Submodules
 ----------
 
-rewann.postopt.report module
+wann_genetic.postopt.report module
 ----------------------------
 
-.. automodule:: rewann.postopt.report
+.. automodule:: wann_genetic.postopt.report
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ rewann.postopt.report module
 Module contents
 ---------------
 
-.. automodule:: rewann.postopt
+.. automodule:: wann_genetic.postopt
    :members:
    :undoc-members:
    :show-inheritance:

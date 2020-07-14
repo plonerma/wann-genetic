@@ -1,27 +1,27 @@
-wann_genetic.tools package
-====================
+wann\_genetic.tools package
+===========================
 
 Submodules
 ----------
 
-wann_genetic.tools.cli module
------------------------
+wann\_genetic.tools.cli module
+------------------------------
 
 .. automodule:: wann_genetic.tools.cli
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.tools.compare\_experiments module
-----------------------------------------
+wann\_genetic.tools.compare\_experiments module
+-----------------------------------------------
 
 .. automodule:: wann_genetic.tools.compare_experiments
    :members:
    :undoc-members:
    :show-inheritance:
 
-wann_genetic.tools.experiment\_series module
---------------------------------------
+wann\_genetic.tools.experiment\_series module
+---------------------------------------------
 
 .. automodule:: wann_genetic.tools.experiment_series
    :members:
