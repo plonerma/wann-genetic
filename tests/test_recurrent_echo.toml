@@ -16,4 +16,4 @@ debug=true
   size=64
 
 [sampling]
-  num_training_samples_per_iteration=100
+  num_samples_per_iteration=100
