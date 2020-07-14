@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 SPHINXAUTOBUILD   = sphinx-autobuild
-SPHINXPROJ    = ReWann
+SPHINXPROJ    = wann_genetic
 SOURCEDIR     = source
 BUILDDIR      = build
 

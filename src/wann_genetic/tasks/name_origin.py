@@ -12,7 +12,7 @@ import string
 
 import numpy as np
 
-from rewann.tasks import RecurrentTask, ClassificationTask
+from wann_genetic.tasks import RecurrentTask, ClassificationTask
 
 class NameOriginTask(RecurrentTask, ClassificationTask):
     all_letters = string.ascii_letters + " .,;'"

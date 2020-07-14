@@ -1,7 +1,7 @@
 import numpy as np
 import logging
 
-from rewann.util import get_array_field
+from wann_genetic.util import get_array_field
 
 
 def add_node(ind, env, innov):

@@ -15,9 +15,9 @@ import logging
 import json
 
 from .vis import draw_graph
-from rewann.environment.util import load_ind
-from rewann.environment.evaluation_util import evaluate_inds, express_inds
-from rewann.tasks import ClassificationTask
+from wann_genetic.environment.util import load_ind
+from wann_genetic.environment.evaluation_util import evaluate_inds, express_inds
+from wann_genetic.tasks import ClassificationTask
 
 from tabulate import tabulate
 
@@ -252,7 +252,7 @@ class Report:
 
 
 def compile_report():
-    from rewann import Environment
+    from wann_genetic import Environment
 
     logging.getLogger().setLevel(logging.INFO)
     parser = argparse.ArgumentParser(description='Post Optimization')
@@ -270,7 +270,7 @@ def compile_report():
 
 
 def draw_network():
-    from rewann import Environment
+    from wann_genetic import Environment
 
     logging.getLogger().setLevel(logging.INFO)
 
@@ -308,7 +308,7 @@ def draw_network():
 
 
 def plot_gen_quartiles():
-    from rewann import Environment
+    from wann_genetic import Environment
 
     logging.getLogger().setLevel(logging.INFO)
 
@@ -324,7 +324,7 @@ def plot_gen_quartiles():
 
 
 def plot_gen_lines():
-    from rewann import Environment
+    from wann_genetic import Environment
 
     logging.getLogger().setLevel(logging.INFO)
 

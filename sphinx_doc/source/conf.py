@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# ReWann documentation build configuration file, created by
+# wann_genetic documentation build configuration file, created by
 # sphinx-quickstart on Mon May 18 14:57:38 2020.
 #
 # This file is execfile()d with the current directory set to its
@@ -19,7 +19,7 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../src/rewann'))
+sys.path.insert(0, os.path.abspath('../../src/wann_genetic'))
 
 
 # -- General configuration ------------------------------------------------
@@ -62,7 +62,7 @@ intersphinx_mapping = {'python': ('http://docs.python.org/3', None),
 master_doc = 'index'
 
 # General information about the project.
-project = 'ReWann'
+project = 'WANN (genetic)'
 copyright = '2020, Max Ploner'
 author = 'Max Ploner'
 
@@ -128,7 +128,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ReWanndoc'
+htmlhelp_basename = 'wann_genetic_doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -155,7 +155,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ReWann.tex', 'ReWann Documentation',
+    (master_doc, 'wann_genetic.tex', 'wann_genetic Documentation',
      'Max Ploner', 'manual'),
 ]
 
@@ -165,7 +165,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'rewann', 'ReWann Documentation',
+    (master_doc, 'wann_genetic', 'wann_genetic Documentation',
      [author], 1)
 ]
 
@@ -176,7 +176,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ReWann', 'ReWann Documentation',
-     author, 'ReWann', 'One line description of project.',
+    (master_doc, 'wann_genetic', 'wann_genetic Documentation',
+     author, 'wann_genetic', 'One line description of project.',
      'Miscellaneous'),
 ]

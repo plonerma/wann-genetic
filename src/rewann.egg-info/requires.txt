@@ -1,0 +1,12 @@
+pytest-watch
+sklearn
+numpy
+mnist
+opencv-python
+h5py
+tabulate
+matplotlib
+networkx
+toml
+pandas
+torch

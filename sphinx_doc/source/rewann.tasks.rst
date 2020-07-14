@@ -1,29 +1,29 @@
-rewann.tasks package
+wann_genetic.tasks package
 ====================
 
 Submodules
 ----------
 
-rewann.tasks.base module
+wann_genetic.tasks.base module
 ------------------------
 
-.. automodule:: rewann.tasks.base
+.. automodule:: wann_genetic.tasks.base
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.tasks.image module
+wann_genetic.tasks.image module
 -------------------------
 
-.. automodule:: rewann.tasks.image
+.. automodule:: wann_genetic.tasks.image
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.tasks.rnn module
+wann_genetic.tasks.rnn module
 -----------------------
 
-.. automodule:: rewann.tasks.rnn
+.. automodule:: wann_genetic.tasks.rnn
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +32,7 @@ rewann.tasks.rnn module
 Module contents
 ---------------
 
-.. automodule:: rewann.tasks
+.. automodule:: wann_genetic.tasks
    :members:
    :undoc-members:
    :show-inheritance:

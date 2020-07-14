@@ -1,0 +1,7 @@
+[console_scripts]
+compile_report = wann_genetic.postopt.report:compile_report
+draw_network = wann_genetic.postopt.report:draw_network
+generate_experiment_series = wann_genetic.tools.cli:generate_experiments
+plot_gen_lines = wann_genetic.postopt.report:plot_gen_lines
+plot_gen_quartiles = wann_genetic.postopt.report:plot_gen_quartiles
+run_experiment = wann_genetic.environment.environment:run_experiment

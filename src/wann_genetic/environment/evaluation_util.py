@@ -65,7 +65,7 @@ def evaluate_inds(env, pop, weights, test=False, measures=['log_loss'], n_sample
 
     Parameters
     ----------
-    env : rewann.Environment
+    env : wann_genetic.Environment
         Environment to use for process pool, weight sampling, and task data.
     pop : list
         List of individuals to evaluate
@@ -107,8 +107,8 @@ def express_inds(env, pop):
 
     Parameters
     ----------
-    env : rewann.Environment
-    pop : [rewann.Individual]
+    env : wann_genetic.Environment
+    pop : [wann_genetic.Individual]
     """
     inds_to_express = list(filter(lambda i: i.network is None, pop))
 
@@ -123,7 +123,7 @@ def get_objective_values(ind, objectives):
 
     Parameters
     ----------
-    ind : rewann.Individual
+    ind : wann_genetic.Individual
         The individual to get the measurements for.
     objectives : tuple
         Tuple (metric_names, sign) that specifies the objectives.

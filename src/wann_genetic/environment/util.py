@@ -24,7 +24,7 @@ default_params = toml.load(default_params_path)
 
 
 def get_version():
-    return metadata.version('rewann')
+    return metadata.version('wann_genetic')
 
 
 def derive_path(env):
@@ -148,7 +148,7 @@ def store_gen(env, gen, population=None, indiv_measurements=None):
 
     Parameters
     ----------
-    population : [rewann.Individual], optional
+    population : [wann_genetic.Individual], optional
         List of individuals to store for this generation.
     indiv_measurements
         Individuals measurements to store for this generation.
@@ -189,7 +189,7 @@ def load_gen(env, gen):
 
     Parameters
     ----------
-    env : rewann.Environment
+    env : wann_genetic.Environment
     gen : int
     """
     if isinstance(gen, str):
@@ -205,7 +205,7 @@ def load_pop(env, gen, ids_only=False):
 
     Parameters
     ----------
-    env : rewann.Environment
+    env : wann_genetic.Environment
     gen: int
     ids_only : bool, optional
         Only return the ids of the individuals in this generation instead of

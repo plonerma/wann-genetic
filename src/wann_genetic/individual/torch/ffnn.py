@@ -7,7 +7,7 @@ import logging
 
 from functools import reduce
 
-from rewann.individual.network_base import BaseFFNN
+from wann_genetic.individual.network_base import BaseFFNN
 
 
 class MultiActivationModule(torch.nn.Module):

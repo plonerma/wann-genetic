@@ -4,7 +4,7 @@ import logging
 
 from .ffnn import MultiActivationModule, Network as TorchFFNN
 
-from rewann.individual.network_base import BaseRNN
+from wann_genetic.individual.network_base import BaseRNN
 
 
 class ReConcatLayer(torch.nn.Module):

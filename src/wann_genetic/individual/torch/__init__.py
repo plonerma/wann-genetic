@@ -1,4 +1,4 @@
-from rewann.individual import IndividualBase, RecurrentIndividualBase
+from wann_genetic.individual import IndividualBase, RecurrentIndividualBase
 
 
 class Individual(IndividualBase):

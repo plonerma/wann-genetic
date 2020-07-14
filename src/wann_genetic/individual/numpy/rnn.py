@@ -2,7 +2,7 @@ import numpy as np
 
 import logging
 
-from rewann.individual.network_base import BaseRNN
+from wann_genetic.individual.network_base import BaseRNN
 
 from .ffnn import Network as FFNN
 

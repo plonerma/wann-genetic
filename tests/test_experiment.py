@@ -1,5 +1,5 @@
 import logging
-from rewann import Environment
+from wann_genetic import Environment
 import toml
 
 import pytest

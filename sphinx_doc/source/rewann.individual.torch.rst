@@ -1,21 +1,21 @@
-rewann.individual.torch package
+wann_genetic.individual.torch package
 ===============================
 
 Submodules
 ----------
 
-rewann.individual.torch.ffnn module
+wann_genetic.individual.torch.ffnn module
 -----------------------------------
 
-.. automodule:: rewann.individual.torch.ffnn
+.. automodule:: wann_genetic.individual.torch.ffnn
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.individual.torch.rnn module
+wann_genetic.individual.torch.rnn module
 ----------------------------------
 
-.. automodule:: rewann.individual.torch.rnn
+.. automodule:: wann_genetic.individual.torch.rnn
    :members:
    :undoc-members:
    :show-inheritance:
@@ -24,7 +24,7 @@ rewann.individual.torch.rnn module
 Module contents
 ---------------
 
-.. automodule:: rewann.individual.torch
+.. automodule:: wann_genetic.individual.torch
    :members:
    :undoc-members:
    :show-inheritance:

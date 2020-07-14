@@ -1,5 +1,5 @@
 import numpy as np
-from rewann.util import get_array_field
+from wann_genetic.util import get_array_field
 
 
 def rearrange_matrix(m, indices):

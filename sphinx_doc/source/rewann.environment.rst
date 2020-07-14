@@ -1,29 +1,29 @@
-rewann.environment package
+wann_genetic.environment package
 ==========================
 
 Submodules
 ----------
 
-rewann.environment.environment module
+wann_genetic.environment.environment module
 -------------------------------------
 
-.. automodule:: rewann.environment.environment
+.. automodule:: wann_genetic.environment.environment
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.evaluation\_util module
+wann_genetic.environment.evaluation\_util module
 ------------------------------------------
 
-.. automodule:: rewann.environment.evaluation_util
+.. automodule:: wann_genetic.environment.evaluation_util
    :members:
    :undoc-members:
    :show-inheritance:
 
-rewann.environment.util module
+wann_genetic.environment.util module
 ------------------------------
 
-.. automodule:: rewann.environment.util
+.. automodule:: wann_genetic.environment.util
    :members:
    :undoc-members:
    :show-inheritance:
@@ -32,7 +32,7 @@ rewann.environment.util module
 Module contents
 ---------------
 
-.. automodule:: rewann.environment
+.. automodule:: wann_genetic.environment
    :members:
    :undoc-members:
    :show-inheritance:

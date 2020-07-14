@@ -1,8 +1,8 @@
 import numpy as np
 
-from rewann import RecurrentGenes
-from rewann.individual.numpy import RecurrentIndividual as NumpyInd
-from rewann.individual.torch import RecurrentIndividual as TorchInd
+from wann_genetic import RecurrentGenes
+from wann_genetic.individual.numpy import RecurrentIndividual as NumpyInd
+from wann_genetic.individual.torch import RecurrentIndividual as TorchInd
 
 
 ff_genes = RecurrentGenes(

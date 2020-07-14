@@ -7,7 +7,7 @@ def rank_individuals(population, obj_values, return_order=False):
 
     Parameters
     ----------
-    population : List[rewann.Individual]
+    population : List[wann_genetic.Individual]
         List of individuals to rank.
     obj_values : np.ndarray
         (N x m) array where N is the number of individuals and m the number of

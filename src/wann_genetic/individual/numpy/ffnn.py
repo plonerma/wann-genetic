@@ -3,7 +3,7 @@ import sklearn
 
 import logging
 
-from rewann.individual.network_base import BaseFFNN
+from wann_genetic.individual.network_base import BaseFFNN
 
 
 def softmax(x, axis=-1):
@@ -21,7 +21,7 @@ def apply_act_function(available_funcs, selected_funcs, x=None):
     """Apply the activation function of the selected nodes to their sums.
 
     This fullfils the same function as the
-    :class:`rewann.individual.torch.ffn.MultiActivationModule`.
+    :class:`wann_genetic.individual.torch.ffn.MultiActivationModule`.
     """
     if x is not None:
         result = np.empty(x.shape)

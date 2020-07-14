@@ -144,7 +144,7 @@ In order to easily compare the results of the series, use the ``load_experiment_
 
 ::
 
-  from rewann.tools import load_series_stats
+  from wann_genetic.tools import load_series_stats
 
   df = load_series_stats("path_to_series_spec")
 

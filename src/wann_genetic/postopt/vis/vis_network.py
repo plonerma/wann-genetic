@@ -2,7 +2,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rewann.individual.torch.ffnn import Network as TorchNetwork
+from wann_genetic.individual.torch.ffnn import Network as TorchNetwork
 
 import torch
 

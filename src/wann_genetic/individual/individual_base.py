@@ -19,8 +19,8 @@ class IndividualBase:
 
         Parameters
         ----------
-        genes : rewann.Genes
-        network : rewann.Network, optional
+        genes : wann_genetic.Genes
+        network : wann_genetic.Network, optional
         id : int, optional
         birth: int, optional
             Index of the generation the individual was created

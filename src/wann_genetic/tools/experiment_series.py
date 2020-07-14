@@ -13,8 +13,8 @@ from collections.abc import Mapping
 from functools import reduce
 from typing import Iterable, Collection, Sequence
 
-from rewann.util import ParamTree
-from rewann import Environment
+from wann_genetic.util import ParamTree
+from wann_genetic import Environment
 
 
 class Variable:

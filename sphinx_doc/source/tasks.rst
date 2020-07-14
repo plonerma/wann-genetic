@@ -23,7 +23,7 @@ MNIST
 Recurrent Tasks
 ---------------
 
-Recurrent tasks are derived from :class:`rewann.tasks.base.RecurrentTask`.
+Recurrent tasks are derived from :class:`wann_genetic.tasks.base.RecurrentTask`.
 
 .. _echo_task:
 

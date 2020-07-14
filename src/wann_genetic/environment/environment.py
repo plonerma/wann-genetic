@@ -4,20 +4,20 @@ import numpy as np
 import pandas as pd
 import os
 
-from rewann import Individual, RecurrentIndividual
+from wann_genetic import Individual, RecurrentIndividual
 
 
-from rewann.tasks import select_task
+from wann_genetic.tasks import select_task
 
-from rewann import GeneticAlgorithm
+from wann_genetic import GeneticAlgorithm
 
 from .util import get_version, TimeStore
 
 from .evaluation_util import (get_objective_values, update_hall_of_fame,
                               make_measurements)
 
-from rewann.util import ParamTree
-from rewann.postopt import Report
+from wann_genetic.util import ParamTree
+from wann_genetic.postopt import Report
 
 
 class Environment(ParamTree):
@@ -56,9 +56,9 @@ class Environment(ParamTree):
 
         # choose adequate type of individuals
         if self['config', 'backend'].lower() == 'torch':
-            import rewann.individual.torch as backend
+            import wann_genetic.individual.torch as backend
         else:
-            import rewann.individual.numpy as backend
+            import wann_genetic.individual.numpy as backend
 
         if self.task.is_recurrent:
             self.ind_class = backend.RecurrentIndividual
@@ -305,7 +305,7 @@ class Environment(ParamTree):
 
         Parameters
         ----------
-        population : [rewann.Individual]
+        population : [wann_genetic.Individual]
             List of individuals that constitute the population.
         gen : int
             Current generation index (required for caluclating the individuals
