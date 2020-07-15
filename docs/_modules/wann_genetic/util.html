@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>wann_genetic.util &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <title>wann_genetic.util &#8212; WANN (genetic) 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -57,6 +57,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
     <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="nested_keys"><a class="viewcode-back" href="../../wann_genetic.html#wann_genetic.util.nested_keys">[docs]</a><span class="k">def</span> <span class="nf">nested_keys</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k_</span> <span class="ow">in</span> <span class="n">nested_keys</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">k_</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ParamTree"><a class="viewcode-back" href="../../wann_genetic.html#wann_genetic.util.ParamTree">[docs]</a><span class="k">class</span> <span class="nc">ParamTree</span><span class="p">(</span><span class="n">UserDict</span><span class="p">):</span>
@@ -118,7 +127,10 @@
                 <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">last_key</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">)):</span>
             <span class="n">nested_update</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">last_key</span><span class="p">],</span> <span class="n">update</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">target</span><span class="p">[</span><span class="n">last_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">update</span></div></div>
+            <span class="n">target</span><span class="p">[</span><span class="n">last_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">update</span></div>
+
+<div class="viewcode-block" id="ParamTree.nested_keys"><a class="viewcode-back" href="../../wann_genetic.html#wann_genetic.util.ParamTree.nested_keys">[docs]</a>    <span class="k">def</span> <span class="nf">nested_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">yield from</span> <span class="n">nested_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -149,7 +161,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

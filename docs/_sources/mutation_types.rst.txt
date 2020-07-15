@@ -1,7 +1,7 @@
 Mutation Types
 ==============
 
-This document describes some of the possible mutation types. Check doc:`params`
+This document describes some of the possible mutation types. Check :doc:`params`
 for implemented types and how to configure them.
 
 

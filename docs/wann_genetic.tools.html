@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>wann_genetic.tools package &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <title>wann_genetic.tools package &#8212; WANN (genetic) 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,7 +29,7 @@
         <li class="right" >
           <a href="wann_genetic.tasks.html" title="wann_genetic.tasks package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="wann_genetic.html" accesskey="U">wann_genetic package</a> &#187;</li> 
       </ul>
@@ -78,6 +78,11 @@ specification and base parameters for multivariate testing.</p>
 <p>Represents an experiment series.</p>
 <p>Can be used to generate experiment files and read in data from previously
 executed experiments.</p>
+<dl class="py method">
+<dt id="wann_genetic.tools.experiment_series.ExperimentSeries.affected_keys">
+<code class="sig-name descname">affected_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#ExperimentSeries.affected_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.ExperimentSeries.affected_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="wann_genetic.tools.experiment_series.ExperimentSeries.assemble_stats">
 <code class="sig-name descname">assemble_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#ExperimentSeries.assemble_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.ExperimentSeries.assemble_stats" title="Permalink to this definition">¶</a></dt>
@@ -151,6 +156,11 @@ frames.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="wann_genetic.tools.experiment_series.ExperimentSeries.hyperparam_table">
+<code class="sig-name descname">hyperparam_table</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ignored_keys</span><span class="o">=</span><span class="default_value">['config', None, 'postopt', None, 'storage', None, 'debug', 'sampling', 'seed', 'sampling', 'post_init_seed', 'selection', 'recorded_metrics', 'task', 'name', 'task', 'sample_order_seed']</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#ExperimentSeries.hyperparam_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.ExperimentSeries.hyperparam_table" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="wann_genetic.tools.experiment_series.ExperimentSeries.init_variables">
 <code class="sig-name descname">init_variables</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spec</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.8)">collections.abc.Mapping</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#ExperimentSeries.init_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.ExperimentSeries.init_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the variables.</p>
@@ -181,6 +191,11 @@ frames.</p>
 <em class="property">class </em><code class="sig-prename descclassname">wann_genetic.tools.experiment_series.</code><code class="sig-name descname">Variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)">tuple</a></span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span></em>, <em class="sig-param"><span class="n">fmt</span><span class="p">:</span> <span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></span> <span class="o">=</span> <span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#Variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.Variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a variable in an experiment series.</p>
+<dl class="py method">
+<dt id="wann_genetic.tools.experiment_series.Variable.affected_keys">
+<code class="sig-name descname">affected_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#Variable.affected_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.Variable.affected_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="wann_genetic.tools.experiment_series.Variable.iter_indices">
 <code class="sig-name descname">iter_indices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/wann_genetic/tools/experiment_series.html#Variable.iter_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#wann_genetic.tools.experiment_series.Variable.iter_indices" title="Permalink to this definition">¶</a></dt>
@@ -245,7 +260,7 @@ frames.</p>
         <li class="right" >
           <a href="wann_genetic.tasks.html" title="wann_genetic.tasks package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="modules.html" >API</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="wann_genetic.html" >wann_genetic package</a> &#187;</li> 
       </ul>

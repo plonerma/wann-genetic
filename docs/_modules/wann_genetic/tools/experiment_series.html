@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>wann_genetic.tools.experiment_series &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <title>wann_genetic.tools.experiment_series &#8212; WANN (genetic) 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
@@ -25,7 +25,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -54,6 +54,8 @@
 <span class="kn">from</span> <span class="nn">wann_genetic.util</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 <span class="kn">from</span> <span class="nn">wann_genetic</span> <span class="kn">import</span> <span class="n">Environment</span>
 <span class="kn">from</span> <span class="nn">wann_genetic.environment.util</span> <span class="kn">import</span> <span class="n">default_params</span>
+
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">hyperparam_table</span><span class="p">,</span> <span class="n">default_ignored_keys</span>
 
 
 <div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.Variable">[docs]</a><span class="k">class</span> <span class="nc">Variable</span><span class="p">:</span>
@@ -92,7 +94,18 @@
         <span class="n">params</span><span class="o">.</span><span class="n">update_params_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">i</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Variable.iter_indices"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.Variable.iter_indices">[docs]</a>    <span class="k">def</span> <span class="nf">iter_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Variable.affected_keys"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.Variable.affected_keys">[docs]</a>    <span class="k">def</span> <span class="nf">affected_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">affected_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;_fmt&#39;</span><span class="p">:</span>
+                        <span class="n">affected_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span><span class="p">,))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">affected_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">affected_keys</span></div></div>
 
 
 <div class="viewcode-block" id="ExperimentSeries"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.ExperimentSeries">[docs]</a><span class="k">class</span> <span class="nc">ExperimentSeries</span><span class="p">:</span>
@@ -337,7 +350,15 @@
                 <span class="n">stats</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flat_values</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
                 <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;_configuration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
                 <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentSeries.affected_keys"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.ExperimentSeries.affected_keys">[docs]</a>    <span class="k">def</span> <span class="nf">affected_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">affected_keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">()])</span></div>
+
+<div class="viewcode-block" id="ExperimentSeries.hyperparam_table"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.ExperimentSeries.hyperparam_table">[docs]</a>    <span class="k">def</span> <span class="nf">hyperparam_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignored_keys</span><span class="o">=</span><span class="n">default_ignored_keys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">ignored_keys</span> <span class="o">=</span> <span class="n">ignored_keys</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">affected_keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">hyperparam_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">full_base_params</span><span class="p">(),</span>
+                                <span class="n">ignored_keys</span><span class="o">=</span><span class="n">ignored_keys</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
@@ -368,7 +389,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

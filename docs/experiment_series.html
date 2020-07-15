@@ -4,7 +4,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Generating Series of Experiments &#8212; WANN (genetic) 0.1b.1 documentation</title>
+    <title>Generating Series of Experiments &#8212; WANN (genetic) 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -33,7 +33,7 @@
         <li class="right" >
           <a href="tasks.html" title="Tasks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,7 +44,7 @@
             
   <div class="section" id="generating-series-of-experiments">
 <h1>Generating Series of Experiments<a class="headerlink" href="#generating-series-of-experiments" title="Permalink to this headline">¶</a></h1>
-<p>In order to compare the impact of the various hyper parameters, it is necessary to compare multiple runs of the experiment with slightly changing parameters.
+<p>In order to compare the impact of the various hyperparameters (see <a class="reference internal" href="params.html"><span class="doc">Parameters</span></a> fo available parameters), it is necessary to compare multiple runs of the experiment with slightly changing parameters.
 The <code class="docutils literal notranslate"><span class="pre">generate_experiment_series</span></code> command can be used to generate a list of experiments from a <cite>base</cite> and a <cite>specification</cite> file. The <cite>base</cite> file is used to define parameters that are shared within a series of experiments (eg. you might want to run multiple parameters on the same task - the task name must then be placed in the <cite>base</cite> file).</p>
 <p>The <cite>specification</cite> file defines a the parameters that will be changed between the experiment and the values they will take on. Every variable/value combination (cross product) will then be created. The command line tool will output a list of files that can then be used to run these experiments (eg. using a simple for loop):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">build_dir</span><span class="o">=</span><span class="s1">&#39;build&#39;</span>
@@ -183,7 +183,7 @@ All the name part for all the variable are then combined to determine the name o
         <li class="right" >
           <a href="tasks.html" title="Tasks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1b.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">WANN (genetic) 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
