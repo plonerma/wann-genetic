@@ -21,6 +21,15 @@ def nested_update(d: MutableMapping, u: Mapping) -> MutableMapping:
     return d
 
 
+def nested_keys(d: Mapping):
+    for k in d.keys():
+        if isinstance(d[k], Mapping):
+            for k_ in nested_keys(d[k]):
+                yield (k, ) + k_
+        else:
+            yield (k, )
+
+
 class ParamTree(UserDict):
     """Wraps a dict to allow access of fields via list of keys."""
 
@@ -81,3 +90,6 @@ class ParamTree(UserDict):
             nested_update(target[last_key], update)
         else:
             target[last_key] = update
+
+    def nested_keys(self):
+        yield from nested_keys(self)
