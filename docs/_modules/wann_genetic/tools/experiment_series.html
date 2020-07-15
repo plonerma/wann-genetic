@@ -53,6 +53,7 @@
 
 <span class="kn">from</span> <span class="nn">wann_genetic.util</span> <span class="kn">import</span> <span class="n">ParamTree</span>
 <span class="kn">from</span> <span class="nn">wann_genetic</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">wann_genetic.environment.util</span> <span class="kn">import</span> <span class="n">default_params</span>
 
 
 <div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.Variable">[docs]</a><span class="k">class</span> <span class="nc">Variable</span><span class="p">:</span>
@@ -105,7 +106,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">base_params</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span> <span class="n">data_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_params</span> <span class="o">=</span> <span class="n">base_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_params</span> <span class="o">=</span> <span class="n">ParamTree</span><span class="p">(</span><span class="n">base_params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name_fstr</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;experiment_name&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_path</span> <span class="o">=</span> <span class="n">data_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_environments</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -132,6 +133,13 @@
             <span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">base_params</span><span class="o">=</span><span class="n">base_params</span><span class="p">,</span> <span class="n">data_path</span><span class="o">=</span><span class="n">data_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExperimentSeries.full_base_params"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.ExperimentSeries.full_base_params">[docs]</a>    <span class="k">def</span> <span class="nf">full_base_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns complete base params including the default params.&quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">ParamTree</span><span class="p">(</span><span class="n">default_params</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">update_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">params</span></div>
+
 
 <div class="viewcode-block" id="ExperimentSeries.init_variables"><a class="viewcode-back" href="../../../wann_genetic.tools.html#wann_genetic.tools.ExperimentSeries.init_variables">[docs]</a>    <span class="k">def</span> <span class="nf">init_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the variables.&quot;&quot;&quot;</span>
