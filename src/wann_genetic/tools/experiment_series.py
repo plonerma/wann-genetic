@@ -17,6 +17,8 @@ from wann_genetic.util import ParamTree
 from wann_genetic import Environment
 from wann_genetic.environment.util import default_params
 
+from .util import hyperparam_table, default_ignored_keys
+
 
 class Variable:
     """Represents a variable in an experiment series."""
@@ -55,6 +57,17 @@ class Variable:
 
     def iter_indices(self):
         return range(len(self.values))
+
+    def affected_keys(self):
+        affected_keys = set()
+        for value in self.values:
+            if isinstance(value, Mapping):
+                for k in value.keys():
+                    if k != '_fmt':
+                        affected_keys.add(self.key + (k,))
+            else:
+                affected_keys.add(self.key)
+        return affected_keys
 
 
 class ExperimentSeries:
@@ -300,3 +313,11 @@ class ExperimentSeries:
                 stats['_configuration'] = c
                 data.append(stats)
         return pd.DataFrame(data)
+
+    def affected_keys(self):
+        return set().union(*[v.affected_keys() for v in self.vars()])
+
+    def hyperparam_table(self, ignored_keys=default_ignored_keys, **kwargs):
+        ignored_keys = ignored_keys + list(self.affected_keys())
+        return hyperparam_table(self.full_base_params(),
+                                ignored_keys=ignored_keys, **kwargs)
