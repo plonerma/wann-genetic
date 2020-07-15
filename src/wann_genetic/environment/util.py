@@ -118,7 +118,7 @@ def ind_from_hdf(env, data):
         parent=p,
         id=data.get('id')[()],
         birth=data.get('birth')[()],
-        mutations=data.get('mutations')[()],
+        mutations=(data.get('mutations')[()] if 'mutations' in data else None),
     )
 
 
