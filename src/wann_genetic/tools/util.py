@@ -5,7 +5,7 @@ import logging
 def get_initial_population(p):
     v = p('population', 'initial_enabled_edge_prob')  # store first, so it has been accessed
     if p('population', 'initial_genes') == 'full':
-        return f"fully connected\n(edges have {v:0.0%} probability of being enabled)"
+        return f"fully connected\n(edges have {v:0.0%} chance of\nbeing enabled)"
     else:
         return "without any connections"
 
@@ -17,17 +17,23 @@ def get_tournament_size(p):
 
 
 def get_objectives(p):
-    value = ''
+    lines = list()
     for obj in p('selection', 'objectives'):
         minimize, obj = (True, obj[1:]) if obj[0] == '-' else (False, obj)
+
+        if '.' in obj:
+            name, postfix = obj.split('.')
+            obj = f"{postfix} {name}"
 
         obj = {
             'log_loss': 'logarithmic loss',
             'n_hidden': 'number of hidden nodes',
             'n_layers': 'number of hidden layers'
         }.get(obj, obj)
-        value += f"{'min' if minimize else 'max'} {obj}"
-    return value
+        lines.append(f"{'minimize' if minimize else 'maximize'} the {obj}")
+    result = ',\n\n'.join(lines)
+    result = result[0:1].upper() + result[1:] + "."
+    return result
 
 
 default_table_rows = {
@@ -38,10 +44,10 @@ default_table_rows = {
     'Size of the hall of fame': ('population', 'hof_size'),
 
     # selection
-    'Elite ratio\n(ratio of individuals to surive without mutation)': lambda p: f"{p('selection', 'elite_ratio'):0.0%}",
+    'Objectives': get_objectives,
+    'Elite ratio\n(ratio of individuals to survive without mutation)': lambda p: f"{p('selection', 'elite_ratio'):0.0%}",
     'Culling ratio\n(ratio of individuals to exclude from selection)': lambda p: f"{p('selection', 'culling_ratio'):0.0%}",
     'Number of individuals in a tournament': get_tournament_size,
-    'Objectives': get_objectives,
 
     # mutations
     'New edge mutation strategy': ('mutation', 'new_edge', 'strategy'),
@@ -49,7 +55,7 @@ default_table_rows = {
     # sampling
     'Number of weights per generation': ('sampling', 'num_weights_per_iteration'),
     'Number of training samples per generation': lambda p: p('sampling', 'num_samples_per_iteration') if p('sampling', 'num_samples_per_iteration')>0 else 'all',
-    'Number of evaluation iterations required to enter hall of fame\n(if to few, individual will be more thoroughly evaluted)': ('sampling', 'hof_evaluation_iterations'),
+    'Number of evaluation iterations required\nto enter hall of fame (if to few, individual will\nbe more thoroughly evaluated)': ('sampling', 'hof_evaluation_iterations'),
 }
 
 default_ignored_keys = [
