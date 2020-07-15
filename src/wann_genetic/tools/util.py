@@ -42,6 +42,7 @@ default_table_rows = {
     'Number of generations': ('population', 'num_generations'),
     'Initial population': get_initial_population,
     'Size of the hall of fame': ('population', 'hof_size'),
+    'Edge signs enabled': ('population', 'enable_edge_signs'),
 
     # selection
     'Objectives': get_objectives,
