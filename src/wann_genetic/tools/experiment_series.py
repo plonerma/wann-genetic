@@ -147,6 +147,9 @@ class ExperimentSeries:
         """Return the product of the number of values of each variable."""
         return reduce(lambda p, var: p*len(var.values), self.vars(), 1)
 
+    def __len__(self):
+        return self.num_configurations()
+
     def configurations(self) -> Iterable:
         """Return iteratator containing all the possible configurations."""
         return product(*[var.iter_indices() for var in self.vars()])
