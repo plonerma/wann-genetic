@@ -9,10 +9,25 @@ def get_initial_population(p):
     else:
         return "without any connections"
 
+
 def get_tournament_size(p):
     v = p('selection', 'tournament_size')
     if p('selection', 'use_tournaments'):
         return v
+
+
+def get_objectives(p):
+    value = ''
+    for obj in p('selection', 'objectives'):
+        minimize, obj = (True, obj[1:]) if obj[0] == '-' else (False, obj)
+
+        obj = {
+            'log_loss': 'logarithmic loss',
+            'n_hidden': 'number of hidden nodes',
+            'n_layers': 'number of hidden layers'
+        }.get(obj, obj)
+        value += f"{'min' if minimize else 'max'} {obj}"
+    return value
 
 
 default_table_rows = {
@@ -26,6 +41,7 @@ default_table_rows = {
     'Elite ratio\n(ratio of individuals to surive without mutation)': lambda p: f"{p('selection', 'elite_ratio'):0.0%}",
     'Culling ratio\n(ratio of individuals to exclude from selection)': lambda p: f"{p('selection', 'culling_ratio'):0.0%}",
     'Number of individuals in a tournament': get_tournament_size,
+    'Objectives': get_objectives,
 
     # mutations
     'New edge mutation strategy': ('mutation', 'new_edge', 'strategy'),
@@ -43,6 +59,9 @@ default_ignored_keys = [
     ('debug', ),
     ('sampling', 'seed'),
     ('sampling', 'post_init_seed'),
+    ('selection', 'recorded_metrics'),
+    ('task', 'name'),
+    ('task', 'sample_order_seed'),
 ]
 
 default_headers = ['Parameter', 'Value']
