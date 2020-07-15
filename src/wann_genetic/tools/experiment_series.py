@@ -15,6 +15,7 @@ from typing import Iterable, Collection, Sequence
 
 from wann_genetic.util import ParamTree
 from wann_genetic import Environment
+from wann_genetic.environment.util import default_params
 
 
 class Variable:
@@ -67,7 +68,7 @@ class ExperimentSeries:
 
     def __init__(self, spec: Mapping, base_params=dict(), data_path=None):
         self.variables = OrderedDict()
-        self.base_params = base_params
+        self.base_params = ParamTree(base_params)
         self.name_fstr = spec['experiment_name']
         self.data_path = data_path
         self._environments = dict()
@@ -94,6 +95,13 @@ class ExperimentSeries:
             data_path = os.path.join(dir, 'data')
 
         return cls(spec=spec, base_params=base_params, data_path=data_path)
+
+    def full_base_params(self):
+        """Returns complete base params including the default params."""
+        params = ParamTree(default_params)
+        params.update_params(self.base_params)
+        return params
+
 
     def init_variables(self, spec: Mapping):
         """Initialize the variables."""
