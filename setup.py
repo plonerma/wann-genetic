@@ -9,7 +9,6 @@ setup(
     author='Max Ploner',
     version='0.1.1',
     author_email='wann_genetic@maxploner.de',
-    #scripts=['src/wann_genetic/cli/inspect_run', 'src/wann_genetic/cli/inspect_run.py'],
     entry_points={
         'console_scripts': [
             # execution of a single experiment
