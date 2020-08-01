@@ -65,13 +65,13 @@ class Environment(ParamTree):
         else:
             self.ind_class = backend.Individual
 
-        # only use enabeld activations functions
-        funcs = self.ind_class.Phenotype.available_act_functions
+        # only use enabled activations functions
+        available_funcs = self.ind_class.Phenotype.available_act_functions
         enabled_acts = self['population', 'enabled_activation_funcs']
 
         if self['population', 'enabled_activation_funcs'] != 'all':
             self.ind_class.Phenotype.enabled_act_functions = [
-                funcs[i] for i in enabled_acts
+                available_funcs[i] for i in enabled_acts
             ]
 
     def seed(self, seed=None):
