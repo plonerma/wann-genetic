@@ -70,7 +70,7 @@ class Environment(ParamTree):
         enabled_acts = self['population', 'enabled_activation_funcs']
 
         if self['population', 'enabled_activation_funcs'] != 'all':
-            self.ind_class.Phenotype.available_act_functions = [
+            self.ind_class.Phenotype.enabled_act_functions = [
                 funcs[i] for i in enabled_acts
             ]
 

@@ -92,7 +92,7 @@ class IndividualBase:
         )
         data.update(
             num_used_activation_functions(
-                self.genes.nodes, self.network.available_act_functions))
+                self.genes.nodes, self.network.enabled_act_functions))
         return data
 
     def get_data(self, *keys, as_list=False, **kwargs):

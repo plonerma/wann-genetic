@@ -105,7 +105,7 @@ class BaseFFNN:
     @property
     def n_act_funcs(self):
         """Number of enabled activations functions."""
-        return len(self.available_act_functions)
+        return len(self.enabled_act_functions)
 
     def index_to_gene_id(self, i):
         """Return gene node id from network node index."""

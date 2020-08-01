@@ -76,12 +76,14 @@ class Network(BaseFFNN):
         ('sin', torch.sin),
     ]
 
+    enabled_act_functions = available_act_functions
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.shared_weight = torch.nn.Parameter(torch.Tensor([1]))
 
-        all_act_funcs = [f for _, f in self.available_act_functions]
+        all_act_funcs = [f for _, f in self.enabled_act_functions]
 
         # prepare ConcatLayers
         layers = list()

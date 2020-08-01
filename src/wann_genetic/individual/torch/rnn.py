@@ -50,7 +50,7 @@ class Network(BaseRNN, TorchFFNN):
 
         self.shared_weight = torch.nn.Parameter(torch.Tensor([1]))
 
-        all_act_funcs = [f for _, f in self.available_act_functions]
+        all_act_funcs = [f for _, f in self.enabled_act_functions]
 
         # prepare ConcatLayers
         layers = list()

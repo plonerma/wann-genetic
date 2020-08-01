@@ -95,7 +95,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
 
     if labels == 'func_names':
         node_labels = [''] * (net.n_in + 1) + [
-            net.available_act_functions[func][0][:5] for func in net.nodes['func']
+            net.enabled_act_functions[func][0][:5] for func in net.nodes['func']
         ]
         pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
         nx.draw_networkx_nodes(g, ax=ax, pos=pos, node_color=color, node_size=150)
@@ -119,7 +119,7 @@ def draw_graph(net, ax=None, pos_iterations=None, layer_h=17, labels=None):
         pos = dict(zip(nodes, np.array([pos['x'], pos['y']]).T))
 
         for func, n in zip(net.nodes['func'], nodes[net.offset:]):
-            func = net.available_act_functions[func][1]
+            func = net.enabled_act_functions[func][1]
 
             x = np.linspace(0, 2, 10)
             x = np.hstack([x, 1-x, -x, x-1])

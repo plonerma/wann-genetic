@@ -57,6 +57,8 @@ class Network(BaseFFNN):
 
     ]
 
+    enabled_act_functions = available_act_functions
+
     def get_measurements(self, weights, x, y_true=None, measures=['predictions']):
         assert len(x.shape) == 2  # multiple one dimensional input arrays
         assert isinstance(weights, np.ndarray)
@@ -132,7 +134,7 @@ class Network(BaseFFNN):
 
     def activation_functions(self, nodes, x=None):
         funcs = self.nodes['func'][nodes - self.offset]
-        return apply_act_function(self.available_act_functions, funcs, x)
+        return apply_act_function(self.enabled_act_functions, funcs, x)
 
     def calc_act(self, x, active_nodes, base_weights, add_to_sum=0):
         """Apply updates for active nodes (active nodes can't share edges).
