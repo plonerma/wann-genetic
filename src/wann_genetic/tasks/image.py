@@ -40,6 +40,25 @@ def mnist_256(test=False):
 
     return x, y_true
 
+def mnist_784(test=False):
+    '''
+    Converts 28x28 mnist digits to [16x16]
+    [samples x pixels]  ([N X 256])
+    '''
+    import mnist
+    if not test:
+        x = mnist.train_images()
+        y_true = mnist.train_labels()
+    else:
+        x = mnist.test_images()
+        y_true = mnist.test_labels()
+
+    x = x/255
+    x = preprocess(x,(28,28))
+    x = x.reshape(-1, (28*28))
+
+    return x, y_true
+
 
 def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
     """

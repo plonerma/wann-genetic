@@ -1,6 +1,6 @@
 from .base import ClassificationTask, RecurrentTask
 
-from .image import mnist_256, digit_raw
+from .image import mnist_256, mnist_784, digit_raw
 
 from .rnn import EchoTask, AddingTask, CopyTask
 
@@ -19,6 +19,9 @@ available_tasks = {
     'mnist256': ClassificationTask(
                     n_in=256, n_out=10,
                     load_func=mnist_256),
+    'mnist784': ClassificationTask(
+                    n_in=784, n_out=10,
+                    load_func=mnist_784),
     'digits': ClassificationTask(
                     n_in=64, n_out=10,
                     load_func=digit_raw),
