@@ -92,11 +92,10 @@ def evaluate_inds(env, pop, weights, test=False, measures=['log_loss'], n_sample
     x, y_true = env.task.get_data(test=test, samples=n_samples)
 
     return env.pool_map((
-        lambda network: network.get_measurements(
-            weights=weights,
-            x=x, y_true=y_true,
-            measures=measures
-        )), pop)
+        partial(env.ind_class.Phenotype.get_measurements,
+                weights=weights,
+                x=x, y_true=y_true,
+                measures=measures)), [ind.network for ind in pop])
 
 
 def express_inds(env, pop):
