@@ -2,7 +2,7 @@ experiment_name='pytest'
 debug=true
 
 [task]
-name='iris'
+  name='iris'
 
 [postopt]
   run_postopt=true
