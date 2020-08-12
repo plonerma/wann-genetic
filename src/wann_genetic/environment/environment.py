@@ -216,12 +216,18 @@ class Environment(ParamTree):
 
         alg = GeneticAlgorithm(self)
 
+        first_generation = True
+
         ts.start()
         for gen in np.arange(self['population', 'num_generations']) + 1:
 
             ts.start()
 
             pop = alg.ask()
+
+            seed = self['sampling', 'post_init_seed']
+            if (first_generation and not isinstance(seed, bool)):
+                self.seed(seed)
 
             # evaluate indivs
 
