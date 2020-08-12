@@ -67,25 +67,39 @@ class GeneticAlgorithm:
     def create_initial_pop(self):
         """Create initial population based on parameters."""
         env = self.env
-
         initial = env['population', 'initial_genes']
+        initial_func = env['population', 'initial_func']
+        assert initial in ('empty', 'full')
+        prob_enabled = env['population', 'initial_enabled_edge_prob']
+        signs_enabeld = env['population', 'enable_edge_signs']
+        n_funcs = len(env.ind_class.Phenotype.enabled_act_functions)
 
-        if initial == 'empty':
-            base_ind = env.ind_class.empty_initial(env.task.n_in, env.task.n_out)
-            self.population = [base_ind]*env['population', 'size']
+        self.population = list()
 
-        elif initial == 'full':
-            self.population = list()
-            prob_enabled = env['population', 'initial_enabled_edge_prob']
-            for i in range(env['population', 'size']):
-                self.population.append(
-                    env.ind_class.full_initial(
-                        env.task.n_in, env.task.n_out,
-                        id=i, prob_enabled=prob_enabled,  # disable some edges
-                        negative_edges_allowed=env['population', 'enable_edge_signs']))
+        for i in range(env['population', 'size']):
+            self.population.append(
+                (
+                    # select appropriate intialization function
+                    env.ind_class.empty_initial
+                    if initial == 'empty' else
+                    env.ind_class.full_initial
+                )(
+                    # base params
+                    id=i,
+                    n_in=env.task.n_in,
+                    n_out=env.task.n_out,
+                    n_funcs=n_funcs,
 
-        else:
-            raise RuntimeError(f'Unknown initial genes type {initial}')
+                    # Determines intialization of activation functions of
+                    # output nodes
+                    initial_func=initial_func,
+
+                    # disable some edges (if applicable)
+                    prob_enabled=prob_enabled,
+
+                    # (only required if edges are created)
+                    negative_edges_allowed=signs_enabeld,
+                ))
 
     def evolve_population(self):
         """Apply tournaments if enabled, and mutate surivers.

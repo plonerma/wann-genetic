@@ -43,6 +43,7 @@
   size = 64
   initial_enabled_edge_prob = 0.05
   initial_genes='full'
+  initial_func='random'
   hof_size=10
   enable_edge_signs=false
   enabled_activation_funcs='all'

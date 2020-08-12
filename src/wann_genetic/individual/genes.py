@@ -89,7 +89,7 @@ class Genes:
         )
 
     @classmethod
-    def empty_initial(cls, n_in, n_out):
+    def empty_initial(cls, n_in, n_out, n_funcs, initial_func='random'):
         """Create new base gene for given encodings."""
         # start without any edges
         edges = np.array([], dtype=list(cls.edge_encoding))
@@ -97,6 +97,7 @@ class Genes:
         # start only with output nodes (input and bias nodes are implicit)
         nodes = np.zeros(n_out, dtype=list(cls.node_encoding))
         nodes['out'] = True
+        nodes['func'] = np.random.randint(n_funcs, size=n_out) if initial_func == 'random' else initial_func
 
         # reserve first n_in + 1 ids for implicit input and bias nodes
         nodes['id'] = np.arange(n_out) + n_in + 1
@@ -104,7 +105,7 @@ class Genes:
         return cls(edges=edges, nodes=nodes, n_in=n_in, n_out=n_out)
 
     @classmethod
-    def full_initial(cls, n_in, n_out, prob_enabled=1, negative_edges_allowed=False):
+    def full_initial(cls, n_in, n_out, n_funcs, prob_enabled=1, negative_edges_allowed=False, initial_func='random'):
         """Create new base gene with all input nodes connected to the output nodes."""
         # connect all input (and bias) nodes to all output nodes
         n_edges = (n_in+1)*n_out
@@ -125,6 +126,9 @@ class Genes:
 
         # start only with output nodes (input and bias nodes are implicit)
         nodes = np.zeros(n_out, dtype=list(cls.node_encoding))
+
+        nodes['func'] = np.random.randint(n_funcs, size=n_out) if initial_func == 'random' else initial_func
+
         nodes['out'] = True
 
         # reserve first n_in + 1 ids for implicit input and bias nodes

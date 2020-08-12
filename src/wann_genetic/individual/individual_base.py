@@ -119,9 +119,9 @@ class IndividualBase:
             raise e
 
     @classmethod
-    def empty_initial(cls, *args, **kwargs):
+    def empty_initial(cls, *args, id=0, **kwargs):
         """Create an initial individual with no edges and no hidden nodes."""
-        return cls(genes=cls.Genotype.empty_initial(*args, **kwargs), birth=0, id=0)
+        return cls(genes=cls.Genotype.empty_initial(*args, **kwargs), birth=0, id=id)
 
     @classmethod
     def full_initial(cls, *args, id=0, **kwargs):
