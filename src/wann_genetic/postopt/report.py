@@ -16,7 +16,7 @@ import json
 
 from .vis import draw_graph
 from wann_genetic.environment.util import load_ind
-from wann_genetic.environment.evaluation_util import evaluate_inds, express_inds
+from wann_genetic.environment.evaluation_util import express_inds
 from wann_genetic.tasks import ClassificationTask
 
 from tabulate import tabulate
