@@ -74,18 +74,15 @@ class Environment(ParamTree):
                 available_funcs[i] for i in enabled_acts
             ]
 
-    def seed(self, seed=None):
+    def seed(self, seed):
         """Set seed to `seed` or from parameters.
 
         Parameters
         ----------
-        seed : int, optional
-            Seed to set. If none, seed in sampling/seed will be used.
+        seed : int
+            Seed to use.
         """
-        if seed is not None:
-            np.random.seed(seed)
-        else:
-            np.random.seed(self['sampling', 'seed'])
+        np.random.seed(seed)
 
     @property
     def elite_size(self):
@@ -187,7 +184,7 @@ class Environment(ParamTree):
             params['is_report'] = True
             toml.dump(params, f)
 
-        self.seed()
+
 
     def run(self):
         """Run optization and post optimization (if enabled)."""
@@ -217,6 +214,8 @@ class Environment(ParamTree):
         alg = GeneticAlgorithm(self)
 
         first_generation = True
+
+        self.seed(self['sampling', 'seed'])
 
         ts.start()
         for gen in np.arange(self['population', 'num_generations']) + 1:
