@@ -221,12 +221,12 @@ class Report:
         x, y_true = env.task.get_data(test=True, samples=num_samples)
         weights = env.sample_weights(num_weights)
 
-        measurements = env.pool_map((
-            lambda network: network.get_measurements(
-                weights=weights,
-                x=x, y_true=y_true,
-                measures=measures
-            )), env.hall_of_fame)
+        measurements = env.pool_map(
+            partial(env.ind_class.Phenotype.get_measurements,
+                    weights=weights,
+                    x=x, y_true=y_true,
+                    measures=measures),
+            [ind.network for ind in env.hall_of_fame])
 
         for ind, m in zip(env.hall_of_fame, measurements):
             ind.measurements = dict()
