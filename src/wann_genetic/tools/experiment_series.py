@@ -5,6 +5,7 @@ import toml
 import json
 import logging
 
+import numpy as np
 import pandas as pd
 
 from itertools import product
@@ -288,7 +289,7 @@ class ExperimentSeries:
 
         self.experiment_paths = paths
 
-    def assemble_stats(self):
+    def assemble_stats(self, include_hof_metadata=False):
         """Load stats for available experiments."""
         if self.experiment_paths is None:
             try:
@@ -313,6 +314,32 @@ class ExperimentSeries:
                     stats = json.load(f)
 
                 stats.update(self.flat_values(c))
+
+                if include_hof_metadata:
+                    env = self.configuration_env(c)
+
+                    with env.open_data():
+                        env.load_hof()
+
+                    ind_stats = dict()
+
+                    for ind in env.hall_of_fame:
+                        ind.express()
+
+                        for k, v in ind.metadata().items():
+                            if k not in ind_stats:
+                                ind_stats[k] = list()
+
+                            ind_stats[k].append(v)
+
+                    for prefix, func in [
+                        ('MAX', np.max), ('MIN', np.min),
+                        ('STD', np.std), ('MEAN', np.mean)
+                    ]:
+                        for k, v in ind_stats.items():
+                            if not np.any([vi is None for vi in v]):
+                                stats[f'{prefix}:{k}'] = func(v)
+
                 stats['_configuration'] = c
                 data.append(stats)
         return pd.DataFrame(data)
