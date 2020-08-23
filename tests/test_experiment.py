@@ -29,6 +29,9 @@ def experiment_test(params_path, tmp_path, mean_treshold=0.0, max_treshold=0.4):
 def test_layer_agnostic(tmp_path):
     experiment_test('tests/test_layer_agnostic.toml', tmp_path)
 
+@pytest.mark.slow
+def test_report(tmp_path):
+    experiment_test('tests/test_report.toml', tmp_path)
 
 @pytest.mark.slow
 def test_layer_based(tmp_path):

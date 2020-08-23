@@ -1,0 +1,15 @@
+experiment_name='pytest'
+debug=true
+
+[task]
+  name='iris'
+
+[postopt]
+  run_postopt=true
+  compile_report=true
+  num_weights=10
+  num_samples=-1
+
+[population]
+  num_generations=40
+  size=64

@@ -168,26 +168,36 @@ class Report:
         hof_measurements = [ind.measurements for ind in self.env.hall_of_fame]
 
         stats = list()
+        json_stats = dict()
 
         for measure in hof_measurements[0].keys():
 
             measures = [m[measure] for m in hof_measurements]
 
-            for pop_fname, pop_f in pop_stat_funcs:
-                descr = f'{pop_fname}:{measure}'
-                i = pop_f(measures)
-                indiv_id = self.env.hall_of_fame[i].id
-                value = measures[i]
-                stats.append((descr, value, indiv_id))
+            max_i, max_v = np.argmax(measures), np.max(measures)
+            min_i, min_v = np.argmin(measures), np.min(measures)
+            mean_v = np.mean(measures)
+
+            stats += [
+                (f'MAX:{measure}', max_v, self.env.hall_of_fame[max_i].id),
+                (f'MIN:{measure}', min_v, self.env.hall_of_fame[min_i].id),
+                (f'MEAN:{measure}', mean_v, ''),
+            ]
+
+            json_stats.update({
+                f'MAX:{measure}': float(max_v),
+                f'ARGMAX:{measure}': (int(max_i), int(self.env.hall_of_fame[max_i].id)),
+                f'MIN:{measure}': float(min_v),
+                f'ARGMIN:{measure}': (int(min_i), int(self.env.hall_of_fame[min_i].id)),
+                f'MEAN:{measure}': float(mean_v),
+            })
 
         self.add(
             "## Best results in hall of fame",
             tabulate(stats, ['measure', 'value', 'individual'])
         )
 
-        self.write_stats({
-            key: float(value) for key, value, *_ in stats
-        })
+        self.write_stats(json_stats)
 
     def compile(self):
         self.add(f"# Report {self.env['experiment_name']}")
