@@ -111,7 +111,7 @@ class Environment(ParamTree):
             upper = self['sampling', 'upper_bound']
             assert lower is not None and upper is not None
 
-            w = np.linspace(lower, upper, size=n)
+            w = np.linspace(lower, upper, num=n)
 
         elif dist == 'lognormal':
             mu = self['sampling', 'mean']
