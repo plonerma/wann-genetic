@@ -106,6 +106,13 @@ class Environment(ParamTree):
 
             w = np.random.uniform(lower, upper, size=n)
 
+        elif dist == 'linspace':
+            lower = self['sampling', 'lower_bound']
+            upper = self['sampling', 'upper_bound']
+            assert lower is not None and upper is not None
+
+            w = np.linspace(lower, upper, size=n)
+
         elif dist == 'lognormal':
             mu = self['sampling', 'mean']
             sigma = self['sampling', 'sigma']
