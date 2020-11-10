@@ -8,7 +8,7 @@ setup(
     package_dir={'': src_dir},
     author='Max Ploner',
     version='0.1.2',
-    author_email='wann_genetic@maxploner.de',
+    author_email='wann@maxploner.de',
     entry_points={
         'console_scripts': [
             # execution of a single experiment
